@@ -30,18 +30,43 @@ public class Stamp {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @CreatedDate
+    @Column(name = "number_of_likes", nullable = false)
+    private int numberOfLikes;
+
     public Stamp() {
     }
 
     @Builder
-    public Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt) {
+    public Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
+        this.numberOfLikes = numberOfLikes;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getNumberOfLikes() {
+        return numberOfLikes;
+    }
+
+    public void like() {
+        numberOfLikes++;
     }
 }

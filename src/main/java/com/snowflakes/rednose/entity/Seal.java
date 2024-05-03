@@ -36,16 +36,20 @@ public class Seal {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "number_of_likes", nullable = false)
+    private int numberOfLikes;
+
     public Seal() {
     }
 
     @Builder
-    public Seal(Long id, Member member, String name, String imageUrl, LocalDateTime createdAt) {
+    public Seal(Long id, Member member, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
         this.id = id;
         this.member = member;
         this.name = name;
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
+        this.numberOfLikes = numberOfLikes;
     }
 
 }

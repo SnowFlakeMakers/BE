@@ -30,6 +30,7 @@ public class StampLikeService {
         Member member= findMemberById(memberId);
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
+        stamp.like();
     }
 
     private Member findMemberById(Long memberId) {
