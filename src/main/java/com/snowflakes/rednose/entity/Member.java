@@ -37,4 +37,8 @@ public class Member {
         this.image = image;
         this.usable = usable;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
