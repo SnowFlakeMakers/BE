@@ -1,5 +1,7 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.service.StampService;
+import java.awt.print.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ public class StampController {
     private final StampService stampService;
 
     @GetMapping("/stamps")
-    public ShowStampsResponse show() {
-        return stampService.show();
+    public ShowStampsResponse show(Pageable pageable) {
+        return stampService.show(pageable);
     }
 }
