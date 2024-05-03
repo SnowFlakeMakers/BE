@@ -1,6 +1,7 @@
 package com.snowflakes.rednose.service;
 
 import com.snowflakes.rednose.entity.Stamp;
+import com.snowflakes.rednose.repository.stamp.StampRepository;
 import java.awt.print.Pageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class StampService {
 
 
     public ShowStampsResponse show(Pageable pageable) {
-        Slice<Stamp> stamps = stampRepository.findByPage(pageable);
+        Slice<Stamp> stamps = stampRepository.findAll(pageable);
         return ShowStampsResponse.from(pageable);
     }
 }
