@@ -45,6 +45,10 @@ public class Stamp {
 
     @Override
     public String toString() {
-        return String.format("ID : {}, 생성일 : {}, 좋아요 수 : {}", id, createdAt, numberOfLikes);
+        return "Stamp{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", numberOfLikes=" + numberOfLikes +
+                '}';
     }
 }
