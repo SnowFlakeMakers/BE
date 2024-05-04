@@ -4,6 +4,7 @@ import com.snowflakes.rednose.dto.like.stamp.ShowStampLikeResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
+import com.snowflakes.rednose.exception.AlreadyExistException;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.snowflakes.rednose.exception.ErrorCode.MEMBER_NOT_FOUND;
+import static com.snowflakes.rednose.exception.ErrorCode.STAMP_LIKE;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,9 @@ public class StampLikeService {
     public void like(Long stampId, Long memberId) {
         Stamp stamp = findStampById(stampId);
         Member member= findMemberById(memberId);
+        if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
+            throw new AlreadyExistException(STAMP_LIKE);
+        }
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
         stamp.like();
