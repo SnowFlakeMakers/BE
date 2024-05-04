@@ -30,7 +30,6 @@ public class Stamp {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @CreatedDate
     @Column(name = "number_of_likes", nullable = false)
     private int numberOfLikes;
 
