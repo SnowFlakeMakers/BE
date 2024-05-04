@@ -4,6 +4,7 @@ import com.snowflakes.rednose.dto.like.stamp.ShowStampLikeResponse;
 import com.snowflakes.rednose.service.StampLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,12 @@ public class StampLikeController {
     @GetMapping("/likes")
     public ShowStampLikeResponse show(Long memberId) {
         return stampLikeService.getLikes(memberId);
+    }
+
+    @DeleteMapping("/{stampId}")
+    public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long stampId) {
+        stampLikeService.cancel(stampId, 3L);
+        return ResponseEntity.ok().build();
     }
 
 }
