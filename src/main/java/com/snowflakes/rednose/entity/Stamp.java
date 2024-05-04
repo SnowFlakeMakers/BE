@@ -42,4 +42,9 @@ public class Stamp {
         this.createdAt = createdAt;
         this.numberOfLikes = numberOfLikes;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ID : {}, 생성일 : {}, 좋아요 수 : {}", id, createdAt, numberOfLikes);
+    }
 }
