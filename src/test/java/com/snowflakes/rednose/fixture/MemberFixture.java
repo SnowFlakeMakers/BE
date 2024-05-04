@@ -1,12 +1,13 @@
 package com.snowflakes.rednose.fixture;
 
 import com.snowflakes.rednose.entity.Member;
+import java.util.Random;
 
 public class MemberFixture {
 
     private Long id;
-    private Long socialId;
-    private String nickname;
+    private Long socialId = new Random().nextLong();
+    private String nickname = "rlfrkdms1";
     private String image = "https://image.com/virtual.png";
     private boolean usable = true;
 
