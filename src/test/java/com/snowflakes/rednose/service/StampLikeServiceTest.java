@@ -46,4 +46,23 @@ class StampLikeServiceTest {
         );
     }
 
+    @Test
+    void 좋아요_취소가_가능하다() {
+        Member member = MemberFixture.builder().id(1L).build();
+        Stamp stamp = StampFixture.builder().id(1L).build();
+        StampLike stampLike = StampLike.builder().stamp(stamp).member(member).build();
+        given(memberRepository.existsById(member.getId())).willReturn(true);
+        given(stampRepository.findById(stamp.getId())).willReturn(Optional.of(stamp));
+        given(stampLikeRepository.findByMemberIdAndStampId(member.getId(), stamp.getId())).willReturn(Optional.of(stampLike));
+
+        assertAll(
+                () -> stampLikeService.cancel(member.getId(), stamp.getId()),
+                () -> verify(memberRepository, times(1)).existsById(member.getId()),
+                () -> verify(stampRepository, times(1)).findById(stamp.getId()),
+                () -> verify(stampLikeRepository, times(1)).findByMemberIdAndStampId(member.getId(), stamp.getId()),
+                () -> verify(stampLikeRepository, times(1)).delete(stampLike)
+        );
+
+    }
+
 }
