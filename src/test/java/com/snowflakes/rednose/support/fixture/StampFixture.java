@@ -7,8 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class StampFixture {
-    private static Long fixtureId = 1L;
-    private Long id = fixtureId++;
+
     private String name = "우표";
     private String imageUrl = "https://image.com/virtual.png";
     private LocalDateTime createdAt;
@@ -21,7 +20,7 @@ public class StampFixture {
     }
 
     public Stamp toStamp() {
-        return Stamp.builder().id(id).name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
+        return Stamp.builder().name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
                 .build();
     }
 }
