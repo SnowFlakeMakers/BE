@@ -22,4 +22,12 @@ public class ShowStampLikeResponse {
                 .contents(stamps.stream().map(StampResponse::of).toList())
                 .build();
     }
+
+    public boolean isHasNext() {
+        return hasNext;
+    }
+
+    public List<StampResponse> getContents() {
+        return contents;
+    }
 }

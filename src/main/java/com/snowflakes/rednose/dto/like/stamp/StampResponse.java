@@ -23,4 +23,16 @@ public class StampResponse {
                 .numberOfLikes(stamp.getNumberOfLikes())
                 .build();
     }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumberOfLikes() {
+        return numberOfLikes;
+    }
 }
