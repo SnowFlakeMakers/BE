@@ -5,10 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,14 +28,18 @@ public class Stamp {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "number_of_likes", nullable = false)
+    private int numberOfLikes;
+
     public Stamp() {
     }
 
     @Builder
-    public Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt) {
+    public Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
+        this.numberOfLikes = numberOfLikes;
     }
 }
