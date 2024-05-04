@@ -68,4 +68,8 @@ public class Stamp {
     public void like() {
         numberOfLikes++;
     }
+
+    public void cancelLike() {
+        numberOfLikes--;
+    }
 }
