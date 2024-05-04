@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `seal`
     `nickname`              VARCHAR(255) NOT NULL,
     `image_url`             VARCHAR(255) NOT NULL,
     `created_at`            TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `number_of_likes`       MEDIUMINT    NOT NULL,
     PRIMARY KEY ( `id` )
 )
 engine = innodb
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `stamp`
     `name`                  VARCHAR(255) NOT NULL,
     `image_url`             VARCHAR(255) NOT NULL,
     `created_at`            TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `number_of_likes`       MEDIUMINT    NOT NULL,
     PRIMARY KEY ( `id` )
 )
 engine = innodb
