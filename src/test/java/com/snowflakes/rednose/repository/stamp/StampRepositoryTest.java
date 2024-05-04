@@ -38,7 +38,6 @@ class StampRepositoryTest {
         stampRepository.save(stamp1);
         stampRepository.save(stamp2);
 
-
         // when
         Slice<Stamp> slice0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("createdAt").descending()));
         Slice<Stamp> slice1 = stampRepository.findAll(PageRequest.of(1, 2, Sort.by("createdAt").descending()));

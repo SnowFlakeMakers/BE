@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RednoseApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RednoseApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(RednoseApplication.class, args);
+    }
 
 }

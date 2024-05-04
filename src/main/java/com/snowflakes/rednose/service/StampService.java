@@ -3,7 +3,6 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.dto.response.ShowStampsResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
