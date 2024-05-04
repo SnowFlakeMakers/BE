@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.response.ShowStampsResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
 import java.awt.print.Pageable;
@@ -20,6 +21,6 @@ public class StampService {
 
     public ShowStampsResponse show(Pageable pageable) {
         Slice<Stamp> stamps = stampRepository.findAll(pageable);
-        return ShowStampsResponse.from(pageable);
+        return ShowStampsResponse.from(stamps);
     }
 }
