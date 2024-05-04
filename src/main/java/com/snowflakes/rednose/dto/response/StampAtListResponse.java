@@ -14,7 +14,7 @@ public class StampAtListResponse {
     public static StampAtListResponse from(Stamp stamp) {
         return StampAtListResponse.builder().name(stamp.getName())
                 .image(stamp.getImageUrl())
-                .likes(10)
+                .likes(stamp.getNumberOfLikes())
                 .build();
     }
 }
