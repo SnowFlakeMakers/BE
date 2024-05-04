@@ -36,6 +36,7 @@ class StampLikeServiceTest {
         Stamp stamp = StampFixture.builder().id(1L).build();
         given(memberRepository.findById(1L)).willReturn(Optional.of(member));
         given(stampRepository.findById(1L)).willReturn(Optional.of(stamp));
+        given(stampLikeRepository.existsByMemberIdAndStampId(1L, 1L)).willReturn(false);
 
         assertAll(
                 () -> stampLikeService.like(stamp.getId(), member.getId()),
