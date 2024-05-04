@@ -3,9 +3,10 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.dto.response.ShowStampsResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
-import java.awt.print.Pageable;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class StampService {
 
     private final StampRepository stampRepository;
-
 
     public ShowStampsResponse show(Pageable pageable) {
         Slice<Stamp> stamps = stampRepository.findAll(pageable);
