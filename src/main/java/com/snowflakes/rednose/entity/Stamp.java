@@ -6,10 +6,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 public class Stamp {
 
     @Id
