@@ -25,11 +25,11 @@ public class StampLike {
     @JoinColumn(name = "stamp_id", nullable = false)
     private Stamp stamp;
 
-    public StampLike() {
+    protected StampLike() {
     }
 
     @Builder
-    public StampLike(Long id, Member member, Stamp stamp) {
+    private StampLike(Long id, Member member, Stamp stamp) {
         this.id = id;
         this.member = member;
         this.stamp = stamp;

@@ -33,11 +33,11 @@ public class Stamp {
     @Column(name = "number_of_likes", nullable = false)
     private int numberOfLikes;
 
-    public Stamp() {
+    protected Stamp() {
     }
 
     @Builder
-    public Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
+    private Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
