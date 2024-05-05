@@ -16,7 +16,7 @@ public class StampResponse {
         this.numberOfLikes = numberOfLikes;
     }
 
-    public static StampResponse of(Stamp stamp) {
+    public static StampResponse from(Stamp stamp) {
         return StampResponse.builder()
                 .image(stamp.getImageUrl())
                 .name(stamp.getName())
