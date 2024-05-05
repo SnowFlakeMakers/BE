@@ -39,11 +39,11 @@ public class Seal {
     @Column(name = "number_of_likes", nullable = false)
     private int numberOfLikes;
 
-    public Seal() {
+    protected Seal() {
     }
 
     @Builder
-    public Seal(Long id, Member member, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
+    private Seal(Long id, Member member, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
         this.id = id;
         this.member = member;
         this.name = name;

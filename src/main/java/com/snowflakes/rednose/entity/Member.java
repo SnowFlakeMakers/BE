@@ -26,11 +26,11 @@ public class Member {
     @Column(name = "usable", nullable = false)
     private boolean usable;
 
-    public Member() {
+    protected Member() {
     }
 
     @Builder
-    public Member(Long id, Long socialId, String nickname, String image, boolean usable) {
+    private Member(Long id, Long socialId, String nickname, String image, boolean usable) {
         this.id = id;
         this.socialId = socialId;
         this.nickname = nickname;
