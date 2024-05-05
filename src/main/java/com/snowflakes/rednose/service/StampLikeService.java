@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.snowflakes.rednose.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.snowflakes.rednose.exception.ErrorCode.STAMP_LIKE;
 import static com.snowflakes.rednose.exception.ErrorCode.STAMP_LIKE_NOT_FOUND;
+import static com.snowflakes.rednose.exception.ErrorCode.STAMP_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +45,7 @@ public class StampLikeService {
     }
 
     private Stamp findStampById(Long stampId) {
-        return stampRepository.findById(stampId).orElseThrow(() -> new NotFoundException(MEMBER_NOT_FOUND));
+        return stampRepository.findById(stampId).orElseThrow(() -> new NotFoundException(STAMP_NOT_FOUND));
     }
 
     public ShowStampLikeResponse getLikes(Long memberId) {
