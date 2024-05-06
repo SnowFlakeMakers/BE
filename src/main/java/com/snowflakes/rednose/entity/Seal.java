@@ -51,5 +51,4 @@ public class Seal {
         this.createdAt = createdAt;
         this.numberOfLikes = numberOfLikes;
     }
-
 }

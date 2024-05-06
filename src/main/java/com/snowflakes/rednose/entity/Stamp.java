@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import lombok.Builder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -71,5 +70,14 @@ public class Stamp {
 
     public void cancelLike() {
         numberOfLikes--;
+    }
+  
+      @Override
+    public String toString() {
+        return "Stamp{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", numberOfLikes=" + numberOfLikes +
+                '}';
     }
 }
