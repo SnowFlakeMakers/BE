@@ -23,11 +23,11 @@ public class SealLike {
     @JoinColumn(name = "seal_id", nullable = false)
     private Seal seal;
 
-    public SealLike() {
+    protected SealLike() {
     }
 
     @Builder
-    public SealLike(Long id, Member member, Seal seal) {
+    private SealLike(Long id, Member member, Seal seal) {
         this.id = id;
         this.member = member;
         this.seal = seal;

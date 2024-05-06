@@ -2,16 +2,17 @@ package com.snowflakes.rednose.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@EntityListeners(AuditingEntityListener.class)
 public class Stamp {
 
     @Id
@@ -31,11 +32,11 @@ public class Stamp {
     @Column(name = "number_of_likes", nullable = false)
     private int numberOfLikes;
 
-    public Stamp() {
+    protected Stamp() {
     }
 
     @Builder
-    public Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
+    private Stamp(Long id, String name, String imageUrl, LocalDateTime createdAt, int numberOfLikes) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -43,7 +44,35 @@ public class Stamp {
         this.numberOfLikes = numberOfLikes;
     }
 
-    @Override
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getNumberOfLikes() {
+        return numberOfLikes;
+    }
+
+    public void like() {
+        numberOfLikes++;
+    }
+
+    public void cancelLike() {
+        numberOfLikes--;
+    }
+  
+      @Override
     public String toString() {
         return "Stamp{" +
                 "id=" + id +
