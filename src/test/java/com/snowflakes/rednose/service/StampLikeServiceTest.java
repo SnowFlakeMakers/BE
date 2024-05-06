@@ -7,7 +7,7 @@ import com.snowflakes.rednose.fixture.MemberFixture;
 import com.snowflakes.rednose.fixture.StampFixture;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
-import com.snowflakes.rednose.repository.StampRepository;
+import com.snowflakes.rednose.repository.stamp.StampRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

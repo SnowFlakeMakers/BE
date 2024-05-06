@@ -8,7 +8,7 @@ import com.snowflakes.rednose.exception.AlreadyExistException;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
-import com.snowflakes.rednose.repository.StampRepository;
+import com.snowflakes.rednose.repository.stamp.StampRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
