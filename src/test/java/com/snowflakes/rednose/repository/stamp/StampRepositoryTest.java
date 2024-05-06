@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -28,24 +29,24 @@ class StampRepositoryTest {
     @Test
     void 우표_목록_최신순_조회() {
         // given
-        Stamp stamp1 = StampFixture.builder().createdAt(LocalDateTime.now()).numberOfLikes(1).build().toStamp();
-        Stamp stamp2 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1)).numberOfLikes(2)
-                .build().toStamp();
-        Stamp stamp3 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2)).numberOfLikes(3)
-                .build().toStamp();
+        Stamp stamp1 = StampFixture.builder().createdAt(LocalDateTime.now()).build();
+        Stamp stamp2 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1))
+                .build();
+        Stamp stamp3 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2))
+                .build();
 
         stampRepository.save(stamp3);
         stampRepository.save(stamp1);
         stampRepository.save(stamp2);
 
         // when
-        Slice<Stamp> slice0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("createdAt").descending()));
-        Slice<Stamp> slice1 = stampRepository.findAll(PageRequest.of(1, 2, Sort.by("createdAt").descending()));
+        Page<Stamp> page0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("createdAt").descending()));
+        Page<Stamp> page1 = stampRepository.findAll(PageRequest.of(1, 2, Sort.by("createdAt").descending()));
 
         // then
         assertAll(
-                () -> assertThat(slice0.getContent()).containsExactly(stamp1, stamp2),
-                () -> assertThat(slice1.getContent()).containsExactly(stamp3)
+                () -> assertThat(page0.getContent()).containsExactly(stamp1, stamp2),
+                () -> assertThat(page1.getContent()).containsExactly(stamp3)
         );
     }
 
@@ -53,11 +54,11 @@ class StampRepositoryTest {
     @Test
     void 우표_목록_좋아요순_조회() {
         // given
-        Stamp stamp1 = StampFixture.builder().createdAt(LocalDateTime.now()).numberOfLikes(1).build().toStamp();
-        Stamp stamp2 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1)).numberOfLikes(2)
-                .build().toStamp();
-        Stamp stamp3 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2)).numberOfLikes(3)
-                .build().toStamp();
+        Stamp stamp1 = StampFixture.builder().numberOfLikes(1).build();
+        Stamp stamp2 = StampFixture.builder().numberOfLikes(2)
+                .build();
+        Stamp stamp3 = StampFixture.builder().numberOfLikes(3)
+                .build();
 
         stampRepository.save(stamp2);
         stampRepository.save(stamp3);
