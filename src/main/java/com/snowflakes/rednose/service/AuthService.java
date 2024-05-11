@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.auth.KakaoToken;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ public class AuthService {
      * @param authCode 인가 코드
      * @return KaKoToken
      */
-    public KaKaoToken getToken(String authCode) {
+    public KakaoToken getToken(String authCode) {
         WebClient webClient = WebClient.builder().build();
 
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
@@ -31,12 +32,13 @@ public class AuthService {
         requestBody.add("redirect_url", "http://localhost:8080/api/v1/login/kakao");
         requestBody.add("code", "authCode");
 
-        KaKaoToken kaKaoToken = webClient.post()
+        KakaoToken kaKaoToken = webClient.post()
                 .uri("https://kauth.kakao.com/oauth/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(requestBody))
                 .retrieve()
-                .bodyToMono(KaKaoToken.class);
+                .bodyToMono(KakaoToken.class)
+                .block();
 
         return kaKaoToken;
     }
