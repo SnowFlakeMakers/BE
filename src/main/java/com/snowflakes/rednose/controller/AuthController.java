@@ -1,5 +1,10 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.dto.auth.KakaoToken;
+import com.snowflakes.rednose.dto.auth.LoginResultResponse;
+import com.snowflakes.rednose.dto.auth.UserInfo;
+import com.snowflakes.rednose.repository.MemberRepository;
+import com.snowflakes.rednose.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,24 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthServiece authServiece;
+    private final AuthService authService;
 
-    // 로그인이자 회원가입
     @RequestMapping("/login/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestParam String authCode) {
-        // 리다이렉트 : 카카오 인증 서버 -> rednose 서버 (인가코드 포함)
+        // access 토큰 받기 : 인가코드를 포함한 POST 요청
+        KakaoToken kakaoToken = authService.getToken(authCode);
 
-        // access 토큰 받기 위한 POST 요청
-        KaKaoToken kaKaoToken = authServiece.getAccestoken(authCode);
+        // 사용자 정보 가져오기 : accessToken을 포함한 GET 요청
+        UserInfo userinfo = authService.getUserInfo(kakaoToken);
 
-        // 로그인 처리 (rednose 로직에 따라 처리 후 사용자에게 토큰 발급)
-        /**
-         * 토큰에서 사용자 정보를 가져와서 로직에 따라 처리한다
-         * 1. 존재하지 않는 회원 -> 회원가입 처리 후 access token 반환
-         * 2. 존재하는 회원 -> 로그인 처리 후 access token 반환
-         */
-        return ResponseEntity.status(HttpStatus.OK).body("로그인 결과(토큰. 닉네임 등)");
+        // 로그인 처리
+        LoginResultResponse loginResultResponse = authService.kakaoLogin(userinfo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(loginResultResponse);
     }
-
-    // 로그아웃
 }
