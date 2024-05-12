@@ -3,10 +3,10 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
+import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,9 +21,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class AuthService {
 
-    @Value("${client_id}")
+    @Value("${kakao.api_key}")
     private String clientId;
     private WebClient webClient = WebClient.builder().build();
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
 
@@ -63,7 +65,26 @@ public class AuthService {
     }
 
     public LoginResultResponse kakaoLogin(UserInfo userinfo) {
-        memberRepository.findBySocialId(userinfo.getSocialId());
+        // socialId로 member를 찾는다. 회원가입 하지 않은 member일 경우, 닉네임을 정하고 회원가입을 해야 되기 때문에 예외(임시)를 던진다
+        Member member = memberRepository.findBySocialId(userinfo.getSocialId())
+                .orElseThrow(() -> new RuntimeException("회원가입 하지 않은 사용자"));
+
+        // 존재하는 member일 경우 accessToken과 refreshToken을 만든다. refreshToken은 db에 저장한다
+        String accessToken = issueToken(member);
+
+        // accessToken을 담은 LoginResultResponse를 클라이언트에게 반환한다
+        return LoginResultResponse.builder().accessToken(accessToken).id(member.getId()).build();
+    }
+
+    /**
+     * member 엔티티의 id를 통해 accessToken과 refreshToken을 만든다. refreshToken은 db에 저장한다
+     *
+     * @param member
+     * @return
+     */
+    private String issueToken(Member member) {
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+        return jwtTokenProvider.createAccessToken(member);
     }
 }
 
