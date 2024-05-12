@@ -41,4 +41,8 @@ public class Member {
     public Long getId() {
         return id;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
 }
