@@ -1,6 +1,6 @@
 package com.snowflakes.rednose.controller;
 
-import com.snowflakes.rednose.dto.like.stamp.ShowStampLikeResponse;
+import com.snowflakes.rednose.dto.stamplike.ShowStampLikeResponse;
 import com.snowflakes.rednose.service.StampLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
