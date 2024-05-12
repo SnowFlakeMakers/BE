@@ -1,6 +1,9 @@
 package com.snowflakes.rednose.service;
 
 import com.snowflakes.rednose.entity.Member;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Base64;
@@ -10,7 +13,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 
 
 @RequiredArgsConstructor
@@ -65,5 +67,11 @@ public class JwtTokenProvider {
     public void verifySignature(String token) {
         Jwts.parser().setSigningKey(encodedKey)
                 .parseClaimsJwt(token);
+    }
+
+    public Object getMemberId(String token) {
+        Jwt<Header, Claims> headerClaimsJwt = Jwts.parser().setSigningKey(encodedKey)
+                .parseClaimsJwt(token);
+        return headerClaimsJwt.getBody().get("id", Long.class);
     }
 }
