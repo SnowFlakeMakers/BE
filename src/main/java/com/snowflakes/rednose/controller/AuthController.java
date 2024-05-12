@@ -1,9 +1,9 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
-import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +21,9 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @AccessibleWithoutLogin
     @RequestMapping("/login/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestParam String authCode) {
+    public ResponseEntity<LoginResultResponse> kakaoLogin(@RequestParam String authCode) {
         // access 토큰 받기 : 인가코드를 포함한 POST 요청
         KakaoToken kakaoToken = authService.getToken(authCode);
 
