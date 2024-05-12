@@ -1,6 +1,6 @@
 package com.snowflakes.rednose.service;
 
-import com.snowflakes.rednose.dto.like.stamp.ShowStampLikeResponse;
+import com.snowflakes.rednose.dto.stamplike.ShowStampLikeResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
