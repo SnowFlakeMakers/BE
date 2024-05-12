@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.dto.like.stamp;
+package com.snowflakes.rednose.dto.stamplike;
 
 import com.snowflakes.rednose.entity.Stamp;
 import lombok.Builder;
