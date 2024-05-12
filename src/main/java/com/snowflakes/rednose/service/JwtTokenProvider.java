@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
+
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
 
-
-    private String secretKey;
+    private String encodedKey;
 
     private final long accessTokenValidTime = 30 * 60 * 1000L;
     private final long MILLISECONDS_PER_WEEK = 7 * 24 * 60 * 60 * 1000L;
@@ -25,11 +25,7 @@ public class JwtTokenProvider {
 
     // jwt key 암호화
     protected void init(@Value("${jwt.secret.key}") String secretKey) {
-        this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
-
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
     // JWT access 토큰 생성
@@ -47,7 +43,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, encodedKey)
                 .compact();
     }
 
@@ -61,7 +57,13 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, encodedKey)
                 .compact();
+    }
+
+    // 토큰 검증
+    public void verifySignature(String token) {
+        Jwts.parser().setSigningKey(encodedKey)
+                .parseClaimsJwt(token);
     }
 }
