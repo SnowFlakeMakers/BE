@@ -70,10 +70,8 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("회원가입 하지 않은 사용자"));
 
         // 존재하는 member일 경우 accessToken과 refreshToken을 만든다. refreshToken은 db에 저장한다
-        String accessToken = issueToken(member);
-
-        // accessToken을 담은 LoginResultResponse를 클라이언트에게 반환한다
-        return LoginResultResponse.builder().accessToken(accessToken).id(member.getId()).build();
+        // 클라이언트에게 refresh token, access token 반환
+        return issueToken(member);
     }
 
     /**
@@ -82,9 +80,11 @@ public class AuthService {
      * @param member
      * @return
      */
-    private String issueToken(Member member) {
+    private LoginResultResponse issueToken(Member member) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
-        return jwtTokenProvider.createAccessToken(member);
+        String accessToken = jwtTokenProvider.createAccessToken(member);
+        return LoginResultResponse.builder().id(member.getId()).refreshToken(refreshToken).accessToken(accessToken)
+                .build();
     }
 }
 
