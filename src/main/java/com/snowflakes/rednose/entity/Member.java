@@ -29,6 +29,9 @@ public class Member {
     protected Member() {
     }
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @Builder
     private Member(Long id, Long socialId, String nickname, String image, boolean usable) {
         this.id = id;
@@ -44,5 +47,13 @@ public class Member {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 }
