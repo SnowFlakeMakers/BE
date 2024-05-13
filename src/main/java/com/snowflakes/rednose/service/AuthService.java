@@ -5,19 +5,19 @@ import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -80,9 +80,11 @@ public class AuthService {
      * @param member
      * @return
      */
-    private LoginResultResponse issueToken(Member member) {
+    @Transactional
+    public LoginResultResponse issueToken(Member member) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
         String accessToken = jwtTokenProvider.createAccessToken(member);
+        member.setRefreshToken(refreshToken);
         return LoginResultResponse.builder().id(member.getId()).refreshToken(refreshToken).accessToken(accessToken)
                 .build();
     }
