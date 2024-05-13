@@ -63,9 +63,9 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // 토큰 검증
-    public void verifySignature(String token) {
-        Jwts.parser().setSigningKey(encodedKey)
+    // 토큰 검증 및 검증에 성공할 경우 claim 값 반환
+    public Jwt<Header, Claims> verifySignature(String token) {
+        return Jwts.parser().setSigningKey(encodedKey)
                 .parseClaimsJwt(token);
     }
 
