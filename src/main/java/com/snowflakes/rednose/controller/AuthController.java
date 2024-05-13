@@ -4,7 +4,7 @@ import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
-import com.snowflakes.rednose.service.AuthService;
+import com.snowflakes.rednose.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

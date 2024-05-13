@@ -1,7 +1,7 @@
 package com.snowflakes.rednose.argumentresolver;
 
 import com.snowflakes.rednose.annotation.MemberId;
-import com.snowflakes.rednose.service.JwtTokenProvider;
+import com.snowflakes.rednose.service.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

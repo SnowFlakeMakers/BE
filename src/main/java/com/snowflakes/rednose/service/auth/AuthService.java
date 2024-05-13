@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.service;
+package com.snowflakes.rednose.service.auth;
 
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;

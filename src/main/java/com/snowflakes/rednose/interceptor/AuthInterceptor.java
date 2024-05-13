@@ -1,7 +1,7 @@
 package com.snowflakes.rednose.interceptor;
 
 import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
-import com.snowflakes.rednose.service.JwtTokenProvider;
+import com.snowflakes.rednose.service.auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
