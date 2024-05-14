@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.dto.stampmakingfacility;
+package com.snowflakes.rednose.dto.stampcraft;
 
 import com.snowflakes.rednose.entity.CanvasType;
 

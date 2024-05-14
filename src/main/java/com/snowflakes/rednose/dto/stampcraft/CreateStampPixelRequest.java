@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.dto.stampmakingfacility;
+package com.snowflakes.rednose.dto.stampcraft;
 
 public class CreateStampPixelRequest {
 
