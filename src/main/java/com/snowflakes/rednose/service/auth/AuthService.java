@@ -45,7 +45,7 @@ public class AuthService {
         requestBody.add("grant_type", "authorization_code");
         requestBody.add("client_id", clientId);
         requestBody.add("redirect_url", "http://localhost:8080/api/v1/login/kakao");
-        requestBody.add("code", "authCode");
+        requestBody.add("code", authCode);
 
         KakaoToken kaKaoToken = webClient.post()
                 .uri("https://kapi.kakao.com/v2/user/me")
