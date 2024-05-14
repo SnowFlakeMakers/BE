@@ -48,7 +48,7 @@ public class AuthService {
         requestBody.add("code", authCode);
 
         KakaoToken kaKaoToken = webClient.post()
-                .uri("https://kapi.kakao.com/v2/user/me")
+                .uri("https://kauth.kakao.com/oauth/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(requestBody))
                 .retrieve()
