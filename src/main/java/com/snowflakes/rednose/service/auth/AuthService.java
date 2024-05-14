@@ -5,6 +5,9 @@ import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.repository.MemberRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -87,6 +90,17 @@ public class AuthService {
         member.setRefreshToken(refreshToken);
         return LoginResultResponse.builder().id(member.getId()).refreshToken(refreshToken).accessToken(accessToken)
                 .build();
+    }
+
+    public Member validateRefreshToken(String refreshToken) {
+        Jwt<Header, Claims> headerClaimsJwt = jwtTokenProvider.verifySignature(refreshToken);
+        Long memberId = headerClaimsJwt.getBody().get("id", Long.class);
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("존재하지 않는 회원"));
+        if (member.getRefreshToken().equals(refreshToken)) {
+            // db에 있는 refreshToken과 클라이언트가 재발급하기 위해 보낸 refreshToken이 동일한 경우
+            return member;
+        }
+        throw new RuntimeException("Refresh Token값이 일치하지 않습니다");
     }
 }
 

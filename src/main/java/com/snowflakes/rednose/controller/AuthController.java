@@ -4,6 +4,7 @@ import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
+import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,12 +45,12 @@ public class AuthController {
         String refreshToken = authHeader.split(" ")[1];
 
         // 리프레시 토큰이 db에 있는 것과 일치하는지 검증
-        authService.validateRefreshToken(refreshToken);
+        Member member = authService.validateRefreshToken(refreshToken);
 
-        // 검증하는 과정에서 에러를 던지지 않는다면 재발급
+        // 검증하는 과정에서 에러를 던지지 않는다면 재발급 (access, refresh 모두)
+        LoginResultResponse loginResultResponse = authService.issueToken(member);
 
         // 토큰 반환
+        return ResponseEntity.status(HttpStatus.OK).body(loginResultResponse);
     }
-
-
 }
