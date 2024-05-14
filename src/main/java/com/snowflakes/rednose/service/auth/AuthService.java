@@ -1,7 +1,7 @@
 package com.snowflakes.rednose.service.auth;
 
+import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
-import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.repository.MemberRepository;
@@ -10,8 +10,10 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -67,29 +69,21 @@ public class AuthService {
         return userInfo;
     }
 
-    public LoginResultResponse kakaoLogin(UserInfo userinfo) {
-        // socialId로 member를 찾는다. 회원가입 하지 않은 member일 경우, 닉네임을 정하고 회원가입을 해야 되기 때문에 예외(임시)를 던진다
-        Member member = memberRepository.findBySocialId(userinfo.getSocialId())
+    public Member getExistMember(UserInfo userinfo) {
+        return memberRepository.findBySocialId(userinfo.getSocialId())
                 .orElseThrow(() -> new RuntimeException("회원가입 하지 않은 사용자"));
-
-        // 존재하는 member일 경우 accessToken과 refreshToken을 만든다. refreshToken은 db에 저장한다
-        // 클라이언트에게 refresh token, access token 반환
-        return issueToken(member);
     }
 
-    /**
-     * member 엔티티의 id를 통해 accessToken과 refreshToken을 만든다. refreshToken은 db에 저장한다
-     *
-     * @param member
-     * @return
-     */
     @Transactional
-    public LoginResultResponse issueToken(Member member) {
+    public String issueAccessToken(Member member) {
+        return jwtTokenProvider.createAccessToken(member);
+    }
+
+    @Transactional
+    public String issueRefreshToken(Member member) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
-        String accessToken = jwtTokenProvider.createAccessToken(member);
         member.setRefreshToken(refreshToken);
-        return LoginResultResponse.builder().id(member.getId()).refreshToken(refreshToken).accessToken(accessToken)
-                .build();
+        return refreshToken;
     }
 
     public Member validateRefreshToken(String refreshToken) {
@@ -101,6 +95,19 @@ public class AuthService {
             return member;
         }
         throw new RuntimeException("Refresh Token값이 일치하지 않습니다");
+    }
+
+    public IssueTokenResult issueToken(Member member) {
+        String accessToken = issueAccessToken(member);
+        String refreshToken = issueRefreshToken(member);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+        return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+                .build();
     }
 }
 

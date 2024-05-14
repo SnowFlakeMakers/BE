@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class LoginResultResponse {
+public class IssueTokenResult {
     private String accessToken;
+    private String refreshTokenCookie;
 }
