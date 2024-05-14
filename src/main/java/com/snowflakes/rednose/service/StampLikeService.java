@@ -4,8 +4,10 @@ import com.snowflakes.rednose.dto.like.stamp.ShowStampLikeResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
-import com.snowflakes.rednose.exception.AlreadyExistException;
-import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.BadRequestException;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
+import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
+import com.snowflakes.rednose.exception.errorcode.StampLikeErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
@@ -13,11 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.snowflakes.rednose.exception.ErrorCode.MEMBER_NOT_FOUND;
-import static com.snowflakes.rednose.exception.ErrorCode.STAMP_LIKE;
-import static com.snowflakes.rednose.exception.ErrorCode.STAMP_LIKE_NOT_FOUND;
-import static com.snowflakes.rednose.exception.ErrorCode.STAMP_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +28,9 @@ public class StampLikeService {
     @Transactional
     public void like(Long stampId, Long memberId) {
         Stamp stamp = findStampById(stampId);
-        Member member= findMemberById(memberId);
+        Member member = findMemberById(memberId);
         if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
-            throw new AlreadyExistException(STAMP_LIKE);
+            throw new BadRequestException(StampLikeErrorCode.NOT_FOUND);
         }
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
@@ -41,11 +38,13 @@ public class StampLikeService {
     }
 
     private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(MEMBER_NOT_FOUND));
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new BadRequestException(MemberErrorCode.NOT_FOUND));
     }
 
     private Stamp findStampById(Long stampId) {
-        return stampRepository.findById(stampId).orElseThrow(() -> new NotFoundException(STAMP_NOT_FOUND));
+        return stampRepository.findById(stampId)
+                .orElseThrow(() -> new BadRequestException(StampErrorCode.NOT_FOUND));
     }
 
     public ShowStampLikeResponse getLikes(Long memberId) {
@@ -64,11 +63,12 @@ public class StampLikeService {
 
     private void validateMemberExist(Long memberId) {
         if (!memberRepository.existsById(memberId)) {
-            throw new NotFoundException(MEMBER_NOT_FOUND);
+            throw new BadRequestException(MemberErrorCode.NOT_FOUND);
         }
     }
 
     private StampLike findStampLikeByMemberIdAndStampId(Long memberId, Long stampId) {
-        return stampLikeRepository.findByMemberIdAndStampId(memberId, stampId).orElseThrow(() -> new NotFoundException(STAMP_LIKE_NOT_FOUND));
+        return stampLikeRepository.findByMemberIdAndStampId(memberId, stampId)
+                .orElseThrow(() -> new BadRequestException(StampLikeErrorCode.NOT_FOUND));
     }
 }
