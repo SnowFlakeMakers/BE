@@ -5,6 +5,7 @@ import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
 import com.snowflakes.rednose.exception.BadRequestException;
+import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
 import com.snowflakes.rednose.exception.errorcode.StampLikeErrorCode;
@@ -30,7 +31,7 @@ public class StampLikeService {
         Stamp stamp = findStampById(stampId);
         Member member = findMemberById(memberId);
         if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
-            throw new BadRequestException(StampLikeErrorCode.NOT_FOUND);
+            throw new NotFoundException(StampLikeErrorCode.NOT_FOUND);
         }
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
@@ -39,12 +40,12 @@ public class StampLikeService {
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BadRequestException(MemberErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 
     private Stamp findStampById(Long stampId) {
         return stampRepository.findById(stampId)
-                .orElseThrow(() -> new BadRequestException(StampErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(StampErrorCode.NOT_FOUND));
     }
 
     public ShowStampLikeResponse getLikes(Long memberId) {
@@ -63,12 +64,12 @@ public class StampLikeService {
 
     private void validateMemberExist(Long memberId) {
         if (!memberRepository.existsById(memberId)) {
-            throw new BadRequestException(MemberErrorCode.NOT_FOUND);
+            throw new NotFoundException(MemberErrorCode.NOT_FOUND);
         }
     }
 
     private StampLike findStampLikeByMemberIdAndStampId(Long memberId, Long stampId) {
         return stampLikeRepository.findByMemberIdAndStampId(memberId, stampId)
-                .orElseThrow(() -> new BadRequestException(StampLikeErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(StampLikeErrorCode.NOT_FOUND));
     }
 }

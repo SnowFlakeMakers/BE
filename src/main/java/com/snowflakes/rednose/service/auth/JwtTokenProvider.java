@@ -1,11 +1,15 @@
 package com.snowflakes.rednose.service.auth;
 
 import com.snowflakes.rednose.entity.Member;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,8 +69,15 @@ public class JwtTokenProvider {
 
     // 토큰 검증 및 검증에 성공할 경우 claim 값 반환
     public Jwt<Header, Claims> verifySignature(String token) {
-        return Jwts.parser().setSigningKey(encodedKey)
-                .parseClaimsJwt(token);
+
+        try {
+            return Jwts.parser().setSigningKey(encodedKey)
+                    .parseClaimsJwt(token);
+        } catch (ExpiredJwtException e) {
+            throw new UnAuthorizedException(AuthErrorCode.EXPIRED);
+        } catch (UnsupportedJwtException e) {
+            throw new UnAuthorizedException(AuthErrorCode.UNSUPPORTED);
+        }
     }
 
     public Object getMemberId(String token) {

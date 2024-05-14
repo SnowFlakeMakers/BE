@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum AuthErrorCode implements ErrorCode {
+public enum InternalServerErrorCode implements ErrorCode {
 
-    EXPIRED("token이 만료되었습니다"),
-    UNSUPPORTED("지원하지 않는 token입니다");
+    ERROR("서버 내부 에러");
 
     private final String message;
 
