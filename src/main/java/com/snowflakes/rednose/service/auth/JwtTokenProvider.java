@@ -81,8 +81,6 @@ public class JwtTokenProvider {
     }
 
     public Object getMemberId(String token) {
-        Jwt<Header, Claims> headerClaimsJwt = Jwts.parser().setSigningKey(encodedKey)
-                .parseClaimsJwt(token);
-        return headerClaimsJwt.getBody().get("id", Long.class);
+        return verifySignature(token).getBody().get("id", Long.class);
     }
 }
