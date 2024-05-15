@@ -1,17 +1,15 @@
 package com.snowflakes.rednose.entity;
 
 import lombok.Builder;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.ArrayList;
+import java.util.List;
 public class StampCraft {
 
     private Member host;
 
     private CanvasType canvasType;
 
-    private Map<String, Member> members = new ConcurrentHashMap<>();
+    private List<Member> members = new ArrayList<>();
 
     private String[][] stamp;
 
@@ -19,7 +17,7 @@ public class StampCraft {
     }
 
     @Builder
-    public StampCraft(Member host, CanvasType canvasType, Map<String, Member> members, String[][] stamp) {
+    public StampCraft(Member host, CanvasType canvasType, List<Member> members, String[][] stamp) {
         this.host = host;
         this.canvasType = canvasType;
         this.members = members;
@@ -34,7 +32,7 @@ public class StampCraft {
         return canvasType;
     }
 
-    public Map<String, Member> getMembers() {
+    public List<Member> getMembers() {
         return members;
     }
 
@@ -45,5 +43,9 @@ public class StampCraft {
     public void paint(int x, int y, String color) {
         if(color.isEmpty()) throw new RuntimeException();
         stamp[x][y] = color;
+    }
+
+    public void enter(Member member) {
+        members.add(member);
     }
 }

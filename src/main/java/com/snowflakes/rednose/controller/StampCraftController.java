@@ -2,6 +2,7 @@ package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
+import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.service.StampCraftService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class StampCraftController {
 
     private final StampCraftService stampCraftService;
-    private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     @PostMapping("/api/v1/stamp-craft")
     public CreateStampCraftResponse create(@RequestBody CreateStampCraftRequest request, Long memberId) {
@@ -45,8 +44,14 @@ public class StampCraftController {
         log.info("session disconnected => {}", sessionId);
     }
 
-    @MessageMapping("/{stampCraftId}")
-    @SendTo("/sub/{stampCraftId}")
+    @MessageMapping("/stamp-craft/{stampCraftId}/enter")
+    @SendTo("/sub/stamp-craft/{stampCraftId}")
+    public EnterStampCraftResponse enter(@DestinationVariable Long stampCraftId, Long memberId) {
+        return stampCraftService.enter(stampCraftId, memberId);
+    }
+
+    @MessageMapping("/stamp-craft/{stampCraftId}/paint")
+    @SendTo("/sub/stamp-craft/{stampCraftId}")
     public PaintStampRequest paint(@DestinationVariable Long stampCraftId, @RequestBody PaintStampRequest request) {
         stampCraftService.paint(stampCraftId, request);
         return request;
