@@ -1,12 +1,12 @@
 package com.snowflakes.rednose.dto.stampcraft;
 
-public class CreateStampPixelRequest {
+public class PaintStampRequest {
 
     private int x;
     private int y;
     private String color;
 
-    protected CreateStampPixelRequest() {
+    protected PaintStampRequest() {
     }
 
     public int getX() {
