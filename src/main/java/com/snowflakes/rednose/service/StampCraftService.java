@@ -2,6 +2,7 @@ package com.snowflakes.rednose.service;
 
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
+import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.StampCraft;
@@ -48,5 +49,12 @@ public class StampCraftService {
         if (!stampCrafts.containsKey(stampCraftId)) {
             throw new NotFoundException(STAMP_CRAFT_NOT_FOUND);
         }
+    }
+
+    public EnterStampCraftResponse enter(Long stampCraftId, Long memberId) {
+        Member member = findMemberById(memberId);
+        StampCraft stampCraft = stampCrafts.get(stampCraftId);
+        stampCraft.enter(member);
+        return EnterStampCraftResponse.from(member.getNickname());
     }
 }
