@@ -79,8 +79,6 @@ public class AuthService {
     public String issueRefreshToken(Member member) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
         member.setRefreshToken(refreshToken);
-        log.info("refreshToken을 발급하고 member id : {}의 로우 컬럼을 업데이트함", member.getId());
-        log.info("member.getRefreshToken : {}", member.getRefreshToken());
         return refreshToken;
     }
 
