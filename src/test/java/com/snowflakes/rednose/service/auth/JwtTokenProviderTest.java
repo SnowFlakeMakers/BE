@@ -25,10 +25,10 @@ class JwtTokenProviderTest {
     private final String ID = "id";
     private final String NICKNAME = "nickname";
     private final String ISSUER = "rednose";
-    private final String SECRET_KEY = "tlqkfdhodksehlsmsrjdi";
+    private final String SECRET_KEY = "rlfrkdmsrlfrkdmsrlfrkdmsrlfrkdmsrlfrkdms";
     private final String ENCODED_SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
     private final String ENCODED_DIFFERENTLY_SECRET_KEY = new String(SECRET_KEY.getBytes(), StandardCharsets.US_ASCII);
-    private final String FAKE_KEY = "dmddodmddodmddodmddodmddodmddodmddo";
+    private final String FAKE_KEY = "dlwlalsdlwlalsdlwlalsdlwlalsdlwlals";
     private final String ENCODED_FAKE_KEY = Base64.getEncoder().encodeToString(FAKE_KEY.getBytes());
     private final Long ACCESS_TOKEN_VALID_TIME = 1800000L;
     private final Long SHORT_TIME = 10000L;
@@ -44,7 +44,6 @@ class JwtTokenProviderTest {
 
         // when
         String accessToken = jwtTokenProvider.createAccessToken(member);
-        log.info("access token generated : {}", accessToken);
         Long memberId = jwtTokenProvider.getMemberId(accessToken);
 
         // then
@@ -56,7 +55,6 @@ class JwtTokenProviderTest {
     void refreshToken_발행_검증() {
         // when
         String refreshToken = jwtTokenProvider.createRefreshToken();
-        log.info("refresh token generated : {}", refreshToken);
 
         // then (검증 과정에서 예외를 던지지 않는 것을 테스트)
         Assertions.assertDoesNotThrow(() -> jwtTokenProvider.verifySignature(refreshToken));
