@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class JwtTokenProvider {
     private static final String ISSUER = "rednose";
+    public static final String ID = "id";
+    public static final String NICKNAME = "nickname";
     private String encodedKey;
 
     private final long accessTokenValidTime = 30 * 60 * 1000L;
@@ -37,8 +39,8 @@ public class JwtTokenProvider {
     public String createAccessToken(Member member) {
         // claim : id, nickname
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id", member.getId());
-        claims.put("nickname", member.getNickname());
+        claims.put(ID, member.getId());
+        claims.put(NICKNAME, member.getNickname());
 
         // 발행시간
         Date now = new Date();
@@ -83,6 +85,6 @@ public class JwtTokenProvider {
     }
 
     public Long getMemberId(String token) {
-        return verifySignature(token).getBody().get("id", Long.class);
+        return verifySignature(token).getBody().get(ID, Long.class);
     }
 }
