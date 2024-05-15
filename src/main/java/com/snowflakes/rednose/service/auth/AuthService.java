@@ -4,10 +4,11 @@ import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
-import com.snowflakes.rednose.exception.NotFoundException;
-import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     @Value("${kakao.api_key}")
@@ -77,6 +79,8 @@ public class AuthService {
     public String issueRefreshToken(Member member) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
         member.setRefreshToken(refreshToken);
+        log.info("refreshToken을 발급하고 member id : {}의 로우 컬럼을 업데이트함", member.getId());
+        log.info("member.getRefreshToken : {}", member.getRefreshToken());
         return refreshToken;
     }
 
@@ -86,9 +90,10 @@ public class AuthService {
 
         // refresh token이 유효하다면 refresh token으로 회원을 찾음
         return memberRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NOT_EXISTS_IN_DATABASE));
     }
 
+    @Transactional
     public IssueTokenResult issueToken(Member member) {
         String accessToken = issueAccessToken(member);
         String refreshToken = issueRefreshToken(member);
