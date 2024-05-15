@@ -41,4 +41,20 @@ public class Member {
     public Long getId() {
         return id;
     }
+
+    public Long getSocialId() {
+        return socialId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public boolean isUsable() {
+        return usable;
+    }
 }
