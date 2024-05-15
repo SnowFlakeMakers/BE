@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.dto.stampcraft;
 
+import com.snowflakes.rednose.entity.Member;
 import lombok.Builder;
 
 public class EnterStampCraftResponse {
@@ -11,7 +12,9 @@ public class EnterStampCraftResponse {
         this.nickname = nickname;
     }
 
-    public static EnterStampCraftResponse from(String nickname) {
-        return EnterStampCraftResponse.builder().nickname(nickname).build();
+    public static EnterStampCraftResponse from(Member member) {
+        return EnterStampCraftResponse.builder()
+                .nickname(member.getNickname())
+                .build();
     }
 }
