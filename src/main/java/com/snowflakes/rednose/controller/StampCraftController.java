@@ -3,6 +3,7 @@ package com.snowflakes.rednose.controller;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
+import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.service.StampCraftService;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +57,12 @@ public class StampCraftController {
         stampCraftService.paint(stampCraftId, request);
         return request;
     }
+
+    @MessageMapping("/stamp-craft/{stampCraftId}/leave")
+    @SendTo("/sub/stamp-craft/{stampCraftId}")
+    public LeaveStampCraftResponse leave(@DestinationVariable Long stampCraftId, Long memberId) {
+        return stampCraftService.leave(stampCraftId, memberId);
+    }
+
 
 }

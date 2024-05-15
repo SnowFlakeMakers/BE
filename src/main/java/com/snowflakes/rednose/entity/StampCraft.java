@@ -48,4 +48,8 @@ public class StampCraft {
     public void enter(Member member) {
         members.add(member);
     }
+
+    public void quit(Member member) {
+        members.remove(member);
+    }
 }
