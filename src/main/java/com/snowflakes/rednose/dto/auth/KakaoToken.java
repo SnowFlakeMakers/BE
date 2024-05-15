@@ -3,9 +3,11 @@ package com.snowflakes.rednose.dto.auth;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class KakaoToken {
 
     private String token_type;

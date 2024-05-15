@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllException(Exception e) {
+        log.info(e.getMessage());
         return handleExceptionInternal(new InternalServerException(InternalServerErrorCode.ERROR));
     }
 

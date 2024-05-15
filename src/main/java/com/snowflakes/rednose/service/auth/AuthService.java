@@ -4,6 +4,8 @@ import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
+import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
@@ -70,8 +72,8 @@ public class AuthService {
     }
 
     public Member getExistMember(UserInfo userinfo) {
-        return memberRepository.findBySocialId(userinfo.getSocialId())
-                .orElseThrow(() -> new RuntimeException("회원가입 하지 않은 사용자"));
+        return memberRepository.findBySocialId(userinfo.getId())
+                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 
     @Transactional
