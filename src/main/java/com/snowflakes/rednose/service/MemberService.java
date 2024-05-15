@@ -24,7 +24,8 @@ public class MemberService {
         if (memberRepository.existsByNickname(request.getNickname())) {
             throw new BadRequestException(MemberErrorCode.DUPLICATED_NICKNAME);
         }
-        return memberRepository.save(Member.builder().socialId(request.getSocialId()).usable(true).build());
+        return memberRepository.save(
+                Member.builder().nickname(request.getNickname()).socialId(request.getSocialId()).usable(true).build());
     }
 
     public Member getExistMember(UserInfo userinfo) {
