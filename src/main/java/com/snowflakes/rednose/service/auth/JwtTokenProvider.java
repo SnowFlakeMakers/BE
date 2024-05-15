@@ -28,13 +28,15 @@ public class JwtTokenProvider {
     public static final String NICKNAME = "nickname";
     private String encodedKey;
 
-    private final long accessTokenValidTime = 30 * 60 * 1000L;
-    private final long MILLISECONDS_PER_WEEK = 7 * 24 * 60 * 60 * 1000L;
-    private final long refreshTokenValidTime = 2 * MILLISECONDS_PER_WEEK;
+    private long accessTokenValidTime;
+    private long refreshTokenValidTime;
 
-    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey) {
-        log.info(secretKey);
-        encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey,
+                            @Value("jwt.access.token.valid.time") Long accessTokenValidTime,
+                            @Value("jwt.refresh.token.valid.time") Long refreshTokenValidTime) {
+        this.encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        this.accessTokenValidTime = accessTokenValidTime;
+        this.refreshTokenValidTime = refreshTokenValidTime;
     }
 
     // JWT access 토큰 생성
