@@ -56,13 +56,19 @@ public class StampCraftService {
         Member member = findMemberById(memberId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.enter(member);
-        return EnterStampCraftResponse.from(member.getNickname());
+        return EnterStampCraftResponse.from(member);
     }
 
     public LeaveStampCraftResponse leave(Long stampCraftId, Long memberId) {
         Member member = findMemberById(memberId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.quit(member);
-        return LeaveStampCraftResponse.from(member.getNickname());
+        if (!stampCraft.hasMembers()) {
+            stampCrafts.remove(stampCraft);
+        }
+        if (stampCraft.hasHost(member)) {
+            stampCraft.chooseNewHost();
+        }
+        return LeaveStampCraftResponse.from(member, stampCraft);
     }
 }
