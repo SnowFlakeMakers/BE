@@ -23,20 +23,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class JwtTokenProvider {
-    private static final String ISSUER = "rednose";
-    public static final String ID = "id";
-    public static final String NICKNAME = "nickname";
+    private final String ISSUER = "rednose";
+    private final String ID = "id";
+    private final String NICKNAME = "nickname";
     private String encodedKey;
 
-    private long accessTokenValidTime;
-    private long refreshTokenValidTime;
+    private final Long accessTokenValidTime = 1800000L;
+    private final Long refreshTokenValidTime = 604800000L;
 
-    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey,
-                            @Value("jwt.access.token.valid.time") Long accessTokenValidTime,
-                            @Value("jwt.refresh.token.valid.time") Long refreshTokenValidTime) {
+    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey) {
         this.encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        this.accessTokenValidTime = accessTokenValidTime;
-        this.refreshTokenValidTime = refreshTokenValidTime;
     }
 
     // JWT access 토큰 생성
