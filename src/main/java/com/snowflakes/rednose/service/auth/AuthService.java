@@ -7,9 +7,6 @@ import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.Cookie.SameSite;
@@ -84,14 +81,12 @@ public class AuthService {
     }
 
     public Member validateRefreshToken(String refreshToken) {
-        Jwt<Header, Claims> headerClaimsJwt = jwtTokenProvider.verifySignature(refreshToken);
-        Long memberId = headerClaimsJwt.getBody().get("id", Long.class);
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("존재하지 않는 회원"));
-        if (member.getRefreshToken().equals(refreshToken)) {
-            // db에 있는 refreshToken과 클라이언트가 재발급하기 위해 보낸 refreshToken이 동일한 경우
-            return member;
-        }
-        throw new RuntimeException("Refresh Token값이 일치하지 않습니다");
+        // refresh token 검증 (refresh token이 만료되거나 구조에 문제가 있으면 이 라인에서 예외를 던짐)
+        jwtTokenProvider.verifySignature(refreshToken);
+
+        // refresh token이 유효하다면 refresh token으로 회원을 찾음
+        return memberRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 
     public IssueTokenResult issueToken(Member member) {

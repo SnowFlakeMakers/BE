@@ -5,8 +5,7 @@ import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -14,23 +13,23 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
-@RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtTokenProvider {
-
+    private static final String ISSUER = "rednose";
     private String encodedKey;
 
     private final long accessTokenValidTime = 30 * 60 * 1000L;
     private final long MILLISECONDS_PER_WEEK = 7 * 24 * 60 * 60 * 1000L;
     private final long refreshTokenValidTime = 2 * MILLISECONDS_PER_WEEK;
 
-    // jwt key 암호화
-    protected void init(@Value("${jwt.secret.key}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey) {
+        log.info(secretKey);
         encodedKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
@@ -49,7 +48,8 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, encodedKey)
+                .setIssuer(ISSUER)
+                .signWith(SignatureAlgorithm.HS512, encodedKey)
                 .compact();
     }
 
@@ -63,24 +63,26 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, encodedKey)
+                .signWith(SignatureAlgorithm.HS512, encodedKey)
+                .setIssuer(ISSUER)
                 .compact();
     }
 
     // 토큰 검증 및 검증에 성공할 경우 claim 값 반환
-    public Jwt<Header, Claims> verifySignature(String token) {
+    public Jws<Claims> verifySignature(String token) {
 
         try {
-            return Jwts.parser().setSigningKey(encodedKey)
-                    .parseClaimsJwt(token);
+            return Jwts.parser().setSigningKey(encodedKey).requireIssuer(ISSUER)
+                    .parseClaimsJws(token);
         } catch (ExpiredJwtException e) {
             throw new UnAuthorizedException(AuthErrorCode.EXPIRED);
         } catch (UnsupportedJwtException e) {
+            log.info(e.getMessage());
             throw new UnAuthorizedException(AuthErrorCode.UNSUPPORTED);
         }
     }
 
-    public Object getMemberId(String token) {
+    public Long getMemberId(String token) {
         return verifySignature(token).getBody().get("id", Long.class);
     }
 }
