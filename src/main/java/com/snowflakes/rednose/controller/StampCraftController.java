@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,9 +46,10 @@ public class StampCraftController {
     }
 
     @MessageMapping("/{stampCraftId}")
-    public void paint(@DestinationVariable Long stampCraftId, @RequestBody PaintStampRequest request, Long memberId) {
+    @SendTo("/sub/{stampCraftId}")
+    public PaintStampRequest paint(@DestinationVariable Long stampCraftId, @RequestBody PaintStampRequest request) {
         stampCraftService.paint(stampCraftId, request);
-        simpMessageSendingOperations.convertAndSend(String.format("/sub/%d", stampCraftId), request);
+        return request;
     }
 
 }
