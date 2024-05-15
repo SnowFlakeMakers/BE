@@ -7,7 +7,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Base64;
 import java.util.Date;
@@ -81,6 +83,10 @@ public class JwtTokenProvider {
         } catch (UnsupportedJwtException e) {
             log.info(e.getMessage());
             throw new UnAuthorizedException(AuthErrorCode.UNSUPPORTED);
+        } catch (MalformedJwtException e) {
+            throw new UnAuthorizedException(AuthErrorCode.MALFORMED);
+        } catch (SignatureException e) {
+            throw new UnAuthorizedException(AuthErrorCode.SIGNATURE);
         }
     }
 
