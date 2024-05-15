@@ -4,11 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 class JwtTokenProviderTest {
@@ -32,6 +31,17 @@ class JwtTokenProviderTest {
 
         // then
         assertThat(memberId).isEqualTo(MEMBER_ID);
+    }
+
+    @DisplayName("refresh token을 발행하고 검증할 수 있다")
+    @Test
+    void refreshToken_발행_검증() {
+        // when
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+        log.info("refresh token generated : {}", refreshToken);
+
+        // then (검증 과정에서 예외를 던지지 않는 것을 테스트)
+        Assertions.assertDoesNotThrow(() -> jwtTokenProvider.verifySignature(refreshToken));
     }
 
 
