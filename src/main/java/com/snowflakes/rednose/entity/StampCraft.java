@@ -1,42 +1,29 @@
 package com.snowflakes.rednose.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.Builder;
 
-@Entity
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class StampCraft {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "host_id")
     private Member host;
 
-    @Enumerated(value = EnumType.STRING)
     private CanvasType canvasType;
+
+    private Map<String, Member> members = new ConcurrentHashMap<>();
+
+    private String[][] stamp;
 
     protected StampCraft() {
     }
 
     @Builder
-    public StampCraft(Long id, Member host, CanvasType canvasType) {
-        this.id = id;
+    public StampCraft(Member host, CanvasType canvasType, Map<String, Member> members, String[][] stamp) {
         this.host = host;
         this.canvasType = canvasType;
-    }
-
-    public Long getId() {
-        return id;
+        this.members = members;
+        this.stamp = new String[canvasType.getLength()][canvasType.getLength()];
     }
 
     public Member getHost() {
@@ -45,5 +32,18 @@ public class StampCraft {
 
     public CanvasType getCanvasType() {
         return canvasType;
+    }
+
+    public Map<String, Member> getMembers() {
+        return members;
+    }
+
+    public String[][] getStamp() {
+        return stamp;
+    }
+
+    public void paint(int x, int y, String color) {
+        if(color.isEmpty()) throw new RuntimeException();
+        stamp[x][y] = color;
     }
 }
