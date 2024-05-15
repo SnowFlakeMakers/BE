@@ -52,4 +52,16 @@ public class StampCraft {
     public void quit(Member member) {
         members.remove(member);
     }
+
+    public boolean hasHost(Member member) {
+        return host == member;
+    }
+
+    public void chooseNewHost() {
+        host = members.get(0);
+    }
+
+    public boolean hasMembers() {
+        return members.size() != 0;
+    }
 }
