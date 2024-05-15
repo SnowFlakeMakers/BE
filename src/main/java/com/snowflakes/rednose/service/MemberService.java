@@ -4,6 +4,7 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.dto.member.SignInRequest;
 import com.snowflakes.rednose.entity.Member;
+import com.snowflakes.rednose.exception.BadRequestException;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
@@ -21,7 +22,7 @@ public class MemberService {
     @Transactional
     public Member signIn(SignInRequest request) {
         if (memberRepository.existsByNickname(request.getNickname())) {
-            throw new RuntimeException("닉네임 중복");
+            throw new BadRequestException(MemberErrorCode.DUPLICATED_NICKNAME);
         }
         return memberRepository.save(Member.builder().socialId(request.getSocialId()).usable(true).build());
     }
