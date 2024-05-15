@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `member`
     `nickname`              VARCHAR(255) NOT NULL, -- unique
     `image`                 VARCHAR(255),
     `usable`                TINYINT(1)   NOT NULL,
+    `refresh_token`         varchar(255),
     PRIMARY KEY ( `id` )
 )
 engine = innodb
