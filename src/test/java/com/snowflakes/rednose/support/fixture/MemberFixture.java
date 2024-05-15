@@ -1,21 +1,23 @@
 package com.snowflakes.rednose.support.fixture;
 
 import com.snowflakes.rednose.entity.Member;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.Random;
 
-@Getter
-@NoArgsConstructor
 public class MemberFixture {
 
-    private final String image = "https://image.com/virtual.png";
-    private final String nickname = "미친석촌호수맨";
-    private final boolean usable = true;
     private Long id;
-    private Long socialId = 123456789L;
+    private Long socialId = new Random().nextLong();
+    private String nickname = "rlfrkdms1";
+    private String image = "https://image.com/virtual.png";
+    private boolean usable = true;
 
     public static MemberFixture builder() {
         return new MemberFixture();
+    }
+
+    public MemberFixture id(Long id) {
+        this.id = id;
+        return this;
     }
 
     public MemberFixture socialId(Long socialId) {
@@ -23,7 +25,22 @@ public class MemberFixture {
         return this;
     }
 
+    public MemberFixture nickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+
+    public MemberFixture image(String image) {
+        this.image = image;
+        return this;
+    }
+
+    public MemberFixture usable(boolean usable) {
+        this.usable = usable;
+        return this;
+    }
+
     public Member build() {
-        return Member.builder().image(image).nickname(nickname).usable(usable).socialId(socialId).build();
+        return Member.builder().id(id).socialId(socialId).nickname(nickname).image(image).usable(usable).build();
     }
 }
