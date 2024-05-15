@@ -71,11 +71,6 @@ public class AuthService {
         return userInfo;
     }
 
-    public Member getExistMember(UserInfo userinfo) {
-        return memberRepository.findBySocialId(userinfo.getId())
-                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
-    }
-
     @Transactional
     public String issueAccessToken(Member member) {
         return jwtTokenProvider.createAccessToken(member);
