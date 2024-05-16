@@ -1,6 +1,6 @@
 package com.snowflakes.rednose.dto.stamp;
 
-public class CreatePresignedUrlResponse {
+public class CreatePreSignedUrlResponse {
 
     private String url;
 
@@ -8,7 +8,7 @@ public class CreatePresignedUrlResponse {
         return url;
     }
 
-    public CreatePresignedUrlResponse(String url) {
+    public CreatePreSignedUrlResponse(String url) {
         this.url = url;
     }
 }
