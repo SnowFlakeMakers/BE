@@ -1,5 +1,7 @@
 package com.snowflakes.rednose.exception;
 
+import com.snowflakes.rednose.exception.errorcode.ErrorCode;
+
 public class CustomException extends RuntimeException {
 
     private final ErrorCode errorCode;
