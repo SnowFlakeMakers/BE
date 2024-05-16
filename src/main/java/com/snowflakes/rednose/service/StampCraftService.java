@@ -8,19 +8,20 @@ import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.StampCraft;
 import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
+import com.snowflakes.rednose.exception.errorcode.StampCraftErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.snowflakes.rednose.exception.ErrorCode.MEMBER_NOT_FOUND;
-import static com.snowflakes.rednose.exception.ErrorCode.STAMP_CRAFT_NOT_FOUND;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class StampCraftService {
 
     private final MemberRepository memberRepository;
@@ -31,12 +32,13 @@ public class StampCraftService {
     public CreateStampCraftResponse create(CreateStampCraftRequest request, Long memberId) {
         Member member = findMemberById(memberId);
         StampCraft stampCraft = StampCraft.builder().host(member).canvasType(request.getCanvasType()).build();
-        stampCrafts.put(ID++, stampCraft);
-        return CreateStampCraftResponse.from(ID);
+        stampCrafts.put(ID, stampCraft);
+        return CreateStampCraftResponse.from(ID++);
     }
 
     private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(MEMBER_NOT_FOUND));
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 
     public void paint(Long stampCraftId, PaintStampRequest request) {
@@ -48,7 +50,7 @@ public class StampCraftService {
 
     private void validExistStampCraft(Long stampCraftId) {
         if (!stampCrafts.containsKey(stampCraftId)) {
-            throw new NotFoundException(STAMP_CRAFT_NOT_FOUND);
+            throw new NotFoundException(StampCraftErrorCode.NOT_FOUND);
         }
     }
 
