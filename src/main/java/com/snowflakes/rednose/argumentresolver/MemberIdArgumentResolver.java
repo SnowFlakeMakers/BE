@@ -1,5 +1,7 @@
 package com.snowflakes.rednose.argumentresolver;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String token = webRequest.getHeader("Authorization").split(" ")[1];
-        return jwtTokenProvider.getMemberId(token);
+        String refreshToken = webRequest.getHeader(AUTHORIZATION).split(" ")[1];
+        return jwtTokenProvider.getMemberId(refreshToken);
     }
 }
