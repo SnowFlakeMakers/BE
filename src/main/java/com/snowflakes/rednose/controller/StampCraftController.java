@@ -28,7 +28,7 @@ public class StampCraftController {
 
     @PostMapping("/api/v1/stamp-craft")
     public CreateStampCraftResponse create(@RequestBody CreateStampCraftRequest request, Long memberId) {
-        return stampCraftService.create(request, memberId);
+        return stampCraftService.create(request, 1L);
     }
 
     @EventListener
@@ -45,23 +45,23 @@ public class StampCraftController {
         log.info("session disconnected => {}", sessionId);
     }
 
-    @MessageMapping("/stamp-craft/{stampCraftId}/enter")
-    @SendTo("/sub/stamp-craft/{stampCraftId}")
-    public EnterStampCraftResponse enter(@DestinationVariable Long stampCraftId, Long memberId) {
-        return stampCraftService.enter(stampCraftId, memberId);
+    @MessageMapping("/stamp-craft/{stamp-craft-id}/enter")
+    @SendTo("/sub/stamp-craft/{stamp-craft-id}")
+    public EnterStampCraftResponse enter(@DestinationVariable("stamp-craft-id") Long stampCraftId) {
+        return stampCraftService.enter(stampCraftId, 1L);
     }
 
-    @MessageMapping("/stamp-craft/{stampCraftId}/paint")
-    @SendTo("/sub/stamp-craft/{stampCraftId}")
-    public PaintStampRequest paint(@DestinationVariable Long stampCraftId, @RequestBody PaintStampRequest request) {
+    @MessageMapping("/stamp-craft/{stamp-craft-id}/paint")
+    @SendTo("/sub/stamp-craft/{stamp-craft-id}")
+    public PaintStampRequest paint(@DestinationVariable("stamp-craft-id") Long stampCraftId, @RequestBody PaintStampRequest request) {
         stampCraftService.paint(stampCraftId, request);
         return request;
     }
 
-    @MessageMapping("/stamp-craft/{stampCraftId}/leave")
-    @SendTo("/sub/stamp-craft/{stampCraftId}")
-    public LeaveStampCraftResponse leave(@DestinationVariable Long stampCraftId, Long memberId) {
-        return stampCraftService.leave(stampCraftId, memberId);
+    @MessageMapping("/stamp-craft/{stamp-craft-id}/leave")
+    @SendTo("/sub/stamp-craft/{stamp-craft-id}")
+    public LeaveStampCraftResponse leave(@DestinationVariable("stamp-craft-id") Long stampCraftId) {
+        return stampCraftService.leave(stampCraftId, 1L);
     }
 
 

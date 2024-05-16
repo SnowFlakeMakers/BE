@@ -10,4 +10,6 @@ public class CreateStampCraftRequest {
         return canvasType;
     }
 
+    protected CreateStampCraftRequest() {
+    }
 }

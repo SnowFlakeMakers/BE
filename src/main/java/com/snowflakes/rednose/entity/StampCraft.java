@@ -9,7 +9,7 @@ public class StampCraft {
 
     private CanvasType canvasType;
 
-    private List<Member> members = new ArrayList<>();
+    private List<Member> members;
 
     private String[][] stamp;
 
@@ -20,7 +20,7 @@ public class StampCraft {
     public StampCraft(Member host, CanvasType canvasType, List<Member> members, String[][] stamp) {
         this.host = host;
         this.canvasType = canvasType;
-        this.members = members;
+        this.members = new ArrayList<>();
         this.stamp = new String[canvasType.getLength()][canvasType.getLength()];
     }
 
