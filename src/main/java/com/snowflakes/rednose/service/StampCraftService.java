@@ -1,5 +1,12 @@
 package com.snowflakes.rednose.service;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
@@ -20,10 +27,14 @@ import com.snowflakes.rednose.repository.StampRecordRepository;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -35,6 +46,10 @@ public class StampCraftService {
     private final MemberRepository memberRepository;
     private final StampRecordRepository stampRecordRepository;
     private final StampRepository stampRepository;
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.s3.bucket}")
+    private String bucket;
 
     private Long ID = 0L;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
@@ -100,5 +115,39 @@ public class StampCraftService {
         }
         stampCrafts.remove(stampCraftId);
         return CreateStampResponse.from(stamp);
+    }
+
+    public CreatePreSignedUrlResponse getPreSignedUrl(CreatePreSignedUrlRequest request) {
+        String path = createPath(request);
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(path);
+        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+        return new CreatePreSignedUrlResponse(url.toString());
+    }
+
+    private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String path) {
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucket, path)
+                        .withMethod(HttpMethod.PUT)
+                        .withExpiration(getPreSignedUrlExpiration());
+        generatePresignedUrlRequest.addRequestParameter(
+                Headers.S3_CANNED_ACL,
+                CannedAccessControlList.PublicRead.toString());
+        return generatePresignedUrlRequest;
+    }
+
+    private Date getPreSignedUrlExpiration() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 2);
+        return new Date(calendar.getTimeInMillis());
+    }
+
+
+    private String createPath(CreatePreSignedUrlRequest request) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!request.getDirectoryName().isEmpty()) {
+            stringBuilder.append(request.getDirectoryName())
+                    .append("/");
+        }
+        return stringBuilder.append(UUID.randomUUID()).append(request.getFileName()).toString();
     }
 }
