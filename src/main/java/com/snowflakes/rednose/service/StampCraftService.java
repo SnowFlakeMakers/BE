@@ -1,20 +1,28 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.stampcraft.CreateStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
+import com.snowflakes.rednose.dto.stampcraft.CreateStampResponse;
 import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.entity.Member;
+import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampCraft;
+import com.snowflakes.rednose.entity.StampRecord;
+import com.snowflakes.rednose.exception.BadRequestException;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.exception.errorcode.StampCraftErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
+import com.snowflakes.rednose.repository.StampRecordRepository;
+import com.snowflakes.rednose.repository.stamp.StampRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StampCraftService {
 
     private final MemberRepository memberRepository;
+    private final StampRecordRepository stampRecordRepository;
+    private final StampRepository stampRepository;
+
     private Long ID = 0L;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
 
@@ -72,5 +83,22 @@ public class StampCraftService {
             stampCraft.chooseNewHost();
         }
         return LeaveStampCraftResponse.from(member, stampCraft);
+    }
+
+    @Transactional
+    public CreateStampResponse done(CreateStampRequest request, Long memberId, Long stampCraftId) {
+        Member host = findMemberById(memberId);
+        StampCraft stampCraft = stampCrafts.get(stampCraftId);
+        if(!stampCraft.hasHost(host)) {
+            throw new BadRequestException(StampCraftErrorCode.NOT_HOST);
+        }
+        Stamp stamp = request.toStamp();
+        stampRepository.save(stamp);
+        for (Member member : stampCraft.getMembers()) {
+            StampRecord stampRecord = StampRecord.builder().stamp(stamp).member(member).build();
+            stampRecordRepository.save(stampRecord);
+        }
+        stampCrafts.remove(stampCraftId);
+        return CreateStampResponse.from(stamp);
     }
 }
