@@ -1,11 +1,11 @@
 package com.snowflakes.rednose.dto.stamp;
 
-public class CreatePresignedUrlRequest {
+public class CreatePreSignedUrlRequest {
 
     private String fileName;
     private String directoryName;
 
-    public CreatePresignedUrlRequest() {
+    public CreatePreSignedUrlRequest() {
     }
 
     public String getFileName() {
