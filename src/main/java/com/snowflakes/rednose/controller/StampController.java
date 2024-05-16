@@ -26,8 +26,4 @@ public class StampController {
         return stampService.show(pageable);
     }
 
-    @PostMapping("/pre-signed-url")
-    public CreatePreSignedUrlResponse getPreSignedUrl(@RequestBody CreatePreSignedUrlRequest request) {
-        return stampService.getPreSignedUrl(request);
-    }
 }

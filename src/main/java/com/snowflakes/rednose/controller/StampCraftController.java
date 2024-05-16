@@ -1,5 +1,7 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
@@ -64,6 +66,11 @@ public class StampCraftController {
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
     public LeaveStampCraftResponse leave(@DestinationVariable("stamp-craft-id") Long stampCraftId) {
         return stampCraftService.leave(stampCraftId, 1L);
+    }
+
+    @PostMapping("/pre-signed-url")
+    public CreatePreSignedUrlResponse getPreSignedUrl(@RequestBody CreatePreSignedUrlRequest request) {
+        return stampCraftService.getPreSignedUrl(request);
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/done")

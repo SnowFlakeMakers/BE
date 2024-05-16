@@ -28,49 +28,11 @@ import java.util.UUID;
 @Slf4j
 public class StampService {
 
-    @Value("${cloud.s3.bucket}")
-    private String bucket;
-
     private final StampRepository stampRepository;
-    private final AmazonS3 amazonS3;
-
 
     public ShowStampsResponse show(Pageable pageable) {
         Page<Stamp> stamps = stampRepository.findAll(pageable);
         return ShowStampsResponse.from(stamps);
     }
 
-    public CreatePreSignedUrlResponse getPreSignedUrl(CreatePreSignedUrlRequest request) {
-        String path = createPath(request);
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(path);
-        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
-        return new CreatePreSignedUrlResponse(url.toString());
-    }
-
-    private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String path) {
-        GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucket, path)
-                        .withMethod(HttpMethod.PUT)
-                        .withExpiration(getPreSignedUrlExpiration());
-        generatePresignedUrlRequest.addRequestParameter(
-                Headers.S3_CANNED_ACL,
-                CannedAccessControlList.PublicRead.toString());
-        return generatePresignedUrlRequest;
-    }
-
-    private Date getPreSignedUrlExpiration() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 2);
-        return new Date(calendar.getTimeInMillis());
-    }
-
-
-    private String createPath(CreatePreSignedUrlRequest request) {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (!request.getDirectoryName().isEmpty()) {
-            stringBuilder.append(request.getDirectoryName())
-                    .append("/");
-        }
-        return stringBuilder.append(UUID.randomUUID()).append(request.getFileName()).toString();
-    }
 }
