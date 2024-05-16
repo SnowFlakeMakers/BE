@@ -17,4 +17,8 @@ public class EnterStampCraftResponse {
                 .nickname(member.getNickname())
                 .build();
     }
+
+    public String getNickname() {
+        return nickname;
+    }
 }

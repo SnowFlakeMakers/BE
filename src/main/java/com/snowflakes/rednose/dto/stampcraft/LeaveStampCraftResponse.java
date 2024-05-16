@@ -25,4 +25,12 @@ public class LeaveStampCraftResponse {
                 .host(stampCraft.getHost().getNickname())
                 .build();
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getHost() {
+        return host;
+    }
 }
