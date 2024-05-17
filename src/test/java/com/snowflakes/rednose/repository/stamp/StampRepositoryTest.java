@@ -3,10 +3,15 @@ package com.snowflakes.rednose.repository.stamp;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
+import com.snowflakes.rednose.entity.StampRecord;
+import com.snowflakes.rednose.repository.StampRecordRepository;
+import com.snowflakes.rednose.support.fixture.MemberFixture;
+import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.support.RepositoryTest;
-import com.snowflakes.rednose.support.fixture.StampFixture;
 import java.time.LocalDateTime;
+import com.snowflakes.rednose.support.fixture.StampFixture;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
