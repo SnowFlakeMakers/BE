@@ -78,7 +78,7 @@ public class AuthService {
     @Transactional
     public String issueRefreshToken(Member member) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
-        member.setRefreshToken(refreshToken);
+        member.storeRefreshToken(refreshToken);
         return refreshToken;
     }
 
