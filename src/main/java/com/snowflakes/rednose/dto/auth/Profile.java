@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.dto.auth;
 
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -8,14 +9,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class UserInfo {
-    private Long id;
-    private KaKaoAccount kakaoAcount;
+public class Profile {
+    private String profileImageUrl;
+    private boolean isDefaultImage;
 }
