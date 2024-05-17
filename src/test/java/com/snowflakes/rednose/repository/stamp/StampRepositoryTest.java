@@ -34,6 +34,11 @@ class StampRepositoryTest {
 
     @Autowired
     private StampRepository stampRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private StampRecordRepository stampRecordRepository;
+
 
     @MockBean
     DateTimeProvider dateTimeProvider;
@@ -95,6 +100,29 @@ class StampRepositoryTest {
                 () -> assertThat(slice0.getContent()).containsExactly(stamp3, stamp2),
                 () -> assertThat(slice1.getContent()).containsExactly(stamp1)
         );
+    }
+
+    @Test
+    void memberId로_내가_만든_우표를_조회할_수_있다() {
+        Stamp stamp1 = stampRepository.save(StampFixture.builder().build());
+        Stamp stamp2 = stampRepository.save(StampFixture.builder().build());
+
+        Member member1 = memberRepository.save(MemberFixture.builder().build());
+        Member member2 = memberRepository.save(MemberFixture.builder().build());
+
+        stampRecordRepository.save(StampRecord.builder().member(member1).stamp(stamp1).build());
+        stampRecordRepository.save(StampRecord.builder().member(member1).stamp(stamp2).build());
+        stampRecordRepository.save(StampRecord.builder().member(member2).stamp(stamp2).build());
+
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        Slice<Stamp> stamps1 = stampRepository.findMyStampsByMemberId(member1.getId(), pageRequest);
+        Slice<Stamp> stamps2 = stampRepository.findMyStampsByMemberId(member2.getId(), pageRequest);
+
+        assertAll(
+                () -> assertThat(stamps1.getContent()).containsExactly(stamp1, stamp2),
+                () -> assertThat(stamps2.getContent()).containsExactly(stamp2)
+        );
+
     }
 
 
