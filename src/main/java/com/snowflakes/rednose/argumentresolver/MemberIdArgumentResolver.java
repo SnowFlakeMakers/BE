@@ -20,8 +20,7 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(MemberId.class) && Long.class.isAssignableFrom(
-                parameter.getParameterType());
+        return parameter.hasParameterAnnotation(MemberId.class) && Long.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
