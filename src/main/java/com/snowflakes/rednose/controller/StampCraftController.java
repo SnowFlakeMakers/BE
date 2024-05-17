@@ -44,9 +44,6 @@ public class StampCraftController {
     @EventListener
     public void disconnectWebSocket(SessionDisconnectEvent event) {
         stampCraftService.disconnect(event);
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headerAccessor.getSessionId();
-        log.info("session disconnected => {}", sessionId);
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/enter")
@@ -68,7 +65,7 @@ public class StampCraftController {
         return stampCraftService.leave(stampCraftId, accessor);
     }
 
-    @PostMapping("/pre-signed-url")
+    @PostMapping("/api/v1/pre-signed-url")
     public CreatePreSignedUrlResponse getPreSignedUrl(@RequestBody CreatePreSignedUrlRequest request) {
         return stampCraftService.getPreSignedUrl(request);
     }
