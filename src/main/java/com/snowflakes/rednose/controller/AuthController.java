@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +47,7 @@ public class AuthController {
     }
 
     @AccessibleWithoutLogin
-    @GetMapping("/reissue/kakao")
+    @PostMapping("/reissue/kakao")
     public ResponseEntity<LoginResultResponse> kakaoReissue(
             @CookieValue("refreshToken") String refreshToken) {
         // 리프레시 토큰 -> db에 있는 것과 일치하는지 검증. 일치한다면 해당 member를 반환한다 (토큰을 발급하기 위해)
