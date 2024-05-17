@@ -69,6 +69,6 @@ public class Member {
 
     public static Member from(UserInfo userInfo) {
         return Member.builder().socialId(userInfo.getId()).usable(true)
-                .image(userInfo.getKakaoAcount().getProfile().getProfileImageUrl()).build();
+                .image(userInfo.getKakaoAccount().getProfile().getProfileImageUrl()).build();
     }
 }

@@ -17,5 +17,5 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserInfo {
     private Long id;
-    private KaKaoAccount kakaoAcount;
+    private KaKaoAccount kakaoAccount;
 }
