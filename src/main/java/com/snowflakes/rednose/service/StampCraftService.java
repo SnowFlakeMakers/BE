@@ -28,8 +28,12 @@ import com.snowflakes.rednose.repository.stamp.StampRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.messaging.SessionConnectEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +57,7 @@ public class StampCraftService {
 
     private Long ID = 0L;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
+    private Map<String, Long> connections = new ConcurrentHashMap<>();
 
     @Transactional
     public CreateStampCraftResponse create(CreateStampCraftRequest request, Long memberId) {
@@ -80,14 +85,16 @@ public class StampCraftService {
         }
     }
 
-    public EnterStampCraftResponse enter(Long stampCraftId, Long memberId) {
+    public EnterStampCraftResponse enter(Long stampCraftId, SimpMessageHeaderAccessor accessor) {
+        Long memberId = connections.get(accessor.getSessionId());
         Member member = findMemberById(memberId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.enter(member);
         return EnterStampCraftResponse.from(member);
     }
 
-    public LeaveStampCraftResponse leave(Long stampCraftId, Long memberId) {
+    public LeaveStampCraftResponse leave(Long stampCraftId, SimpMessageHeaderAccessor accessor) {
+        Long memberId = connections.get(accessor.getSessionId());
         Member member = findMemberById(memberId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.quit(member);
@@ -149,5 +156,18 @@ public class StampCraftService {
                     .append("/");
         }
         return stringBuilder.append(UUID.randomUUID()).append(request.getFileName()).toString();
+    }
+
+    public void connect(SessionConnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionId = headerAccessor.getSessionId();
+        Long memberId = Long.parseLong(headerAccessor.getFirstNativeHeader("MemberId"));
+        connections.put(sessionId, memberId);
+    }
+
+    public void disconnect(SessionDisconnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        String sessionId = headerAccessor.getSessionId();
+        connections.remove(sessionId);
     }
 }

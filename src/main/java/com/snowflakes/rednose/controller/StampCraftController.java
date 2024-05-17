@@ -16,6 +16,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,13 +38,12 @@ public class StampCraftController {
 
     @EventListener
     public void connectWebSocket(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headerAccessor.getSessionId();
-        log.info("session connected => {}", sessionId);
+        stampCraftService.connect(event);
     }
 
     @EventListener
     public void disconnectWebSocket(SessionDisconnectEvent event) {
+        stampCraftService.disconnect(event);
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         log.info("session disconnected => {}", sessionId);
@@ -51,8 +51,8 @@ public class StampCraftController {
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/enter")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public EnterStampCraftResponse enter(@DestinationVariable("stamp-craft-id") Long stampCraftId) {
-        return stampCraftService.enter(stampCraftId, 1L);
+    public EnterStampCraftResponse enter(@DestinationVariable("stamp-craft-id") Long stampCraftId, SimpMessageHeaderAccessor accessor) {
+        return stampCraftService.enter(stampCraftId, accessor);
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/paint")
@@ -64,8 +64,8 @@ public class StampCraftController {
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/leave")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public LeaveStampCraftResponse leave(@DestinationVariable("stamp-craft-id") Long stampCraftId) {
-        return stampCraftService.leave(stampCraftId, 1L);
+    public LeaveStampCraftResponse leave(@DestinationVariable("stamp-craft-id") Long stampCraftId, SimpMessageHeaderAccessor accessor) {
+        return stampCraftService.leave(stampCraftId, accessor);
     }
 
     @PostMapping("/pre-signed-url")
