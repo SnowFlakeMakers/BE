@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.fixture;
+package com.snowflakes.rednose.support.fixture;
 
 import com.snowflakes.rednose.entity.Member;
 import java.util.Random;
