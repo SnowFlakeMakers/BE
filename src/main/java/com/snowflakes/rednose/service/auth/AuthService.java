@@ -70,7 +70,6 @@ public class AuthService {
         return userInfo;
     }
 
-    @Transactional
     public String issueAccessToken(Member member) {
         return jwtTokenProvider.createAccessToken(member);
     }
