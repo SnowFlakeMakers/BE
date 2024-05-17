@@ -88,6 +88,7 @@ public class StampCraftService {
     public EnterStampCraftResponse enter(Long stampCraftId, SimpMessageHeaderAccessor accessor) {
         Long memberId = connections.get(accessor.getSessionId());
         Member member = findMemberById(memberId);
+        validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.enter(member);
         return EnterStampCraftResponse.from(member);
@@ -96,6 +97,7 @@ public class StampCraftService {
     public LeaveStampCraftResponse leave(Long stampCraftId, SimpMessageHeaderAccessor accessor) {
         Long memberId = connections.get(accessor.getSessionId());
         Member member = findMemberById(memberId);
+        validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.quit(member);
         if (!stampCraft.hasMembers()) {
@@ -110,18 +112,22 @@ public class StampCraftService {
     @Transactional
     public CreateStampResponse done(CreateStampRequest request, Long memberId, Long stampCraftId) {
         Member host = findMemberById(memberId);
+        validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
-        if(!stampCraft.hasHost(host)) {
-            throw new BadRequestException(StampCraftErrorCode.NOT_HOST);
-        }
-        Stamp stamp = request.toStamp();
-        stampRepository.save(stamp);
+        validCorrectHost(host, stampCraft);
+        Stamp stamp = stampRepository.save(request.toStamp());
         for (Member member : stampCraft.getMembers()) {
             StampRecord stampRecord = StampRecord.builder().stamp(stamp).member(member).build();
             stampRecordRepository.save(stampRecord);
         }
         stampCrafts.remove(stampCraftId);
         return CreateStampResponse.from(stamp);
+    }
+
+    private void validCorrectHost(Member host, StampCraft stampCraft) {
+        if(!stampCraft.hasHost(host)) {
+            throw new BadRequestException(StampCraftErrorCode.NOT_HOST);
+        }
     }
 
     public CreatePreSignedUrlResponse getPreSignedUrl(CreatePreSignedUrlRequest request) {
