@@ -1,7 +1,6 @@
 package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
-import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
@@ -60,10 +59,5 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));
-    }
-
-    @GetMapping("/test")
-    public String test(@MemberId Long memberId) {
-        return "로그인 성공 , 멤버아이디 : " + memberId;
     }
 }
