@@ -62,7 +62,7 @@ public class AuthService {
     public UserInfo getUserInfo(KakaoToken kakaoToken) {
         UserInfo userInfo = webClient.get()
                 .uri("https://kapi.kakao.com/v2/user/me")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + kakaoToken.getAccess_token())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + kakaoToken.getAccessToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .retrieve()
                 .bodyToMono(UserInfo.class)

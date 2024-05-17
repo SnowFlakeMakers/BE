@@ -1,22 +1,24 @@
 package com.snowflakes.rednose.dto.auth;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
 @ToString
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoToken {
 
-    private String token_type;
+    private String tokenType;
 
-    private String access_token;
+    private String accessToken;
 
-    private Integer expires_in;
+    private Integer expiresIn;
 
-    private String refresh_token;
+    private String refreshToken;
 
-    private Integer refresh_token_expires_in;
+    private Integer refreshTokenExpiresIn;
 }
