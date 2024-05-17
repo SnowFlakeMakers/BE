@@ -3,6 +3,7 @@ package com.snowflakes.rednose.controller;
 import com.snowflakes.rednose.dto.response.ShowStampsResponse;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
+import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.service.StampService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,4 +27,8 @@ public class StampController {
         return stampService.show(pageable);
     }
 
+    @GetMapping("/stamps/mine")
+    public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
+        return stampService.showMyStamps(pageable, 1L);
+    }
 }
