@@ -7,4 +7,8 @@ import lombok.Getter;
 @Builder
 public class LoginResultResponse {
     private String accessToken;
+
+    public static LoginResultResponse from(IssueTokenResult issueTokenResult) {
+        return LoginResultResponse.builder().accessToken(issueTokenResult.getAccessToken()).build();
+    }
 }

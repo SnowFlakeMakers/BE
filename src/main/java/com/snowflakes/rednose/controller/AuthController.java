@@ -58,7 +58,7 @@ public class AuthController {
         // 응답 (헤더 쿠키 : refreshToken, 바디 : accessToken)
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
-                .body(LoginResultResponse.builder().accessToken(issueTokenResult.getAccessToken()).build());
+                .body(LoginResultResponse.from(issueTokenResult));
     }
 
     @GetMapping("/test")
