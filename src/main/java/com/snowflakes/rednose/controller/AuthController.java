@@ -3,7 +3,6 @@ package com.snowflakes.rednose.controller;
 import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
-import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
@@ -32,14 +31,10 @@ public class AuthController {
     @AccessibleWithoutLogin
     @GetMapping("/login/kakao")
     public ResponseEntity<LoginResultResponse> kakaoLogin(@RequestParam String code) {
-        // access 토큰 받기 : 인가코드를 포함한 POST 요청
-        KakaoToken kakaoToken = authService.getToken(code);
-
-        // 사용자 정보 가져오기 : accessToken을 포함한 GET 요청
-        UserInfo userinfo = authService.getUserInfo(kakaoToken);
+        UserInfo userInfo = authService.getUserInfoFromAuthCode(code);
 
         // 회원가입 한 사용자인지 확인 (아닐 경우 -> 에러 던짐 : 닉네임을 정하게 해야함)
-        Member member = memberService.getExistMember(userinfo);
+        Member member = memberService.getExistMember(userInfo);
 
         // 회원가입 한 사용자 -> 로그인처리, 토큰을 발급
         IssueTokenResult issueTokenResult = authService.issueToken(member);

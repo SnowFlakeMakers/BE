@@ -104,5 +104,10 @@ public class AuthService {
         return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
                 .build();
     }
+
+    public UserInfo getUserInfoFromAuthCode(String authCode) {
+        KakaoToken token = getToken(authCode);
+        return getUserInfo(token);
+    }
 }
 
