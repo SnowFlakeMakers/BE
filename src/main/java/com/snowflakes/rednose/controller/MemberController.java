@@ -1,6 +1,7 @@
 package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
+import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.member.SignInRequest;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,4 +43,11 @@ public class MemberController {
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
                 .body(LoginResultResponse.builder().accessToken(issueTokenResult.getAccessToken()).build());
     }
+
+    @DeleteMapping("/members")
+    public ResponseEntity<Void> delete(@MemberId Long memberId) {
+        memberService.delete(memberId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

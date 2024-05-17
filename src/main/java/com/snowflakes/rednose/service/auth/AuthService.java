@@ -104,6 +104,24 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
+    public IssueTokenResult issueTokenWithUserInfo(UserInfo userInfo) {
+        Member member = memberRepository.findBySocialId(userInfo.getId())
+                .orElse(memberRepository.save(Member.from(userInfo)));
+
+        String accessToken = issueAccessToken(member);
+        String refreshToken = issueRefreshToken(member);
+
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+        return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+                .build();
+    }
+
     public UserInfo getUserInfoFromAuthCode(String authCode) {
         KakaoToken token = getToken(authCode);
         return getUserInfo(token);
