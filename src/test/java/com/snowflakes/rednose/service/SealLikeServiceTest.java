@@ -6,6 +6,7 @@ import com.snowflakes.rednose.entity.SealLike;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
 import com.snowflakes.rednose.exception.BadRequestException;
+import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;
@@ -84,7 +85,24 @@ class SealLikeServiceTest {
                 () -> verify(sealLikeRepository, times(1)).findByMemberIdAndSealId(member.getId(), seal.getId()),
                 () -> verify(sealLikeRepository, times(1)).delete(sealLike)
         );
+    }
 
+    @Test
+    void 좋아요가_없는_경우_취소시_예외() {
+        Member member = MemberFixture.builder().build();
+        Seal seal = SealFixture.builder().build();
+        given(memberRepository.existsById(member.getId())).willReturn(true);
+        given(sealRepository.findById(seal.getId())).willReturn(Optional.of(seal));
+        given(sealLikeRepository.findByMemberIdAndSealId(member.getId(), seal.getId())).willReturn(Optional.empty());
+
+        assertAll(
+                () -> assertThatThrownBy(() -> sealLikeService.cancel(member.getId(), seal.getId()))
+                        .isExactlyInstanceOf(NotFoundException.class),
+                () -> verify(memberRepository, times(1)).existsById(member.getId()),
+                () -> verify(sealRepository, times(1)).findById(seal.getId()),
+                () -> verify(sealLikeRepository, times(1)).findByMemberIdAndSealId(member.getId(), seal.getId()),
+                () -> verify(sealLikeRepository, times(0)).delete(any(SealLike.class))
+        );
     }
 
 }
