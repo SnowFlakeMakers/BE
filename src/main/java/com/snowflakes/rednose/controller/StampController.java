@@ -27,7 +27,7 @@ public class StampController {
         return stampService.show(pageable);
     }
 
-    @GetMapping("/stamps/mine")
+    @GetMapping("/my-stamps")
     public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
         return stampService.showMyStamps(pageable, 1L);
     }
