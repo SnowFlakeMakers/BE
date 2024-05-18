@@ -75,4 +75,8 @@ public class Seal {
     public int getNumberOfLikes() {
         return numberOfLikes;
     }
+
+    public void like() {
+        numberOfLikes++;
+    }
 }
