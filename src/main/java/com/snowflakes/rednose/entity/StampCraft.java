@@ -53,7 +53,7 @@ public class StampCraft {
         members.remove(member);
     }
 
-    public boolean hasHost(Member member) {
+    public boolean memberIsHost(Member member) {
         return host == member;
     }
 

@@ -103,7 +103,7 @@ public class StampCraftService {
         if (!stampCraft.hasMembers()) {
             stampCrafts.remove(stampCraft);
         }
-        if (stampCraft.hasHost(member)) {
+        if (stampCraft.memberIsHost(member)) {
             stampCraft.chooseNewHost();
         }
         return LeaveStampCraftResponse.from(member, stampCraft);
@@ -125,7 +125,7 @@ public class StampCraftService {
     }
 
     private void validCorrectHost(Member host, StampCraft stampCraft) {
-        if(!stampCraft.hasHost(host)) {
+        if(!stampCraft.memberIsHost(host)) {
             throw new BadRequestException(StampCraftErrorCode.NOT_HOST);
         }
     }
