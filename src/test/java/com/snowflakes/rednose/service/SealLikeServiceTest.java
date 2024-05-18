@@ -3,12 +3,15 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
 import com.snowflakes.rednose.entity.SealLike;
+import com.snowflakes.rednose.entity.Stamp;
+import com.snowflakes.rednose.entity.StampLike;
 import com.snowflakes.rednose.exception.BadRequestException;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
 import com.snowflakes.rednose.support.fixture.SealFixture;
+import com.snowflakes.rednose.support.fixture.StampFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -63,6 +66,25 @@ class SealLikeServiceTest {
                 () -> verify(sealRepository, times(1)).findById(seal.getId()),
                 () -> verify(sealLikeRepository, times(0)).save(any(SealLike.class))
         );
+    }
+
+    @Test
+    void 좋아요_취소가_가능하다() {
+        Member member = MemberFixture.builder().build();
+        Seal seal = SealFixture.builder().build();
+        SealLike sealLike = SealLike.builder().seal(seal).member(member).build();
+        given(memberRepository.existsById(member.getId())).willReturn(true);
+        given(sealRepository.findById(seal.getId())).willReturn(Optional.of(seal));
+        given(sealLikeRepository.findByMemberIdAndSealId(member.getId(), seal.getId())).willReturn(Optional.of(sealLike));
+
+        assertAll(
+                () -> sealLikeService.cancel(member.getId(), seal.getId()),
+                () -> verify(memberRepository, times(1)).existsById(member.getId()),
+                () -> verify(sealRepository, times(1)).findById(seal.getId()),
+                () -> verify(sealLikeRepository, times(1)).findByMemberIdAndSealId(member.getId(), seal.getId()),
+                () -> verify(sealLikeRepository, times(1)).delete(sealLike)
+        );
+
     }
 
 }
