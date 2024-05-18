@@ -58,7 +58,9 @@ public class StampCraft {
     }
 
     public void chooseNewHost() {
-        host = members.get(0);
+        if (!members.isEmpty()) {
+            host = members.get(0);
+        }
     }
 
     public boolean hasMembers() {
