@@ -34,6 +34,26 @@ public class SealLikeService {
         seal.like();
     }
 
+    @Transactional
+    public void cancel(Long sealId, Long memberId) {
+        validateMemberExist(memberId);
+        Seal seal = findSealById(sealId);
+        SealLike sealLike = findSealLikeById(sealId, memberId);
+        sealLikeRepository.delete(sealLike);
+        seal.cancelLike();
+    }
+
+    private void validateMemberExist(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new NotFoundException(MemberErrorCode.NOT_FOUND);
+        }
+    }
+
+    private SealLike findSealLikeById(Long sealId, Long memberId) {
+        return sealLikeRepository.findByMemberIdAndSealId(memberId, sealId)
+                .orElseThrow(() -> new NotFoundException(SealLikeErrorCode.NOT_FOUND));
+    }
+
     private void validAlreadyLikeSeal(Long sealId, Long memberId) {
         if (sealLikeRepository.existsByMemberIdAndSealId(memberId, sealId)) {
             throw new BadRequestException(SealLikeErrorCode.ALREADY_EXIST);

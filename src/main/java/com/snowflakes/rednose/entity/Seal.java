@@ -79,4 +79,8 @@ public class Seal {
     public void like() {
         numberOfLikes++;
     }
+
+    public void cancelLike() {
+        numberOfLikes--;
+    }
 }
