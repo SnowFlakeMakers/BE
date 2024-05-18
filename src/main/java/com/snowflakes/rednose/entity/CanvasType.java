@@ -5,13 +5,13 @@ public enum CanvasType {
     MEDIUM(32),
     LARGE(64);
 
-    private final int length;
+    private final int size;
 
-    CanvasType(int length) {
-        this.length = length;
+    CanvasType(int size) {
+        this.size = size;
     }
 
-    public int getLength() {
-        return length;
+    public int getSize() {
+        return size;
     }
 }

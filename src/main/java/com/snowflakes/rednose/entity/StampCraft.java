@@ -21,7 +21,7 @@ public class StampCraft {
         this.host = host;
         this.canvasType = canvasType;
         this.members = new ArrayList<>();
-        this.stamp = new String[canvasType.getLength()][canvasType.getLength()];
+        this.stamp = new String[canvasType.getSize()][canvasType.getSize()];
     }
 
     public Member getHost() {
