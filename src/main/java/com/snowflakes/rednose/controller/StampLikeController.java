@@ -3,6 +3,7 @@ package com.snowflakes.rednose.controller;
 import com.snowflakes.rednose.dto.stamplike.ShowStampLikeResponse;
 import com.snowflakes.rednose.service.StampLikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +27,8 @@ public class StampLikeController {
     }
 
     @GetMapping("/likes")
-    public ShowStampLikeResponse show(Long memberId) {
-        return stampLikeService.getLikes(memberId);
+    public ShowStampLikeResponse show(Long memberId, Pageable pageable) {
+        return stampLikeService.getLikes(memberId, pageable);
     }
 
     @DeleteMapping("/{stampId}")

@@ -13,6 +13,7 @@ import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +53,8 @@ public class StampLikeService {
                 .orElseThrow(() -> new NotFoundException(StampErrorCode.NOT_FOUND));
     }
 
-    public ShowStampLikeResponse getLikes(Long memberId) {
-        Slice<Stamp> stamps = stampRepository.findLikesByMemberId(memberId);
+    public ShowStampLikeResponse getLikes(Long memberId, Pageable pageable) {
+        Slice<Stamp> stamps = stampRepository.findLikesByMemberId(memberId, pageable);
         return ShowStampLikeResponse.from(stamps);
     }
 
