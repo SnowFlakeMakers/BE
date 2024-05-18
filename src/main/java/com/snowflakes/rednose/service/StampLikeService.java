@@ -30,12 +30,16 @@ public class StampLikeService {
     public void like(Long stampId, Long memberId) {
         Stamp stamp = findStampById(stampId);
         Member member= findMemberById(memberId);
-        if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
-            throw new BadRequestException(StampLikeErrorCode.ALREADY_EXIST);
-        }
+        validAlreadyLikeStamp(stampId, memberId);
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
         stamp.like();
+    }
+
+    private void validAlreadyLikeStamp(Long stampId, Long memberId) {
+        if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
+            throw new BadRequestException(StampLikeErrorCode.ALREADY_EXIST);
+        }
     }
 
     private Member findMemberById(Long memberId) {
