@@ -44,6 +44,13 @@ dependencies {
     testAnnotationProcessor('org.projectlombok:lombok')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // websocket
+	  implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	  implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+    
+    // aws
+	  implementation 'io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.4.4'
 }
 
 tasks.named('test') {

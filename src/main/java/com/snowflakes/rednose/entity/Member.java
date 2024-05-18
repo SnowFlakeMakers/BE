@@ -43,15 +43,7 @@ public class Member {
         this.image = image;
         this.usable = usable;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
+  
     public void storeRefreshToken(String refreshToken) {
         if (refreshToken == null) {
             throw new UnAuthorizedException(AuthErrorCode.MALFORMED);
@@ -70,5 +62,26 @@ public class Member {
     public static Member from(UserInfo userInfo) {
         return Member.builder().socialId(userInfo.getId()).usable(true)
                 .image(userInfo.getKakaoAccount().getProfile().getProfileImageUrl()).build();
+    }
+  
+    public Long getSocialId() {
+        return socialId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public boolean isUsable() {
+        return usable;
+
+    }
+  
+    public Long getId() {
+        return id;
     }
 }
