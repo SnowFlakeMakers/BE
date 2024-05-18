@@ -1,10 +1,13 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.dto.seallike.ShowMySealLikesResponse;
 import com.snowflakes.rednose.service.SealLikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,4 +34,8 @@ public class SealLikeController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/likes")
+    public ShowMySealLikesResponse show(Long memberId, Pageable pageable) {
+        return sealLikeService.show(memberId, pageable);
+    }
 }

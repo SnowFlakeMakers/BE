@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.seallike.ShowMySealLikesResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
 import com.snowflakes.rednose.entity.SealLike;
@@ -12,6 +13,8 @@ import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,11 @@ public class SealLikeService {
         SealLike sealLike = findSealLikeById(sealId, memberId);
         sealLikeRepository.delete(sealLike);
         seal.cancelLike();
+    }
+
+    public ShowMySealLikesResponse show(Long memberId, Pageable pageable) {
+        Slice<Seal> seals = sealRepository.findMyLikesByMemberId(memberId, pageable);
+        return ShowMySealLikesResponse.from(seals);
     }
 
     private void validateMemberExist(Long memberId) {
