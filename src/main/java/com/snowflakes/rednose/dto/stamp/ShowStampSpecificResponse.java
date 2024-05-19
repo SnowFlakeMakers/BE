@@ -20,6 +20,7 @@ public class ShowStampSpecificResponse {
 
     public static ShowStampSpecificResponse of(Stamp stamp, boolean liked, List<Member> collaborators) {
         return ShowStampSpecificResponse.builder().name(stamp.getName()).imageUrl(stamp.getImageUrl())
-                .createdAt(stamp.getCreatedAt()).collaborators(collaborators).numberOfLikes(stamp.getNumberOfLikes()).liked(liked).build();
+                .createdAt(stamp.getCreatedAt()).collaborators(collaborators).numberOfLikes(stamp.getNumberOfLikes())
+                .liked(liked).build();
     }
 }
