@@ -29,11 +29,10 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
 
-    @AccessibleWithoutLogin
     @PostMapping("/members")
-    public ResponseEntity<LoginResultResponse> signIn(@RequestBody @Valid SignInRequest request) {
+    public ResponseEntity<LoginResultResponse> signIn(@RequestBody @Valid SignInRequest request, @MemberId Long memberId) {
         // Member 저장
-        Member member = memberService.signIn(request);
+        Member member = memberService.signIn(request, memberId);
 
         // 로그인 처리 및 토큰 발급
         IssueTokenResult issueTokenResult = authService.issueToken(member);
