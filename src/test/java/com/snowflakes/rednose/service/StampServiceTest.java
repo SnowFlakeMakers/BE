@@ -1,12 +1,15 @@
 package com.snowflakes.rednose.service;
 
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampRecord;
+import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
 import com.snowflakes.rednose.repository.StampLikeRepository;
 import com.snowflakes.rednose.repository.StampRecordRepository;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
@@ -71,5 +74,19 @@ class StampServiceTest {
 
         // then
         Assertions.assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @DisplayName("우표가 존재하지 않을 경우 알맞은 예외를 던진다")
+    @Test
+    void 우표_자세히보기_예외() {
+        // given
+        final long STAMP_ID = 1L;
+        final long MEMBER_ID = 1L;
+
+        when(stampRepository.findById(STAMP_ID)).thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(NotFoundException.class, () -> stampService.showSpecific(STAMP_ID, MEMBER_ID),
+                StampErrorCode.NOT_FOUND.getMessage());
     }
 }
