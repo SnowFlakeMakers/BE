@@ -43,6 +43,7 @@ public class SealFixture {
 
     public Seal build() {
         return Seal.builder().name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes).id(id)
+                .member(member)
                 .build();
     }
 }
