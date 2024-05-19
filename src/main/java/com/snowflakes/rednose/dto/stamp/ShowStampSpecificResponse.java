@@ -14,11 +14,11 @@ public class ShowStampSpecificResponse {
     private String name;
     private String imageUrl;
     private LocalDateTime createdAt;
-    private List<Member> collaborators;
+    private List<String> collaborators;
     private int numberOfLikes;
     private boolean liked;
 
-    public static ShowStampSpecificResponse of(Stamp stamp, boolean liked, List<Member> collaborators) {
+    public static ShowStampSpecificResponse of(Stamp stamp, boolean liked, List<String> collaborators) {
         return ShowStampSpecificResponse.builder().name(stamp.getName()).imageUrl(stamp.getImageUrl())
                 .createdAt(stamp.getCreatedAt()).collaborators(collaborators).numberOfLikes(stamp.getNumberOfLikes())
                 .liked(liked).build();

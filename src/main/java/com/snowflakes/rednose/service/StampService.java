@@ -4,7 +4,6 @@ import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
-import com.snowflakes.rednose.entity.StampRecord;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
 import com.snowflakes.rednose.repository.StampLikeRepository;
@@ -40,8 +39,8 @@ public class StampService {
 
         boolean liked = stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId);
 
-        List<Member> collaborators = stampRecordRepository.findAllByStamp(stamp).stream()
-                .map(StampRecord::getMember).collect(
+        List<String> collaborators = stampRecordRepository.findAllByStamp(stamp).stream()
+                .map((record) -> record.getMember().getNickname()).collect(
                         Collectors.toList());
 
         return ShowStampSpecificResponse.of(stamp, liked, collaborators);

@@ -66,7 +66,7 @@ class StampServiceTest {
                 COLLABORATORS);
 
         ShowStampSpecificResponse expected = ShowStampSpecificResponse.of(STAMP, LIKED,
-                COLLABORATORS.stream().map(StampRecord::getMember).collect(
+                COLLABORATORS.stream().map((record) -> record.getMember().getNickname()).collect(
                         Collectors.toList()));
 
         // when
