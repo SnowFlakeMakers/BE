@@ -1,7 +1,6 @@
 package com.snowflakes.rednose.dto.stamp;
 
 
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import java.time.LocalDateTime;
 import java.util.List;

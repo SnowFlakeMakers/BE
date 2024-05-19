@@ -2,7 +2,6 @@ package com.snowflakes.rednose.service;
 
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
