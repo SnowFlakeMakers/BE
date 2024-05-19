@@ -119,6 +119,7 @@ public class AuthService {
                 .sameSite(SameSite.NONE.attributeValue())
                 .build();
         return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+                .imageUrl(member.getImage())
                 .build();
     }
 
