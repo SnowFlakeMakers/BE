@@ -52,9 +52,9 @@ class StampRepositoryTest {
         Stamp stamp3 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2))
                 .build();
 
-        stampRepository.save(stamp3);
-        stampRepository.save(stamp1);
-        stampRepository.save(stamp2);
+        Stamp saved3 = stampRepository.save(stamp3);
+        Stamp saved1 = stampRepository.save(stamp1);
+        Stamp saved2 = stampRepository.save(stamp2);
 
         // when
         Page<Stamp> page0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("createdAt").descending()));
@@ -62,8 +62,8 @@ class StampRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(page0.getContent()).containsExactly(stamp1, stamp2),
-                () -> assertThat(page1.getContent()).containsExactly(stamp3)
+                () -> assertThat(page0.getContent()).containsExactly(saved1, saved2),
+                () -> assertThat(page1.getContent()).containsExactly(saved3)
         );
     }
 
@@ -77,9 +77,9 @@ class StampRepositoryTest {
         Stamp stamp3 = StampFixture.builder().numberOfLikes(3)
                 .build();
 
-        stampRepository.save(stamp2);
-        stampRepository.save(stamp3);
-        stampRepository.save(stamp1);
+        Stamp saved3 = stampRepository.save(stamp3);
+        Stamp saved1 = stampRepository.save(stamp1);
+        Stamp saved2 = stampRepository.save(stamp2);
 
         // when
         Slice<Stamp> slice0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("numberOfLikes").descending()));
@@ -87,8 +87,8 @@ class StampRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(slice0.getContent()).containsExactly(stamp3, stamp2),
-                () -> assertThat(slice1.getContent()).containsExactly(stamp1)
+                () -> assertThat(slice0.getContent()).containsExactly(saved3, saved2),
+                () -> assertThat(slice1.getContent()).containsExactly(saved1)
         );
     }
 
