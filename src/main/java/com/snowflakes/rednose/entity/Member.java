@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.entity;
 
+import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import jakarta.persistence.Column;
@@ -43,13 +44,6 @@ public class Member {
         this.usable = usable;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
 
     public void storeRefreshToken(String refreshToken) {
         if (refreshToken == null) {
@@ -66,4 +60,24 @@ public class Member {
         return refreshToken;
     }
 
+    public Long getSocialId() {
+        return socialId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public boolean isUsable() {
+        return usable;
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
 }
