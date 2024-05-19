@@ -45,7 +45,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/members")
-    public ResponseEntity<Void> delete(@MemberId Long memberId) {
+    public ResponseEntity<Void> cancleMembership(@MemberId Long memberId) {
         memberService.delete(memberId);
         return ResponseEntity.noContent().build();
     }
