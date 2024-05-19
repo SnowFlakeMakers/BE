@@ -13,6 +13,7 @@ public class StampFixture {
     private final String imageUrl = "https://image.com/virtual.png";
     private LocalDateTime createdAt = LocalDateTime.now();
     private int numberOfLikes;
+    private long id;
 
     public static StampFixture builder() {
         return new StampFixture();
@@ -28,8 +29,13 @@ public class StampFixture {
         return this;
     }
 
+    public StampFixture id(long id) {
+        this.id = id;
+        return this;
+    }
+
     public Stamp build() {
-        return Stamp.builder().name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
+        return Stamp.builder().name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes).id(id)
                 .build();
     }
 }
