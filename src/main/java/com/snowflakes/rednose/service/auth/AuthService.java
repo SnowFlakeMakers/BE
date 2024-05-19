@@ -120,6 +120,7 @@ public class AuthService {
                 .build();
         return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
                 .imageUrl(member.getImage())
+                .nickname(member.getNickname())
                 .build();
     }
 
