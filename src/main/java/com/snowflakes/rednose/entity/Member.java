@@ -1,8 +1,10 @@
 package com.snowflakes.rednose.entity;
 
 import com.snowflakes.rednose.dto.auth.UserInfo;
+import com.snowflakes.rednose.exception.BadRequestException;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -70,5 +72,12 @@ public class Member {
     public static Member from(UserInfo userInfo) {
         return Member.builder().socialId(userInfo.getId()).usable(true)
                 .image(userInfo.getKakaoAccount().getProfile().getProfileImageUrl()).build();
+    }
+
+    public void signIn(String nickname) {
+        if (nickname == null) {
+            throw new BadRequestException(MemberErrorCode.NULL_NICKNAME);
+        }
+        this.nickname = nickname;
     }
 }
