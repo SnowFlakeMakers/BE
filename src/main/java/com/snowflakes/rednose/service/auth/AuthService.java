@@ -107,7 +107,7 @@ public class AuthService {
     @Transactional
     public IssueTokenResult issueTokenWithUserInfo(UserInfo userInfo) {
         Member member = memberRepository.findBySocialId(userInfo.getId())
-                .orElse(memberRepository.save(Member.from(userInfo)));
+                .orElse(memberRepository.save(userInfo.toMember()));
 
         String accessToken = issueAccessToken(member);
         String refreshToken = issueRefreshToken(member);

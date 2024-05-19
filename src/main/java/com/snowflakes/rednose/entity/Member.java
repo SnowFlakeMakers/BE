@@ -1,6 +1,5 @@
 package com.snowflakes.rednose.entity;
 
-import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import jakarta.persistence.Column;
@@ -67,8 +66,4 @@ public class Member {
         return refreshToken;
     }
 
-    public static Member from(UserInfo userInfo) {
-        return Member.builder().socialId(userInfo.getId()).usable(true)
-                .image(userInfo.getKakaoAccount().getProfile().getProfileImageUrl()).build();
-    }
 }
