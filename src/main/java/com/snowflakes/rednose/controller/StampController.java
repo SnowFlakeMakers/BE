@@ -34,4 +34,5 @@ public class StampController {
         ShowStampSpecificResponse showStampSpecificResponse = stampService.showSpecific(stampId, memberId);
         return ResponseEntity.status(HttpStatus.OK).body(showStampSpecificResponse);
     }
+
 }

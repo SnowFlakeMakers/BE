@@ -30,7 +30,7 @@ public class StampLikeService {
         Stamp stamp = findStampById(stampId);
         Member member = findMemberById(memberId);
         if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
-            throw new NotFoundException(StampLikeErrorCode.NOT_FOUND);
+            throw new BadRequestException(StampLikeErrorCode.ALREADY_EXIST);
         }
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
