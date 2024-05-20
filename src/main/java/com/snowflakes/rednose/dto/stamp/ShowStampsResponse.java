@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.dto.response;
+package com.snowflakes.rednose.dto.stamp;
 
 import com.snowflakes.rednose.entity.Stamp;
 import java.util.List;

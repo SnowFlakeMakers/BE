@@ -1,5 +1,8 @@
 package com.snowflakes.rednose.entity;
 
+import com.snowflakes.rednose.dto.auth.UserInfo;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +32,9 @@ public class Member {
     protected Member() {
     }
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @Builder
     private Member(Long id, Long socialId, String nickname, String image, boolean usable) {
         this.id = id;
@@ -38,16 +44,24 @@ public class Member {
         this.usable = usable;
     }
 
-    public Long getId() {
-        return id;
+
+    public void storeRefreshToken(String refreshToken) {
+        if (refreshToken == null) {
+            throw new UnAuthorizedException(AuthErrorCode.MALFORMED);
+        }
+        this.refreshToken = refreshToken;
+    }
+
+    public void expireRefreshToken() {
+        this.refreshToken = null;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     public Long getSocialId() {
         return socialId;
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 
     public String getImage() {
@@ -56,5 +70,14 @@ public class Member {
 
     public boolean isUsable() {
         return usable;
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 }

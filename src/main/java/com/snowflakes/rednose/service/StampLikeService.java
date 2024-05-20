@@ -29,7 +29,7 @@ public class StampLikeService {
     @Transactional
     public void like(Long stampId, Long memberId) {
         Stamp stamp = findStampById(stampId);
-        Member member= findMemberById(memberId);
+        Member member = findMemberById(memberId);
         if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
             throw new BadRequestException(StampLikeErrorCode.ALREADY_EXIST);
         }

@@ -3,7 +3,7 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
-import com.snowflakes.rednose.fixture.MemberFixture;
+import com.snowflakes.rednose.support.fixture.MemberFixture;
 import com.snowflakes.rednose.fixture.StampFixture;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
