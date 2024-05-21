@@ -106,8 +106,10 @@ public class AuthService {
 
     @Transactional
     public IssueTokenResult issueTokenWithUserInfo(UserInfo userInfo) {
+        log.info("userinfo socialid : {}", userInfo.getId());
+
         Member member = memberRepository.findBySocialId(userInfo.getId())
-                .orElse(memberRepository.save(Member.from(userInfo)));
+                .orElseGet(() -> memberRepository.save(userInfo.toMember()));
 
         String accessToken = issueAccessToken(member);
         String refreshToken = issueRefreshToken(member);
@@ -119,6 +121,8 @@ public class AuthService {
                 .sameSite(SameSite.NONE.attributeValue())
                 .build();
         return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+                .imageUrl(member.getImage())
+                .nickname(member.getNickname())
                 .build();
     }
 
