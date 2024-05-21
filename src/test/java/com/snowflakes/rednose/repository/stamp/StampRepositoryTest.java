@@ -46,15 +46,11 @@ class StampRepositoryTest {
     @Test
     void 우표_목록_최신순_조회() {
         // given
-        Stamp stamp1 = StampFixture.builder().createdAt(LocalDateTime.now()).build();
-        Stamp stamp2 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1))
-                .build();
-        Stamp stamp3 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2))
-                .build();
-
-        Stamp saved3 = stampRepository.save(stamp3);
-        Stamp saved1 = stampRepository.save(stamp1);
-        Stamp saved2 = stampRepository.save(stamp2);
+        Stamp saved3 = 저장(StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2))
+                .build());
+        Stamp saved1 = 저장(StampFixture.builder().createdAt(LocalDateTime.now()).build());
+        Stamp saved2 = 저장(StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1))
+                .build());
 
         // when
         Page<Stamp> page0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("createdAt").descending()));
@@ -71,15 +67,11 @@ class StampRepositoryTest {
     @Test
     void 우표_목록_좋아요순_조회() {
         // given
-        Stamp stamp1 = StampFixture.builder().numberOfLikes(1).build();
-        Stamp stamp2 = StampFixture.builder().numberOfLikes(2)
-                .build();
-        Stamp stamp3 = StampFixture.builder().numberOfLikes(3)
-                .build();
-
-        Stamp saved3 = stampRepository.save(stamp3);
-        Stamp saved1 = stampRepository.save(stamp1);
-        Stamp saved2 = stampRepository.save(stamp2);
+        Stamp saved3 = 저장(StampFixture.builder().numberOfLikes(3)
+                .build());
+        Stamp saved1 = 저장(StampFixture.builder().numberOfLikes(1).build());
+        Stamp saved2 = 저장(StampFixture.builder().numberOfLikes(2)
+                .build());
 
         // when
         Slice<Stamp> slice0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("numberOfLikes").descending()));
@@ -90,6 +82,10 @@ class StampRepositoryTest {
                 () -> assertThat(slice0.getContent()).containsExactly(saved3, saved2),
                 () -> assertThat(slice1.getContent()).containsExactly(saved1)
         );
+    }
+
+    private Stamp 저장(Stamp stamp3) {
+        return stampRepository.save(stamp3);
     }
 
 
