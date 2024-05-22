@@ -29,10 +29,8 @@ public class StampController {
     }
 
     @GetMapping("/stamps/{stampId}")
-    public ResponseEntity<ShowStampSpecificResponse> specific(@PathVariable Long stampId, @MemberId Long memberId) {
-
-        ShowStampSpecificResponse showStampSpecificResponse = stampService.showSpecific(stampId, memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(showStampSpecificResponse);
+    public ShowStampSpecificResponse specific(@PathVariable Long stampId, @MemberId Long memberId) {
+        return stampService.showSpecific(stampId, memberId);
     }
 
 }
