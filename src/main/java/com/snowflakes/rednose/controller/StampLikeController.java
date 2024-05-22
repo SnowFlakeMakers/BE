@@ -15,23 +15,23 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/stamps")
+@RequestMapping("/api/v1")
 public class StampLikeController {
 
     private final StampLikeService stampLikeService;
 
-    @PostMapping("/{stampId}")
+    @PostMapping("/stamp-likes/{stampId}")
     public ResponseEntity<Void> like(Long memberId, @PathVariable Long stampId) {
         stampLikeService.like(stampId, memberId);
         return ResponseEntity.created(URI.create("/api/v1/stamps")).build();
     }
 
-    @GetMapping("/likes")
+    @GetMapping("/stamp-likes")
     public ShowStampLikeResponse show(Long memberId, Pageable pageable) {
         return stampLikeService.getLikes(memberId, pageable);
     }
 
-    @DeleteMapping("/{stampId}")
+    @DeleteMapping("/stamp-likes/{stampId}")
     public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long stampId) {
         stampLikeService.cancel(stampId, memberId);
         return ResponseEntity.ok().build();

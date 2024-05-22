@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
-@RequestMapping("/api/v1/seals")
+@RequestMapping("/api/v1")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -22,19 +22,19 @@ public class SealLikeController {
 
     private final SealLikeService sealLikeService;
 
-    @PostMapping("/{sealId}")
+    @PostMapping("/seal-likes/{sealId}")
     public ResponseEntity<Void> like(Long memberId, @PathVariable Long sealId) {
         sealLikeService.like(sealId, memberId);
         return ResponseEntity.created(URI.create("/api/v1/seals")).build();
     }
 
-    @DeleteMapping("/{sealId}")
+    @DeleteMapping("/seal-likes/{sealId}")
     public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long sealId) {
         sealLikeService.cancel(sealId, memberId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/likes")
+    @GetMapping("/seal-likes/likes")
     public ShowMySealLikesResponse show(Long memberId, Pageable pageable) {
         return sealLikeService.show(memberId, pageable);
     }
