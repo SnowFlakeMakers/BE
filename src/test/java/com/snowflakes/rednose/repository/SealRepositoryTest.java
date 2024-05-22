@@ -36,8 +36,8 @@ class SealRepositoryTest {
         Seal seal3 = sealRepository.save(SealFixture.builder().member(member2).build());
 
         PageRequest pageRequest = PageRequest.of(0, 2);
-        Slice<Seal> seals1 = sealRepository.findAllByMemberId(member1.getId(), pageRequest);
-        Slice<Seal> seals2 = sealRepository.findAllByMemberId(member2.getId(), pageRequest);
+        Slice<Seal> seals1 = sealRepository.findAllByMemberIdOrderByCreatedAtAsc(member1.getId(), pageRequest);
+        Slice<Seal> seals2 = sealRepository.findAllByMemberIdOrderByCreatedAtAsc(member2.getId(), pageRequest);
 
         assertAll(
                 () -> assertThat(seals1.getContent()).containsExactly(seal1, seal2),

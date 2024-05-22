@@ -19,7 +19,7 @@ public class SealService {
     private final SealRepository sealRepository;
 
     public ShowMySealsResponse showMySeals(Pageable pageable, Long memberId) {
-        Slice<Seal> seals = sealRepository.findAllByMemberId(memberId, pageable);
+        Slice<Seal> seals = sealRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId, pageable);
         return ShowMySealsResponse.from(seals);
     }
 }

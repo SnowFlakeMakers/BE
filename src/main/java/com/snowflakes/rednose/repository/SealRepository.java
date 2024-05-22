@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface SealRepository extends JpaRepository<Seal, Long> {
 
-    Slice<Seal> findAllByMemberId(Long memberId, Pageable pageable);
+    Slice<Seal> findAllByMemberIdOrderByCreatedAtAsc(Long memberId, Pageable pageable);
 
     @Query("select s from Seal s join SealLike sl on s.id = sl.seal.id where sl.member.id = :memberId")
     Slice<Seal> findMyLikesByMemberId(@Param("memberId") Long memberId, Pageable pageable);
