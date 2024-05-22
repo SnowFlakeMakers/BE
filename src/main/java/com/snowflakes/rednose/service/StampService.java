@@ -1,11 +1,5 @@
 package com.snowflakes.rednose.service;
 
-import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.Headers;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.snowflakes.rednose.dto.response.ShowStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;

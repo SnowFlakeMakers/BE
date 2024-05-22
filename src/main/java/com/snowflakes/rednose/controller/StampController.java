@@ -2,7 +2,7 @@ package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
-import com.snowflakes.rednose.dto.stamp.ShowMyStampsRes
+import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
 import com.snowflakes.rednose.service.StampService;
 import lombok.RequiredArgsConstructor;
