@@ -47,6 +47,7 @@ public class SealLikeService {
     }
 
     public ShowMySealLikesResponse show(Long memberId, Pageable pageable) {
+        validateMemberExist(memberId);
         Slice<Seal> seals = sealRepository.findMyLikesByMemberId(memberId, pageable);
         return ShowMySealLikesResponse.from(seals);
     }
