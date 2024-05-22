@@ -45,7 +45,7 @@ public class StampFixture {
     }
 
     public Stamp build() {
-        return Stamp.builder().name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
+        return Stamp.builder().id(id).name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
                 .build();
     }
 }
