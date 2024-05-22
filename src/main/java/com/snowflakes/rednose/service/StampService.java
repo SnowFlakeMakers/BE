@@ -1,5 +1,7 @@
 package com.snowflakes.rednose.service;
 
+
+import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
 import com.snowflakes.rednose.entity.Stamp;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,5 +46,10 @@ public class StampService {
                         Collectors.toList());
 
         return ShowStampSpecificResponse.of(stamp, liked, collaborators);
+    }
+
+    public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
+        Slice<Stamp> stamps = stampRepository.findMyStampsByMemberId(memberId, pageable);
+        return ShowMyStampsResponse.from(stamps);
     }
 }

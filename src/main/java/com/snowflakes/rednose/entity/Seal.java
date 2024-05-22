@@ -51,4 +51,36 @@ public class Seal {
         this.createdAt = createdAt;
         this.numberOfLikes = numberOfLikes;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getNumberOfLikes() {
+        return numberOfLikes;
+    }
+
+    public void like() {
+        numberOfLikes++;
+    }
+
+    public void cancelLike() {
+        numberOfLikes--;
+    }
 }

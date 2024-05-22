@@ -1,4 +1,4 @@
-package com.snowflakes.rednose.configuration;
+package com.snowflakes.rednose.config;
 
 import com.snowflakes.rednose.argumentresolver.MemberIdArgumentResolver;
 import com.snowflakes.rednose.interceptor.AuthInterceptor;
