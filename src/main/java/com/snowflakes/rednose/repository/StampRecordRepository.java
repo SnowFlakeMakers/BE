@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StampRecordRepository extends JpaRepository<StampRecord, Long> {
     List<StampRecord> findAllByStamp(Stamp stamp);
+
 }

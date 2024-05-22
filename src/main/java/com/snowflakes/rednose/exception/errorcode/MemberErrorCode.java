@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.exception.errorcode;
 
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

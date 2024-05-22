@@ -4,7 +4,7 @@ import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
-import com.snowflakes.rednose.fixture.StampFixture;
+import com.snowflakes.rednose.support.fixture.StampFixture;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

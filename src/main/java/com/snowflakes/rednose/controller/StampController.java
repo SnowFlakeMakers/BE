@@ -1,6 +1,8 @@
 package com.snowflakes.rednose.controller;
 
+
 import com.snowflakes.rednose.annotation.MemberId;
+import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
 import com.snowflakes.rednose.service.StampService;
@@ -29,9 +31,12 @@ public class StampController {
     }
 
     @GetMapping("/stamps/{stampId}")
-    public ResponseEntity<ShowStampSpecificResponse> specific(@PathVariable Long stampId, @MemberId Long memberId) {
+    public ShowStampSpecificResponse specific(@PathVariable Long stampId, @MemberId Long memberId) {
+        return stampService.showSpecific(stampId, memberId);
+    }
 
-        ShowStampSpecificResponse showStampSpecificResponse = stampService.showSpecific(stampId, memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(showStampSpecificResponse);
+    @GetMapping("/my-stamps")
+    public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
+        return stampService.showMyStamps(pageable, 1L);
     }
 }

@@ -9,14 +9,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StampFixture {
 
-    private final String name = "우표";
-    private final String imageUrl = "https://image.com/virtual.png";
+    private Long id;
+    private String name = "우표";
+    private String imageUrl = "https://image.com/virtual.png";
     private LocalDateTime createdAt = LocalDateTime.now();
     private int numberOfLikes;
-    private long id;
 
     public static StampFixture builder() {
         return new StampFixture();
+    }
+
+    public StampFixture id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public StampFixture name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public StampFixture imageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+        return this;
     }
 
     public StampFixture createdAt(LocalDateTime createdAt) {
@@ -29,13 +44,8 @@ public class StampFixture {
         return this;
     }
 
-    public StampFixture id(long id) {
-        this.id = id;
-        return this;
-    }
-
     public Stamp build() {
-        return Stamp.builder().name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes).id(id)
+        return Stamp.builder().id(id).name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
                 .build();
     }
 }

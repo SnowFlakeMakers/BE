@@ -45,11 +45,8 @@ class StampServiceTest {
     @Test
     void 우표_자세히보기() {
         // given
-        final int LIKES = 10;
-        final long STAMP_ID = 1L;
-        final long MEMBER_ID = 1L;
-        final Stamp STAMP = StampFixture.builder().numberOfLikes(LIKES).id(STAMP_ID).build();
-        final Member JANG = MemberFixture.builder().id(MEMBER_ID).build();
+        final Stamp STAMP = StampFixture.builder().numberOfLikes(10).id(1L).build();
+        final Member JANG = MemberFixture.builder().id(1L).build();
         final Member GIL = MemberFixture.builder().build();
         final Member LEE = MemberFixture.builder().build();
         final boolean LIKED = true;
@@ -60,8 +57,8 @@ class StampServiceTest {
 
         final List<StampRecord> COLLABORATORS = Arrays.asList(JANG_RECORD, GIL_RECORD, LEE_RECORD);
 
-        when(stampRepository.findById(STAMP_ID)).thenReturn(Optional.of(STAMP));
-        when(stampLikeRepository.existsByMemberIdAndStampId(MEMBER_ID, STAMP_ID)).thenReturn(LIKED);
+        when(stampRepository.findById(STAMP.getId())).thenReturn(Optional.of(STAMP));
+        when(stampLikeRepository.existsByMemberIdAndStampId(JANG.getId(), STAMP.getId())).thenReturn(LIKED);
         when(stampRecordRepository.findAllByStamp(STAMP)).thenReturn(
                 COLLABORATORS);
 
@@ -70,7 +67,7 @@ class StampServiceTest {
                         Collectors.toList()));
 
         // when
-        ShowStampSpecificResponse actual = stampService.showSpecific(STAMP_ID, MEMBER_ID);
+        ShowStampSpecificResponse actual = stampService.showSpecific(STAMP.getId(), JANG.getId());
 
         // then
         Assertions.assertThat(actual).usingRecursiveComparison().isEqualTo(expected);

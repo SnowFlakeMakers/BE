@@ -4,6 +4,7 @@ import com.snowflakes.rednose.dto.stamplike.ShowStampLikeResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampLike;
+import com.snowflakes.rednose.exception.BadRequestException;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
@@ -12,6 +13,7 @@ import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampLikeRepository;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +30,17 @@ public class StampLikeService {
     @Transactional
     public void like(Long stampId, Long memberId) {
         Stamp stamp = findStampById(stampId);
-        Member member = findMemberById(memberId);
-        if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
-            throw new NotFoundException(StampLikeErrorCode.NOT_FOUND);
-        }
+        Member member= findMemberById(memberId);
+        validAlreadyLikedStamp(stampId, memberId);
         StampLike like = StampLike.builder().stamp(stamp).member(member).build();
         stampLikeRepository.save(like);
         stamp.like();
+    }
+
+    private void validAlreadyLikedStamp(Long stampId, Long memberId) {
+        if (stampLikeRepository.existsByMemberIdAndStampId(memberId, stampId)) {
+            throw new BadRequestException(StampLikeErrorCode.ALREADY_EXIST);
+        }
     }
 
     private Member findMemberById(Long memberId) {
@@ -47,8 +53,8 @@ public class StampLikeService {
                 .orElseThrow(() -> new NotFoundException(StampErrorCode.NOT_FOUND));
     }
 
-    public ShowStampLikeResponse getLikes(Long memberId) {
-        Slice<Stamp> stamps = stampRepository.findLikesByMemberId(memberId);
+    public ShowStampLikeResponse getLikes(Long memberId, Pageable pageable) {
+        Slice<Stamp> stamps = stampRepository.findLikesByMemberId(memberId, pageable);
         return ShowStampLikeResponse.from(stamps);
     }
 

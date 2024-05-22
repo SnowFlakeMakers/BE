@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.entity.Seal;
 import com.snowflakes.rednose.exception.NotFoundException;
@@ -7,6 +8,8 @@ import com.snowflakes.rednose.exception.errorcode.SealErrorCode;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,5 +28,10 @@ public class SealService {
 
     private Seal findSealById(Long sealId) {
         return sealRepository.findById(sealId).orElseThrow(() -> new NotFoundException(SealErrorCode.NOT_FOUND));
+    }
+
+    public ShowMySealsResponse showMySeals(Pageable pageable, Long memberId) {
+        Slice<Seal> seals = sealRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId, pageable);
+        return ShowMySealsResponse.from(seals);
     }
 }
