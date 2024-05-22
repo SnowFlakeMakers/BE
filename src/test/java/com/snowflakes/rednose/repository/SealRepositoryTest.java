@@ -31,8 +31,8 @@ class SealRepositoryTest {
         Member member1 = memberRepository.save(MemberFixture.builder().build());
         Member member2 = memberRepository.save(MemberFixture.builder().build());
 
-        Seal seal2 = sealRepository.save(SealFixture.builder().member(member1).build());
         Seal seal1 = sealRepository.save(SealFixture.builder().member(member1).build());
+        Seal seal2 = sealRepository.save(SealFixture.builder().member(member1).build());
         Seal seal3 = sealRepository.save(SealFixture.builder().member(member2).build());
 
         PageRequest pageRequest = PageRequest.of(0, 2);

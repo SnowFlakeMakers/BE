@@ -14,7 +14,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     Optional<Stamp> findById(Long stampId);
 
     @Query("select s from Stamp s join StampLike sl on s.id = sl.stamp.id where sl.member.id = :memberId")
-    Slice<Stamp> findLikesByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+    Slice<Stamp> findLikesByMemberId(@Param("memberId") Long memberId, Page
 
     @Query("select s from Stamp s join StampRecord sr on s.id = sr.stamp.id where sr.member.id = :memberId")
     Slice<Stamp> findMyStampsByMemberId(@Param("memberId") Long memberId, Pageable pageable);

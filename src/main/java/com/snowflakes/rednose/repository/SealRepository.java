@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+
 public interface SealRepository extends JpaRepository<Seal, Long> {
 
     Slice<Seal> findAllByMemberId(Long memberId, Pageable pageable);
