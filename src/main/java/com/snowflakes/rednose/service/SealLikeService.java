@@ -31,7 +31,7 @@ public class SealLikeService {
     public void like(Long sealId, Long memberId) {
         Member member = findMemberById(memberId);
         Seal seal = findSealById(sealId);
-        validAlreadyLikeSeal(sealId, memberId);
+        validAlreadyLikedSeal(sealId, memberId);
         SealLike sealLike = SealLike.builder().member(member).seal(seal).build();
         sealLikeRepository.save(sealLike);
         seal.like();
@@ -62,7 +62,7 @@ public class SealLikeService {
                 .orElseThrow(() -> new NotFoundException(SealLikeErrorCode.NOT_FOUND));
     }
 
-    private void validAlreadyLikeSeal(Long sealId, Long memberId) {
+    private void validAlreadyLikedSeal(Long sealId, Long memberId) {
         if (sealLikeRepository.existsByMemberIdAndSealId(memberId, sealId)) {
             throw new BadRequestException(SealLikeErrorCode.ALREADY_EXIST);
         }
