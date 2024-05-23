@@ -54,11 +54,12 @@ class AuthServiceTest {
 
         Member member = MemberFixture.builder().id(MEMBER_ID).build();
 
-        when(jwtTokenProvider.createAccessToken(member)).thenReturn(REFRESH_TOKEN);
+        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+        when(jwtTokenProvider.createAccessToken(MEMBER_ID)).thenReturn(REFRESH_TOKEN);
         when(jwtTokenProvider.createRefreshToken()).thenReturn(ACCESS_TOKEN);
 
         // when
-        IssueTokenResult actual = authService.issueToken(member);
+        IssueTokenResult actual = authService.issueToken(MEMBER_ID);
 
         // then
         assertThat(actual.equals(expected));
