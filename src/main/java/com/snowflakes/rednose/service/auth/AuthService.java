@@ -140,5 +140,10 @@ public class AuthService {
         KakaoToken token = getToken(authCode);
         return getUserInfo(token);
     }
+
+    public IssueTokenResult reIssueToken(String refreshToken) {
+        Long memberId = validateRefreshToken(refreshToken);
+        return issueToken(memberId);
+    }
 }
 
