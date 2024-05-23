@@ -32,10 +32,10 @@ public class MemberController {
     @PostMapping("/members")
     public ResponseEntity<LoginResultResponse> signIn(@RequestBody @Valid SignInRequest request, @MemberId Long memberId) {
         // Member 저장
-        Member member = memberService.signIn(request, memberId);
+        memberService.signIn(request, memberId);
 
         // 로그인 처리 및 토큰 발급
-        IssueTokenResult issueTokenResult = authService.issueToken(member);
+        IssueTokenResult issueTokenResult = authService.issueToken(memberId);
 
         // 응답 (헤더 쿠키 : refreshToken, 바디 : accessToken)
         return ResponseEntity.status(HttpStatus.OK)

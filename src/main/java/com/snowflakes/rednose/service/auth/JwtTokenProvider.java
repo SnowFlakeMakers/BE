@@ -1,6 +1,5 @@
 package com.snowflakes.rednose.service.auth;
 
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import io.jsonwebtoken.Claims;
@@ -35,10 +34,10 @@ public class JwtTokenProvider {
     }
 
     // JWT access 토큰 생성
-    public String createAccessToken(Member member) {
+    public String createAccessToken(Long memberId) {
         // claim : id
         Map<String, Object> claims = new HashMap<>();
-        claims.put(ID, member.getId());
+        claims.put(ID, memberId);
 
         // 발행시간
         Date now = new Date();

@@ -25,9 +25,9 @@ public class StampController {
     private final StampService stampService;
 
     @GetMapping("/stamps")
-    public ResponseEntity<ShowStampsResponse> show(Pageable pageable) {
+    public ShowStampsResponse show(Pageable pageable) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(stampService.show(pageable));
+        return stampService.show(pageable);
     }
 
     @GetMapping("/stamps/{stampId}")

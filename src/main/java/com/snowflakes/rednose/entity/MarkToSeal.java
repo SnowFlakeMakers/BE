@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +13,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class SealLike {
+public class MarkToSeal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,15 +22,17 @@ public class SealLike {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seal_id", nullable = false)
     private Seal seal;
 
-    protected SealLike() {
+    protected MarkToSeal() {
+
     }
 
     @Builder
-    private SealLike(Long id, Member member, Seal seal) {
+    public MarkToSeal(Long id, Member member, Seal seal) {
         this.id = id;
         this.member = member;
         this.seal = seal;
