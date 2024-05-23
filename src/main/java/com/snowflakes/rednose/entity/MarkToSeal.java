@@ -8,14 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 public class MarkToSeal {
 
     @Id
@@ -30,4 +27,14 @@ public class MarkToSeal {
     @JoinColumn(name = "seal_id", nullable = false)
     private Seal seal;
 
+    protected MarkToSeal() {
+
+    }
+
+    @Builder
+    public MarkToSeal(Long id, Member member, Seal seal) {
+        this.id = id;
+        this.member = member;
+        this.seal = seal;
+    }
 }
