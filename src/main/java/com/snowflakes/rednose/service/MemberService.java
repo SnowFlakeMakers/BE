@@ -21,22 +21,27 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Member signIn(SignInRequest request) {
+    public Member signIn(SignInRequest request, Long memberId) {
+
         if (memberRepository.existsByNickname(request.getNickname())) {
             throw new BadRequestException(MemberErrorCode.DUPLICATED_NICKNAME);
         }
-        return memberRepository.save(
-                Member.builder().nickname(request.getNickname()).socialId(request.getSocialId()).usable(true).build());
-    }
 
-    public Optional<Member> getExistMember(UserInfo userinfo) {
-        return memberRepository.findBySocialId(userinfo.getId());
+        Member member = findMemberById(memberId);
+
+        member.signIn(request.getNickname());
+
+        return member;
     }
 
     @Transactional
     public void delete(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
+        Member member = findMemberById(memberId);
         memberRepository.delete(member);
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 }
