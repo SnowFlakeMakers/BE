@@ -4,8 +4,10 @@ import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.KakaoToken;
 import com.snowflakes.rednose.dto.auth.UserInfo;
 import com.snowflakes.rednose.entity.Member;
+import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,30 +72,31 @@ public class AuthService {
         return userInfo;
     }
 
-    public String issueAccessToken(Member member) {
-        return jwtTokenProvider.createAccessToken(member);
+    public String issueAccessToken(Long memberId) {
+        return jwtTokenProvider.createAccessToken(memberId);
     }
 
     @Transactional
-    public String issueRefreshToken(Member member) {
+    public String issueRefreshToken(Long memberId) {
         String refreshToken = jwtTokenProvider.createRefreshToken();
+        Member member = findMemberById(memberId);
         member.storeRefreshToken(refreshToken);
         return refreshToken;
     }
 
-    public Member validateRefreshToken(String refreshToken) {
+    public Long validateRefreshToken(String refreshToken) {
         // refresh token 검증 (refresh token이 만료되거나 구조에 문제가 있으면 이 라인에서 예외를 던짐)
         jwtTokenProvider.verifySignature(refreshToken);
 
         // refresh token이 유효하다면 refresh token으로 회원을 찾음
         return memberRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NOT_EXISTS_IN_DATABASE));
+                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NOT_EXISTS_IN_DATABASE)).getId();
     }
 
     @Transactional
-    public IssueTokenResult issueToken(Member member) {
-        String accessToken = issueAccessToken(member);
-        String refreshToken = issueRefreshToken(member);
+    public IssueTokenResult issueToken(Long memberId) {
+        String accessToken = issueAccessToken(memberId);
+        String refreshToken = issueRefreshToken(memberId);
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
@@ -104,6 +107,11 @@ public class AuthService {
                 .build();
     }
 
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
+    }
+
     @Transactional
     public IssueTokenResult issueTokenWithUserInfo(UserInfo userInfo) {
         log.info("userinfo socialid : {}", userInfo.getId());
@@ -111,8 +119,10 @@ public class AuthService {
         Member member = memberRepository.findBySocialId(userInfo.getId())
                 .orElseGet(() -> memberRepository.save(userInfo.toMember()));
 
-        String accessToken = issueAccessToken(member);
-        String refreshToken = issueRefreshToken(member);
+        Long memberId = member.getId();
+
+        String accessToken = issueAccessToken(memberId);
+        String refreshToken = issueRefreshToken(memberId);
 
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
