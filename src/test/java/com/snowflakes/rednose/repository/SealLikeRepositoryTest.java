@@ -29,27 +29,31 @@ class SealLikeRepositoryTest {
     @Test
     void memberId_sealId로_존재여부_확인() {
         // given
-        final Member JANG = MemberFixture.builder().build();
+        final Member JANG = 저장(MemberFixture.builder().build());
 
-        final Long JANG_ID = memberRepository.save(JANG).getId();
-
-        final Seal CHRISTMAS_SEAL = SealFixture.builder().member(JANG).build();
-        final Seal BIRTHDAY_SEAL = SealFixture.builder().member(JANG).build();
-
-        final Long CHRISTMAS_SEAL_ID = sealRepository.save(CHRISTMAS_SEAL).getId();
-        final Long BIRTHDAY_SEAL_ID = sealRepository.save(BIRTHDAY_SEAL).getId();
+        final Seal CHRISTMAS_SEAL = 저장(SealFixture.builder().member(JANG).build());
+        final Seal BIRTHDAY_SEAL = 저장(SealFixture.builder().member(JANG).build());
 
         sealLikeRepository.save(SealLike.builder().member(JANG).seal(CHRISTMAS_SEAL).build());
 
         // when
-        final boolean JANG_CHRISTMAS = sealLikeRepository.existsByMemberIdAndSealId(JANG_ID, CHRISTMAS_SEAL_ID);
-        final boolean JANG_BIRTHDAY = sealLikeRepository.existsByMemberIdAndSealId(JANG_ID, BIRTHDAY_SEAL_ID);
+        final boolean JANG_CHRISTMAS = sealLikeRepository.existsByMemberIdAndSealId(JANG.getId(),
+                CHRISTMAS_SEAL.getId());
+        final boolean JANG_BIRTHDAY = sealLikeRepository.existsByMemberIdAndSealId(JANG.getId(), BIRTHDAY_SEAL.getId());
 
         // then
         assertAll(
                 () -> assertThat(JANG_CHRISTMAS).isEqualTo(true),
                 () -> assertThat(JANG_BIRTHDAY).isEqualTo(false)
         );
+    }
+
+    private Seal 저장(Seal CHRISTMAS_SEAL) {
+        return sealRepository.save(CHRISTMAS_SEAL);
+    }
+
+    private Member 저장(Member JANG) {
+        return memberRepository.save(JANG);
     }
 
 }
