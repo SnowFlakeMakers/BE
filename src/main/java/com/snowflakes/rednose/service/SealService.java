@@ -47,7 +47,7 @@ public class SealService {
         Seal seal = sealRepository.save(
                 Seal.builder().createdAt(LocalDateTime.now()).member(member).imageUrl(makeSealRequest.getImage())
                         .numberOfLikes(0).build());
-        return MakeSealResponse.builder().sealId(seal.getId()).build();
+        return MakeSealResponse.builder().sealId(seal.getId()).image(seal.getImageUrl()).build();
     }
 
     private Member findMemberById(Long memberId) {

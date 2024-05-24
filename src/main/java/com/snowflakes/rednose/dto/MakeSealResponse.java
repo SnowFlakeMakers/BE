@@ -9,4 +9,5 @@ import lombok.Getter;
 @Builder
 public class MakeSealResponse {
     private Long sealId;
+    private String image;
 }
