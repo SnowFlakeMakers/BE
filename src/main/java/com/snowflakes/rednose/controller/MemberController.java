@@ -1,11 +1,9 @@
 package com.snowflakes.rednose.controller;
 
-import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.member.SignInRequest;
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.service.MemberService;
 import com.snowflakes.rednose.service.auth.AuthService;
 import jakarta.validation.Valid;
@@ -30,7 +28,8 @@ public class MemberController {
     private final AuthService authService;
 
     @PostMapping("/members")
-    public ResponseEntity<LoginResultResponse> signIn(@RequestBody @Valid SignInRequest request, @MemberId Long memberId) {
+    public ResponseEntity<LoginResultResponse> signIn(@RequestBody @Valid SignInRequest request,
+                                                      @MemberId Long memberId) {
         // Member 저장
         memberService.signIn(request, memberId);
 
@@ -40,7 +39,7 @@ public class MemberController {
         // 응답 (헤더 쿠키 : refreshToken, 바디 : accessToken)
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
-                .body(LoginResultResponse.builder().accessToken(issueTokenResult.getAccessToken()).build());
+                .body(LoginResultResponse.from(issueTokenResult));
     }
 
     @DeleteMapping("/members")

@@ -97,6 +97,7 @@ public class AuthService {
     public IssueTokenResult issueToken(Long memberId) {
         String accessToken = issueAccessToken(memberId);
         String refreshToken = issueRefreshToken(memberId);
+        Member member = findMemberById(memberId);
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
@@ -104,6 +105,8 @@ public class AuthService {
                 .sameSite(SameSite.NONE.attributeValue())
                 .build();
         return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+                .nickname(member.getNickname())
+                .imageUrl(member.getImage())
                 .build();
     }
 
