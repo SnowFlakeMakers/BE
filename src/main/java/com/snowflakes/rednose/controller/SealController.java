@@ -2,6 +2,8 @@ package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.MakeSealResponse;
+import com.snowflakes.rednose.dto.seal.AssignSealNameRequest;
+import com.snowflakes.rednose.dto.seal.AssignSealNameResponse;
 import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
@@ -42,5 +44,10 @@ public class SealController {
     @PostMapping("/seals")
     public MakeSealResponse make(@MemberId Long memberId, @RequestBody MakeSealRequest makeSealRequest) {
         return sealService.make(memberId, makeSealRequest);
+    }
+
+    @PostMapping("/seals/name")
+    public AssignSealNameResponse name(@MemberId Long memberId, @RequestBody AssignSealNameRequest assignSealNameReqeust){
+        return sealService.assignName(memberId, assignSealNameReqeust);
     }
 }
