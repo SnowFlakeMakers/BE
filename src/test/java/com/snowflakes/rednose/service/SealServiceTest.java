@@ -9,6 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.snowflakes.rednose.dto.MakeSealResponse;
+import com.snowflakes.rednose.dto.seal.AssignSealNameRequest;
+import com.snowflakes.rednose.dto.seal.AssignSealNameResponse;
 import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.entity.Member;
@@ -106,5 +108,32 @@ class SealServiceTest {
         // when then
         assertThrows(NotFoundException.class, () -> sealService.make(JANG.getId(), REQUEST),
                 MemberErrorCode.NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("씰 이름을 지정할 수 있다")
+    @Test
+    void 씰_이름지정_성공() {
+        // given
+        final Member JANG = MemberFixture.builder().id(1L).build();
+        final Seal CHRISTMAS_SEAL = SealFixture.builder().id(2L).member(JANG).name(null).numberOfLikes(0).build();
+        final String NAME = "우리의 추억이 담긴 씰";
+        final AssignSealNameRequest REQUEST = AssignSealNameRequest.builder().name(NAME)
+                .sealId(CHRISTMAS_SEAL.getId()).build();
+
+        when(memberRepository.findById(JANG.getId())).thenReturn(Optional.of(JANG));
+        when(sealRepository.findById(CHRISTMAS_SEAL.getId())).thenReturn(Optional.of(CHRISTMAS_SEAL));
+
+        final AssignSealNameResponse EXPECTED = AssignSealNameResponse.builder().sealId(CHRISTMAS_SEAL.getId())
+                .image(CHRISTMAS_SEAL.getImageUrl()).name(NAME).build();
+
+        // when
+        final AssignSealNameResponse ACTUAL = sealService.assignName(JANG.getId(), REQUEST);
+
+        // then
+        assertAll(
+                () -> verify(memberRepository, times(1)).findById(JANG.getId()),
+                () -> verify(sealRepository, times(1)).findById(CHRISTMAS_SEAL.getId()),
+                () -> assertThat(ACTUAL).usingRecursiveComparison().isEqualTo(EXPECTED)
+        );
     }
 }
