@@ -9,6 +9,7 @@ import com.snowflakes.rednose.support.fixture.SealFixture;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
@@ -72,6 +73,26 @@ class SealRepositoryTest {
                 () -> assertThat(seals2.getContent()).containsExactly(seal2),
                 () -> assertThat(seals3.getContent()).containsExactly(seal3),
                 () -> assertThat(seals4.getContent()).isEmpty()
+        );
+    }
+
+    @Test
+    void 우표_만든이의_이름으로_검색_가능하다() {
+        final Member JANG = memberRepository.save(MemberFixture.builder().nickname("jang").build());
+        final Member GIL = memberRepository.save(MemberFixture.builder().nickname("gil").build());
+
+        final Seal seal1 = sealRepository.save(SealFixture.builder().member(JANG).build());
+        final Seal seal2 = sealRepository.save(SealFixture.builder().member(GIL).build());
+        final Seal seal3 = sealRepository.save(SealFixture.builder().member(JANG).build());
+
+        PageRequest pageRequest1 = PageRequest.of(0, 2);
+
+        Page<Seal> seals1 = sealRepository.findAllAtBoard(JANG.getNickname(), pageRequest1);
+        Page<Seal> seals2 = sealRepository.findAllAtBoard(GIL.getNickname(), pageRequest1);
+
+        assertAll(
+                () -> assertThat(seals1.getContent()).contains(seal1, seal3),
+                () -> assertThat(seals2.getContent()).contains(seal2)
         );
     }
 }
