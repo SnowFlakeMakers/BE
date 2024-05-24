@@ -72,11 +72,12 @@ public class StampCraftService {
                 .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 
-    public void paint(Long stampCraftId, PaintStampRequest request) {
+    public PaintStampResponse paint(Long stampCraftId, PaintStampRequest request) {
         validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.paint(request.getX(), request.getY(), request.getColor());
         stampCrafts.put(stampCraftId, stampCraft);
+        return PaintStampResponse.from(request);
     }
 
     private void validExistStampCraft(Long stampCraftId) {
