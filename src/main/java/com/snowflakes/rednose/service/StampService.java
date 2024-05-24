@@ -4,6 +4,7 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
+import com.snowflakes.rednose.dto.stamp.StampResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.errorcode.StampErrorCode;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StampService {
 
     private final StampRepository stampRepository;
+    private final PreSignedUrlService preSignedUrlService;
     private final StampLikeRepository stampLikeRepository;
     private final StampRecordRepository stampRecordRepository;
 
@@ -50,6 +52,14 @@ public class StampService {
 
     public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
         Slice<Stamp> stamps = stampRepository.findMyStampsByMemberId(memberId, pageable);
-        return ShowMyStampsResponse.from(stamps);
+        return new ShowMyStampsResponse(
+                stamps.hasNext(),
+                stamps.stream().map(s -> makeStampResponse(s)).toList()
+        );
+    }
+
+    private StampResponse makeStampResponse(Stamp stamp) {
+        String imageUrl = preSignedUrlService.getPreSignedUrlForShow(stamp.getImageUrl());
+        return StampResponse.of(stamp, imageUrl);
     }
 }
