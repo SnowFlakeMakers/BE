@@ -39,7 +39,7 @@ public class SealService {
         Slice<Seal> seals = sealRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId, pageable);
         return new ShowMySealsResponse(
                 seals.hasNext(),
-                seals.stream().map(s -> makeSealResponse(s)).toList()
+                seals.stream().map(seal -> makeSealResponse(seal)).toList()
         );
     }
 
@@ -53,7 +53,7 @@ public class SealService {
         return new ShowSealsResponse(
                 seals.getTotalPages(),
                 seals.getNumber(),
-                seals.stream().map(SealResponse::from).toList()
+                seals.stream().map(seal -> makeSealResponse(seal)).toList()
         );
     }
 }
