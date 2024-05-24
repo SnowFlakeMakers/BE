@@ -2,7 +2,9 @@ package com.snowflakes.rednose.dto.seal;
 
 import com.snowflakes.rednose.entity.Seal;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class SealResponse {
 
     private String image;
@@ -24,17 +26,12 @@ public class SealResponse {
                 .build();
     }
 
-    public String getImage() {
-        return image;
+    public static SealResponse of(Seal seal, String preSignedUrl) {
+        return SealResponse.builder()
+                .image(preSignedUrl)
+                .name(seal.getName())
+                .numberOfLikes(seal.getNumberOfLikes())
+                .build();
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getNumberOfLikes() {
-        return numberOfLikes;
-    }
-
 
 }
