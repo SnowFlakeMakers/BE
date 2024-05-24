@@ -1,12 +1,16 @@
 package com.snowflakes.rednose.service;
 
 import com.snowflakes.rednose.dto.MakeSealResponse;
+import com.snowflakes.rednose.dto.seal.AssignSealNameRequest;
+import com.snowflakes.rednose.dto.seal.AssignSealNameResponse;
 import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
 import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.exception.errorcode.SealErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
@@ -42,6 +46,7 @@ public class SealService {
         return ShowMySealsResponse.from(seals);
     }
 
+    @Transactional
     public MakeSealResponse make(Long memberId, MakeSealRequest makeSealRequest) {
         Member member = findMemberById(memberId);
         Seal seal = sealRepository.save(
@@ -50,8 +55,30 @@ public class SealService {
         return MakeSealResponse.builder().sealId(seal.getId()).image(seal.getImageUrl()).build();
     }
 
+    @Transactional
+    public AssignSealNameResponse assignName(Long memberId, AssignSealNameRequest assignSealNameRequest) {
+        Member member = findMemberById(memberId);
+        Seal seal = findSealById(assignSealNameRequest);
+        validSealMember(seal, member);
+        seal.assignName(assignSealNameRequest.getName());
+        return AssignSealNameResponse.builder().sealId(seal.getId()).image(seal.getImageUrl()).name(seal.getName())
+                .build();
+    }
+
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
+    }
+
+    private Seal findSealById(AssignSealNameRequest assignSealNameRequest) {
+        return sealRepository.findById(assignSealNameRequest.getSealId())
+                .orElseThrow(() -> new NotFoundException(SealErrorCode.NOT_FOUND));
+    }
+
+    private void validSealMember(Seal seal, Member member) {
+        if (seal.getMember().equals(member)) {
+            return;
+        }
+        throw new UnAuthorizedException(AuthErrorCode.NOT_SEAL_CREATOR);
     }
 }
