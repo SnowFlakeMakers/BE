@@ -10,11 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 public class Seal {
 
@@ -50,5 +52,37 @@ public class Seal {
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.numberOfLikes = numberOfLikes;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getNumberOfLikes() {
+        return numberOfLikes;
+    }
+
+    public void like() {
+        numberOfLikes++;
+    }
+
+    public void cancelLike() {
+        numberOfLikes--;
     }
 }
