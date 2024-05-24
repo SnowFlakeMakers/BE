@@ -53,7 +53,7 @@ public class SealLikeService {
         Slice<Seal> seals = sealRepository.findMyLikesByMemberId(memberId, pageable);
         return new ShowMySealLikesResponse(
                 seals.hasNext(),
-                seals.stream().map(s -> makeSealResponse(s)).toList()
+                seals.stream().map(seal -> makeSealResponse(seal)).toList()
         );
     }
 
