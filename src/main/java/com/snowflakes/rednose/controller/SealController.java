@@ -2,6 +2,7 @@ package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.service.SealService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,11 @@ public class SealController {
     @GetMapping("/my-seals")
     public ShowMySealsResponse showMySeals(Pageable pageable, @MemberId Long memberId) {
         return sealService.showMySeals(pageable, memberId);
+    }
+
+    @GetMapping("/seals/pre-signed-url")
+    public CreatePreSignedUrlResponse getPreSignedUrl() {
+        return sealService.getPreSignedUrl();
     }
 
 }
