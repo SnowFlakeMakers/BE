@@ -11,7 +11,8 @@ public enum AuthErrorCode implements ErrorCode {
     UNSUPPORTED("지원하지 않는 token입니다"),
     MALFORMED("잘못된 구조의 token입니다"),
     SIGNATURE("데이터가 변조된 token입니다"),
-    NOT_EXISTS_IN_DATABASE("DB에 존재하지 않는 refresh token입니다");
+    NOT_EXISTS_IN_DATABASE("DB에 존재하지 않는 refresh token입니다"),
+    NOT_SEAL_CREATOR("씰을 만든 회원이 아닙니다");
 
     private final String message;
 
