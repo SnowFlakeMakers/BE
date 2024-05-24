@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -77,7 +78,7 @@ class SealRepositoryTest {
     }
 
     @Test
-    void 우표_만든이의_이름으로_검색_가능하다() {
+    void 씰_만든이의_이름으로_검색_가능하다() {
         final Member JANG = memberRepository.save(MemberFixture.builder().nickname("jang").build());
         final Member GIL = memberRepository.save(MemberFixture.builder().nickname("gil").build());
 
@@ -97,7 +98,7 @@ class SealRepositoryTest {
     }
 
     @Test
-    void 우표_이름으로_검색_가능하다() {
+    void 씰_이름으로_검색_가능하다() {
         final Member member1 = memberRepository.save(MemberFixture.builder().build());
         final Member member2 = memberRepository.save(MemberFixture.builder().build());
 
@@ -119,4 +120,19 @@ class SealRepositoryTest {
         );
     }
 
+    @Test
+    void 좋아요순으로_조회_가능하다() {
+        final Member member1 = memberRepository.save(MemberFixture.builder().build());
+        final Member member2 = memberRepository.save(MemberFixture.builder().build());
+
+        final Seal seal1 = sealRepository.save(SealFixture.builder().member(member1).numberOfLikes(2).build());
+        final Seal seal2 = sealRepository.save(SealFixture.builder().member(member2).numberOfLikes(3).build());
+        final Seal seal3 = sealRepository.save(SealFixture.builder().member(member1).numberOfLikes(5).build());
+        final Seal seal4 = sealRepository.save(SealFixture.builder().member(member2).numberOfLikes(1).build());
+
+        PageRequest pageRequest1 = PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "numberOfLikes"));
+
+        Page<Seal> seals1 = sealRepository.findAllAtBoard(null, pageRequest1);
+        assertThat(seals1.getContent()).containsExactly(seal3, seal2, seal1, seal4);
+    }
 }
