@@ -17,6 +17,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,9 +65,9 @@ public class StampCraftController {
         return stampCraftService.leave(stampCraftId, accessor);
     }
 
-    @PostMapping("/api/v1/pre-signed-url")
-    public CreatePreSignedUrlResponse getPreSignedUrl(@RequestBody CreatePreSignedUrlRequest request) {
-        return stampCraftService.getPreSignedUrl(request);
+    @GetMapping("/api/v1/stamps/pre-signed-url")
+    public CreatePreSignedUrlResponse getPreSignedUrl() {
+        return stampCraftService.getPreSignedUrl();
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/done")
@@ -74,4 +75,5 @@ public class StampCraftController {
     public CreateStampResponse done(@RequestBody CreateStampRequest request, Long memberId, @DestinationVariable("stamp-craft-id") Long stampCraftId) {
         return stampCraftService.done(request, memberId, stampCraftId);
     }
+
 }
