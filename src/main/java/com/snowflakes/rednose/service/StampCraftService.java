@@ -14,6 +14,7 @@ import com.snowflakes.rednose.dto.stampcraft.CreateStampResponse;
 import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
+import com.snowflakes.rednose.dto.stampcraft.PaintStampResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampCraft;
@@ -25,6 +26,7 @@ import com.snowflakes.rednose.exception.errorcode.StampCraftErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.StampRecordRepository;
 import com.snowflakes.rednose.repository.stamp.StampRepository;
+import com.snowflakes.rednose.service.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +53,7 @@ public class StampCraftService {
     private final StampRecordRepository stampRecordRepository;
     private final StampRepository stampRepository;
     private final AmazonS3 amazonS3;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${cloud.s3.bucket}")
     private String bucket;
@@ -168,8 +171,8 @@ public class StampCraftService {
     public void connect(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
-        Long memberId = Long.parseLong(headerAccessor.getFirstNativeHeader("MemberId"));
-        connections.put(sessionId, memberId);
+        String accessToken = headerAccessor.getFirstNativeHeader("Authorization");
+        connections.put(sessionId, jwtTokenProvider.getMemberId(accessToken));
     }
 
     public void disconnect(SessionDisconnectEvent event) {
