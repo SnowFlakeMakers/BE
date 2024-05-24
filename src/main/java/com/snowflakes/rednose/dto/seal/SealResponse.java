@@ -18,14 +18,6 @@ public class SealResponse {
         this.numberOfLikes = numberOfLikes;
     }
 
-    public static SealResponse from(Seal seal) {
-        return SealResponse.builder()
-                .image(seal.getImageUrl())
-                .name(seal.getName())
-                .numberOfLikes(seal.getNumberOfLikes())
-                .build();
-    }
-
     public static SealResponse of(Seal seal, String preSignedUrl) {
         return SealResponse.builder()
                 .image(preSignedUrl)
