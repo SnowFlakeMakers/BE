@@ -1,6 +1,8 @@
 package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.MemberId;
+import com.snowflakes.rednose.dto.MakeSealResponse;
+import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.service.SealService;
@@ -11,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +37,10 @@ public class SealController {
     @GetMapping("/my-seals")
     public ShowMySealsResponse showMySeals(Pageable pageable, Long memberId) {
         return sealService.showMySeals(pageable, memberId);
+    }
+
+    @PostMapping("/seals")
+    public MakeSealResponse make(@MemberId Long memberId, @RequestBody MakeSealRequest makeSealRequest) {
+        return sealService.make(memberId, makeSealRequest);
     }
 }
