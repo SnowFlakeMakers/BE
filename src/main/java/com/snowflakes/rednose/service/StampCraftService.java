@@ -41,11 +41,7 @@ public class StampCraftService {
     private final MemberRepository memberRepository;
     private final StampRecordRepository stampRecordRepository;
     private final StampRepository stampRepository;
-    private final AmazonS3 amazonS3;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Value("${cloud.s3.bucket}")
-    private String bucket;
 
     private Long ID = 0L;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
@@ -136,7 +132,4 @@ public class StampCraftService {
         connections.remove(sessionId);
     }
 
-    public CreatePreSignedUrlResponse getPreSignedUrl() {
-        return new CreatePreSignedUrlResponse(preSignedUrlService.getStampPreSignedUrlForPut());
-    }
 }

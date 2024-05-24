@@ -2,7 +2,6 @@ package com.snowflakes.rednose.service;
 
 import com.snowflakes.rednose.dto.seal.SealResponse;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
-import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealsResponse;
 import com.snowflakes.rednose.entity.Seal;
@@ -47,10 +46,6 @@ public class SealService {
     private SealResponse makeSealResponse(Seal seal) {
         String imageUrl = preSignedUrlService.getPreSignedUrlForShow(seal.getImageUrl());
         return SealResponse.of(seal, imageUrl);
-    }
-
-    public CreatePreSignedUrlResponse getPreSignedUrl() {
-        return new CreatePreSignedUrlResponse(preSignedUrlService.getSealPreSignedUrlForPut());
     }
 
     public ShowSealsResponse show(String keyword, Pageable pageable) {

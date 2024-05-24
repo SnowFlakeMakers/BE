@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -27,12 +28,14 @@ public class PreSignedUrlService {
     @Value("${cloud.s3.bucket}")
     private String bucket;
 
-    public String getStampPreSignedUrlForPut() {
-        return getPreSignedUrl(createPath(STAMP_DIRECTORY_NAME), HttpMethod.PUT);
+    public CreatePreSignedUrlResponse getStampPreSignedUrlForPut() {
+        String preSignedUrl = getPreSignedUrl(createPath(STAMP_DIRECTORY_NAME), HttpMethod.PUT);
+        return new CreatePreSignedUrlResponse(preSignedUrl);
     }
 
-    public String getSealPreSignedUrlForPut() {
-        return getPreSignedUrl(createPath(SEAL_DIRECTORY_NAME), HttpMethod.PUT);
+    public CreatePreSignedUrlResponse getSealPreSignedUrlForPut() {
+        String preSignedUrl = getPreSignedUrl(createPath(SEAL_DIRECTORY_NAME), HttpMethod.PUT);
+        return new CreatePreSignedUrlResponse(preSignedUrl);
     }
 
     public String getPreSignedUrlForShow(String path) {

@@ -5,6 +5,7 @@ import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealsResponse;
+import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.service.SealService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SealController {
 
     private final SealService sealService;
+    private final PreSignedUrlService preSignedUrlService;
 
     @GetMapping("/seals/{sealId}")
     public ResponseEntity<ShowSealSpecificResponse> specific(@PathVariable Long sealId, @MemberId Long memberId) {
@@ -44,7 +46,7 @@ public class SealController {
 
   @GetMapping("/seals/pre-signed-url")
     public CreatePreSignedUrlResponse getPreSignedUrl() {
-        return sealService.getPreSignedUrl();
+      return preSignedUrlService.getSealPreSignedUrlForPut();
     }
 
 }
