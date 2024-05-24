@@ -7,12 +7,20 @@ import com.snowflakes.rednose.support.RepositoryTest;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
 import com.snowflakes.rednose.support.fixture.SealFixture;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.auditing.AuditingHandler;
+import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -27,6 +35,16 @@ class SealRepositoryTest {
     private SealRepository sealRepository;
     @Autowired
     private SealLikeRepository sealLikeRepository;
+
+    @MockBean
+    DateTimeProvider dateTimeProvider;
+    @SpyBean
+    AuditingHandler auditingHandler;
+    @BeforeEach
+    void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        auditingHandler.setDateTimeProvider(dateTimeProvider);
+    }
 
     @Test
     void memberId로_내가_만든_씰을_조회할_수_있다() {
@@ -134,5 +152,21 @@ class SealRepositoryTest {
 
         Page<Seal> seals1 = sealRepository.findAllAtBoard(null, pageRequest1);
         assertThat(seals1.getContent()).containsExactly(seal3, seal2, seal1, seal4);
+    }
+
+    @Test
+    void 최신순으로_조회_가능하다() {
+        final Member member1 = memberRepository.save(MemberFixture.builder().build());
+        final Member member2 = memberRepository.save(MemberFixture.builder().build());
+
+        final Seal seal1 = sealRepository.save(SealFixture.builder().member(member1).createdAt(LocalDateTime.now().minusHours(1)).build());
+        final Seal seal2 = sealRepository.save(SealFixture.builder().member(member2).createdAt(LocalDateTime.now().minusHours(5)).build());
+        final Seal seal3 = sealRepository.save(SealFixture.builder().member(member1).createdAt(LocalDateTime.now().minusHours(2)).build());
+        final Seal seal4 = sealRepository.save(SealFixture.builder().member(member2).createdAt(LocalDateTime.now().minusHours(3)).build());
+
+        PageRequest pageRequest1 = PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Seal> seals1 = sealRepository.findAllAtBoard(null, pageRequest1);
+        assertThat(seals1.getContent()).containsExactly(seal1, seal3, seal4, seal2);
     }
 }
