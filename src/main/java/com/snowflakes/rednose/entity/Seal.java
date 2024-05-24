@@ -9,11 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,7 +28,7 @@ public class Seal {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "image_url", nullable = false)
@@ -84,5 +84,9 @@ public class Seal {
 
     public void cancelLike() {
         numberOfLikes--;
+    }
+
+    public void assignName(String name) {
+        this.name = name;
     }
 }
