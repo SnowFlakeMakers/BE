@@ -2,7 +2,11 @@ package com.snowflakes.rednose.support.fixture;
 
 import com.snowflakes.rednose.entity.Stamp;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class StampFixture {
 
     private Long id;
@@ -41,6 +45,7 @@ public class StampFixture {
     }
 
     public Stamp build() {
-        return Stamp.builder().id(id).name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes).build();
+        return Stamp.builder().id(id).name(name).imageUrl(imageUrl).createdAt(createdAt).numberOfLikes(numberOfLikes)
+                .build();
     }
 }

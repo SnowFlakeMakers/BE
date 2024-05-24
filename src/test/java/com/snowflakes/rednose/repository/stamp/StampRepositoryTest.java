@@ -3,15 +3,15 @@ package com.snowflakes.rednose.repository.stamp;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
+import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.StampRecord;
-import com.snowflakes.rednose.repository.StampRecordRepository;
-import com.snowflakes.rednose.support.fixture.MemberFixture;
 import com.snowflakes.rednose.repository.MemberRepository;
+import com.snowflakes.rednose.repository.StampRecordRepository;
 import com.snowflakes.rednose.support.RepositoryTest;
-import java.time.LocalDateTime;
 import com.snowflakes.rednose.support.fixture.StampFixture;
+import com.snowflakes.rednose.support.fixture.MemberFixture;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,15 +56,11 @@ class StampRepositoryTest {
     @Test
     void 우표_목록_최신순_조회() {
         // given
-        Stamp stamp1 = StampFixture.builder().createdAt(LocalDateTime.now()).build();
-        Stamp stamp2 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1))
-                .build();
-        Stamp stamp3 = StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2))
-                .build();
-
-        stampRepository.save(stamp3);
-        stampRepository.save(stamp1);
-        stampRepository.save(stamp2);
+        final Stamp BIRTHDAY_STAMP = 저장(StampFixture.builder().createdAt(LocalDateTime.now().minusDays(2))
+                .build());
+        final Stamp CHRISTMAS_STAMP = 저장(StampFixture.builder().createdAt(LocalDateTime.now()).build());
+        final Stamp ANNIVERSARY_STAMP = 저장(StampFixture.builder().createdAt(LocalDateTime.now().minusDays(1))
+                .build());
 
         // when
         Page<Stamp> page0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("createdAt").descending()));
@@ -72,8 +68,8 @@ class StampRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(page0.getContent()).containsExactly(stamp1, stamp2),
-                () -> assertThat(page1.getContent()).containsExactly(stamp3)
+                () -> assertThat(page0.getContent()).containsExactly(CHRISTMAS_STAMP, ANNIVERSARY_STAMP),
+                () -> assertThat(page1.getContent()).containsExactly(BIRTHDAY_STAMP)
         );
     }
 
@@ -81,15 +77,11 @@ class StampRepositoryTest {
     @Test
     void 우표_목록_좋아요순_조회() {
         // given
-        Stamp stamp1 = StampFixture.builder().numberOfLikes(1).build();
-        Stamp stamp2 = StampFixture.builder().numberOfLikes(2)
-                .build();
-        Stamp stamp3 = StampFixture.builder().numberOfLikes(3)
-                .build();
-
-        stampRepository.save(stamp2);
-        stampRepository.save(stamp3);
-        stampRepository.save(stamp1);
+        final Stamp BIRTHDAY_STAMP = 저장(StampFixture.builder().numberOfLikes(3)
+                .build());
+        final Stamp CHRISTMAS_STAMP = 저장(StampFixture.builder().numberOfLikes(1).build());
+        final Stamp ANNIVERSARY_STAMP = 저장(StampFixture.builder().numberOfLikes(2)
+                .build());
 
         // when
         Slice<Stamp> slice0 = stampRepository.findAll(PageRequest.of(0, 2, Sort.by("numberOfLikes").descending()));
@@ -97,9 +89,13 @@ class StampRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(slice0.getContent()).containsExactly(stamp3, stamp2),
-                () -> assertThat(slice1.getContent()).containsExactly(stamp1)
+                () -> assertThat(slice0.getContent()).containsExactly(BIRTHDAY_STAMP, ANNIVERSARY_STAMP),
+                () -> assertThat(slice1.getContent()).containsExactly(CHRISTMAS_STAMP)
         );
+    }
+
+    private Stamp 저장(Stamp stamp3) {
+        return stampRepository.save(stamp3);
     }
 
     @Test

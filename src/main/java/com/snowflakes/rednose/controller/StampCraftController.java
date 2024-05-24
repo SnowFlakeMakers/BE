@@ -2,9 +2,9 @@ package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
-import com.snowflakes.rednose.dto.stampcraft.CreateStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
+import com.snowflakes.rednose.dto.stampcraft.CreateStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampResponse;
 import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
@@ -48,20 +48,23 @@ public class StampCraftController {
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/enter")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public EnterStampCraftResponse enter(@DestinationVariable("stamp-craft-id") Long stampCraftId, SimpMessageHeaderAccessor accessor) {
+    public EnterStampCraftResponse enter(@DestinationVariable("stamp-craft-id") Long stampCraftId,
+                                         SimpMessageHeaderAccessor accessor) {
         return stampCraftService.enter(stampCraftId, accessor);
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/paint")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public PaintStampRequest paint(@DestinationVariable("stamp-craft-id") Long stampCraftId, @RequestBody PaintStampRequest request) {
+    public PaintStampRequest paint(@DestinationVariable("stamp-craft-id") Long stampCraftId,
+                                   @RequestBody PaintStampRequest request) {
         stampCraftService.paint(stampCraftId, request);
         return request;
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/leave")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public LeaveStampCraftResponse leave(@DestinationVariable("stamp-craft-id") Long stampCraftId, SimpMessageHeaderAccessor accessor) {
+    public LeaveStampCraftResponse leave(@DestinationVariable("stamp-craft-id") Long stampCraftId,
+                                         SimpMessageHeaderAccessor accessor) {
         return stampCraftService.leave(stampCraftId, accessor);
     }
 
@@ -72,7 +75,8 @@ public class StampCraftController {
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/done")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public CreateStampResponse done(@RequestBody CreateStampRequest request, Long memberId, @DestinationVariable("stamp-craft-id") Long stampCraftId) {
+    public CreateStampResponse done(@RequestBody CreateStampRequest request, Long memberId,
+                                    @DestinationVariable("stamp-craft-id") Long stampCraftId) {
         return stampCraftService.done(request, memberId, stampCraftId);
     }
 

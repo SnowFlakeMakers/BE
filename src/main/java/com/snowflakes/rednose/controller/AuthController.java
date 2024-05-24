@@ -4,7 +4,6 @@ import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +29,7 @@ public class AuthController {
     @GetMapping("/login/kakao")
     public ResponseEntity<LoginResultResponse> kakaoLogin(@RequestParam String code) {
         UserInfo userInfo = authService.getUserInfoFromAuthCode(code);
-
         IssueTokenResult issueTokenResult = authService.issueTokenWithUserInfo(userInfo);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));
@@ -42,10 +39,7 @@ public class AuthController {
     @PostMapping("/reissue/kakao")
     public ResponseEntity<LoginResultResponse> kakaoReissue(
             @CookieValue("refreshToken") String refreshToken) {
-        Member member = authService.validateRefreshToken(refreshToken);
-
-        IssueTokenResult issueTokenResult = authService.issueToken(member);
-
+        IssueTokenResult issueTokenResult = authService.reIssueToken(refreshToken);
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));

@@ -1,6 +1,5 @@
 package com.snowflakes.rednose.service.auth;
 
-import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import io.jsonwebtoken.Claims;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
     private final String ISSUER = "rednose";
     private final String ID = "id";
-    private final String NICKNAME = "nickname";
     private String encodedKey;
 
     private final Long accessTokenValidTime = 1800000L;
@@ -36,11 +34,10 @@ public class JwtTokenProvider {
     }
 
     // JWT access 토큰 생성
-    public String createAccessToken(Member member) {
-        // claim : id, nickname
+    public String createAccessToken(Long memberId) {
+        // claim : id
         Map<String, Object> claims = new HashMap<>();
-        claims.put(ID, member.getId());
-        claims.put(NICKNAME, member.getNickname());
+        claims.put(ID, memberId);
 
         // 발행시간
         Date now = new Date();

@@ -43,7 +43,7 @@ class JwtTokenProviderTest {
         Member member = MemberFixture.builder().id(MEMBER_ID).build();
 
         // when
-        String accessToken = jwtTokenProvider.createAccessToken(member);
+        String accessToken = jwtTokenProvider.createAccessToken(MEMBER_ID);
         Long memberId = jwtTokenProvider.getMemberId(accessToken);
 
         // then
@@ -101,7 +101,7 @@ class JwtTokenProviderTest {
         Member member = MemberFixture.builder().id(MEMBER_ID).build();
 
         // when
-        String accessToken = jwtTokenProvider.createAccessToken(member);
+        String accessToken = jwtTokenProvider.createAccessToken(MEMBER_ID);
         String malformedToken = accessToken + "!@#@#MalFoRm!@#!@#";
 
         // then
