@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.seal.SealResponse;
 import com.snowflakes.rednose.dto.seallike.ShowMySealLikesResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
@@ -26,6 +27,7 @@ public class SealLikeService {
     private final MemberRepository memberRepository;
     private final SealRepository sealRepository;
     private final SealLikeRepository sealLikeRepository;
+    private final PreSignedUrlService preSignedUrlService;
 
     @Transactional
     public void like(Long sealId, Long memberId) {
@@ -49,7 +51,15 @@ public class SealLikeService {
     public ShowMySealLikesResponse show(Long memberId, Pageable pageable) {
         validateMemberExist(memberId);
         Slice<Seal> seals = sealRepository.findMyLikesByMemberId(memberId, pageable);
-        return ShowMySealLikesResponse.from(seals);
+        return new ShowMySealLikesResponse(
+                seals.hasNext(),
+                seals.stream().map(seal -> makeSealResponse(seal)).toList()
+        );
+    }
+
+    private SealResponse makeSealResponse(Seal seal) {
+        String imageUrl = preSignedUrlService.getPreSignedUrlForShow(seal.getImageUrl());
+        return SealResponse.of(seal, imageUrl);
     }
 
     private void validateMemberExist(Long memberId) {

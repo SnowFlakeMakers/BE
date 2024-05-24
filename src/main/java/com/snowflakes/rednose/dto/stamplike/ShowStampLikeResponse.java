@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.dto.stamplike;
 
+import com.snowflakes.rednose.dto.stamp.StampResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,11 +26,4 @@ public class ShowStampLikeResponse {
                 .build();
     }
 
-    public boolean getHasNext() {
-        return hasNext;
-    }
-
-    public List<StampResponse> getContents() {
-        return contents;
-    }
 }

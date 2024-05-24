@@ -1,11 +1,12 @@
 package com.snowflakes.rednose.dto.stamp;
 
-import com.snowflakes.rednose.dto.stamplike.StampResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.domain.Slice;
 import java.util.List;
 
+@Getter
 public class ShowMyStampsResponse {
 
     private boolean hasNext;
@@ -23,14 +24,6 @@ public class ShowMyStampsResponse {
                 .hasNext(stamps.hasNext())
                 .contents(stamps.stream().map(StampResponse::from).toList())
                 .build();
-    }
-
-    public boolean getHasNext() {
-        return hasNext;
-    }
-
-    public List<StampResponse> getContents() {
-        return contents;
     }
 
 }
