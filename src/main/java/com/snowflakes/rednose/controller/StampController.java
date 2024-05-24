@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
@@ -26,7 +27,7 @@ public class StampController {
     }
 
     @GetMapping("/my-stamps")
-    public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
-        return stampService.showMyStamps(pageable, 1L);
+    public ShowMyStampsResponse showMyStamps(Pageable pageable,@MemberId Long memberId) {
+        return stampService.showMyStamps(pageable, memberId);
     }
 }
