@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `seal`
 (
     `id`              BIGINT       NOT NULL auto_increment,
     `member_id`       BIGINT       NOT NULL,
-    `name`            VARCHAR(255) NOT NULL,
+    `name`            VARCHAR(255) ,
     `image_url`       VARCHAR(255) NOT NULL,
     `created_at`      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `number_of_likes` MEDIUMINT    NOT NULL,
