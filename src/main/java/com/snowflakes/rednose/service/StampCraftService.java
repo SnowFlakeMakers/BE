@@ -8,6 +8,7 @@ import com.snowflakes.rednose.dto.stampcraft.CreateStampResponse;
 import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
+import com.snowflakes.rednose.dto.stampcraft.PaintStampResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampCraft;
@@ -41,7 +42,6 @@ public class StampCraftService {
     private final StampRecordRepository stampRecordRepository;
     private final StampRepository stampRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PreSignedUrlService preSignedUrlService;
 
     private Long ID = 0L;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
@@ -60,11 +60,12 @@ public class StampCraftService {
                 .orElseThrow(() -> new NotFoundException(MemberErrorCode.NOT_FOUND));
     }
 
-    public void paint(Long stampCraftId, PaintStampRequest request) {
+    public PaintStampResponse paint(Long stampCraftId, PaintStampRequest request) {
         validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         stampCraft.paint(request.getX(), request.getY(), request.getColor());
         stampCrafts.put(stampCraftId, stampCraft);
+        return PaintStampResponse.from(request);
     }
 
     private void validExistStampCraft(Long stampCraftId) {
@@ -131,7 +132,4 @@ public class StampCraftService {
         connections.remove(sessionId);
     }
 
-    public CreatePreSignedUrlResponse getPreSignedUrl() {
-        return new CreatePreSignedUrlResponse(preSignedUrlService.getStampPreSignedUrlForPut());
-    }
 }

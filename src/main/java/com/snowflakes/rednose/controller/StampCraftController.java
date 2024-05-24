@@ -9,6 +9,8 @@ import com.snowflakes.rednose.dto.stampcraft.CreateStampResponse;
 import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
+import com.snowflakes.rednose.dto.stampcraft.PaintStampResponse;
+import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.service.StampCraftService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class StampCraftController {
 
     private final StampCraftService stampCraftService;
+    private final PreSignedUrlService preSignedUrlService;
 
     @PostMapping("/api/v1/stamp-craft")
     public CreateStampCraftResponse create(@RequestBody CreateStampCraftRequest request, Long memberId) {
@@ -55,10 +58,9 @@ public class StampCraftController {
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/paint")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public PaintStampRequest paint(@DestinationVariable("stamp-craft-id") Long stampCraftId,
-                                   @RequestBody PaintStampRequest request) {
-        stampCraftService.paint(stampCraftId, request);
-        return request;
+    public PaintStampResponse paint(@DestinationVariable("stamp-craft-id") Long stampCraftId,
+                                    @RequestBody PaintStampRequest request) {
+        return stampCraftService.paint(stampCraftId, request);
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/leave")
@@ -70,7 +72,7 @@ public class StampCraftController {
 
     @GetMapping("/api/v1/stamps/pre-signed-url")
     public CreatePreSignedUrlResponse getPreSignedUrl() {
-        return stampCraftService.getPreSignedUrl();
+        return preSignedUrlService.getStampPreSignedUrlForPut();
     }
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/done")
