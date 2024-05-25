@@ -8,6 +8,7 @@ import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.service.SealService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -42,12 +43,12 @@ public class SealController {
     }
 
     @PostMapping("/seals")
-    public MakeSealResponse make(@MemberId Long memberId, @RequestBody MakeSealRequest makeSealRequest) {
+    public MakeSealResponse make(@MemberId Long memberId, @RequestBody @Valid MakeSealRequest makeSealRequest) {
         return sealService.make(memberId, makeSealRequest);
     }
 
     @PostMapping("/seals/name")
-    public AssignSealNameResponse name(@MemberId Long memberId, @RequestBody AssignSealNameRequest assignSealNameReqeust){
+    public AssignSealNameResponse name(@MemberId Long memberId, @RequestBody @Valid AssignSealNameRequest assignSealNameReqeust){
         return sealService.assignName(memberId, assignSealNameReqeust);
     }
 }
