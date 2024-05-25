@@ -1,3 +1,10 @@
 insert into member values (null, 1234, 'jang', 'image.com',true,'123123');
 insert into member values (null, 1235, 'gil', 'image2.com',true,'123124');
 insert into member values (null, 1236, 'lee', 'image3.com',true,'123125');
+insert into member values (null, 1237, 'mong', 'image3.com',true,'123126');
+insert into member values (null, 1238, 'nagyueng', 'image3.com',true,'123127');
+insert into member values (null, 1239, 'dongguk', 'image3.com',true,'123128');
+insert into member values (null, 1240, 'lahm', 'image3.com',true,'123129');
+insert into member values (null, 1241, 'minjae', 'image3.com',true,'123130');
+insert into member values (null, 1242, 'heungmin', 'image3.com',true,'123131');
+insert into member values (null, 1243, 'heechan', 'image3.com',true,'123132');
