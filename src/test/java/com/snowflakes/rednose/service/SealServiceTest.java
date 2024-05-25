@@ -41,6 +41,9 @@ class SealServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
+    @Mock
+    private PreSignedUrlService preSignedUrlService;
+
     @InjectMocks
     private SealService sealService;
 
@@ -76,11 +79,13 @@ class SealServiceTest {
         final Member JANG = MemberFixture.builder().id(1L).build();
         final Seal CHRISTMAS_SEAL = SealFixture.builder().id(2L).member(JANG).name("크리스마스씰").numberOfLikes(0).build();
         final MakeSealRequest REQUEST = MakeSealRequest.builder().image(CHRISTMAS_SEAL.getImageUrl()).build();
+        final String PRE_SIGNED_URL = "preSigned.com";
 
         when(memberRepository.findById(JANG.getId())).thenReturn(Optional.of(JANG));
         when(sealRepository.save(any(Seal.class))).thenReturn(CHRISTMAS_SEAL);
+        when(preSignedUrlService.getPreSignedUrlForShow(CHRISTMAS_SEAL.getImageUrl())).thenReturn(PRE_SIGNED_URL);
 
-        final MakeSealResponse EXPECTED = MakeSealResponse.builder().image(CHRISTMAS_SEAL.getImageUrl())
+        final MakeSealResponse EXPECTED = MakeSealResponse.builder().image(PRE_SIGNED_URL)
                 .sealId(CHRISTMAS_SEAL.getId()).name(CHRISTMAS_SEAL.getName()).build();
 
         // when
@@ -89,6 +94,7 @@ class SealServiceTest {
         assertAll(
                 () -> verify(memberRepository, times(1)).findById(JANG.getId()),
                 () -> verify(sealRepository, times(1)).save(any(Seal.class)),
+                () -> verify(preSignedUrlService, times(1)).getPreSignedUrlForShow(CHRISTMAS_SEAL.getImageUrl()),
                 () -> assertThat(ACTUAL).usingRecursiveComparison().isEqualTo(EXPECTED)
         );
     }
