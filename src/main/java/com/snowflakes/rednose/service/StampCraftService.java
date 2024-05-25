@@ -99,7 +99,8 @@ public class StampCraftService {
     }
 
     @Transactional
-    public CreateStampResponse done(CreateStampRequest request, Long memberId, Long stampCraftId) {
+    public CreateStampResponse done(CreateStampRequest request, SimpMessageHeaderAccessor accessor, Long stampCraftId) {
+        Long memberId = connections.get(accessor.getSessionId());
         Member host = findMemberById(memberId);
         validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
