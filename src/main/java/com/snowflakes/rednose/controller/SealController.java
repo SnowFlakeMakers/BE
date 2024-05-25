@@ -46,15 +46,9 @@ public class SealController {
         return sealService.showMySeals(pageable, memberId);
     }
 
-
     @PostMapping("/seals")
     public MakeSealResponse make(@MemberId Long memberId, @RequestBody @Valid MakeSealRequest makeSealRequest) {
         return sealService.make(memberId, makeSealRequest);
-    }
-
-    @PostMapping("/seals/name")
-    public AssignSealNameResponse name(@MemberId Long memberId, @RequestBody @Valid AssignSealNameRequest assignSealNameReqeust){
-        return sealService.assignName(memberId, assignSealNameReqeust);
     }
 
     @GetMapping("/seals")
