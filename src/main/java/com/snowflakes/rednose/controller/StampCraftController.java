@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlRequest;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
@@ -35,8 +36,8 @@ public class StampCraftController {
     private final PreSignedUrlService preSignedUrlService;
 
     @PostMapping("/api/v1/stamp-craft")
-    public CreateStampCraftResponse create(@RequestBody CreateStampCraftRequest request, Long memberId) {
-        return stampCraftService.create(request, 1L);
+    public CreateStampCraftResponse create(@RequestBody CreateStampCraftRequest request, @MemberId Long memberId) {
+        return stampCraftService.create(request, memberId);
     }
 
     @EventListener
@@ -77,9 +78,9 @@ public class StampCraftController {
 
     @MessageMapping("/stamp-craft/{stamp-craft-id}/done")
     @SendTo("/sub/stamp-craft/{stamp-craft-id}")
-    public CreateStampResponse done(@RequestBody CreateStampRequest request, Long memberId,
+    public CreateStampResponse done(@RequestBody CreateStampRequest request, SimpMessageHeaderAccessor accessor,
                                     @DestinationVariable("stamp-craft-id") Long stampCraftId) {
-        return stampCraftService.done(request, memberId, stampCraftId);
+        return stampCraftService.done(request, accessor, stampCraftId);
     }
 
 }
