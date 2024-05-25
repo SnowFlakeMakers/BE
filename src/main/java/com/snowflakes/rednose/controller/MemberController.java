@@ -43,7 +43,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/members")
-    public ResponseEntity<Void> cancleMembership(@MemberId Long memberId) {
+    public ResponseEntity<Void> cancelMembership(@MemberId Long memberId) {
         memberService.delete(memberId);
         return ResponseEntity.noContent().build();
     }
