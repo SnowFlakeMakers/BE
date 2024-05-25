@@ -7,6 +7,7 @@ import com.snowflakes.rednose.service.auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
     public final String AUTHORIZATION = "Authorization";
@@ -43,8 +45,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private void getHeaderAndVerifySignature(HttpServletRequest request) {
         String accessToken = request.getHeader(AUTHORIZATION);
-        if (accessToken == null) {
-            throw new UnAuthorizedException(AuthErrorCode.NULL_TOKEN);
+        if (accessToken == null || accessToken.isBlank()) {
+            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
         }
         jwtTokenProvider.verifySignature(accessToken.split(" ")[1]);
     }
