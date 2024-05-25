@@ -1,1 +1,13 @@
-insert into stamp_like values (null, 5,51);
+insert into stamp_like values (null, 1,1);
+insert into stamp_like values (null, 1,106);
+insert into stamp_like values (null, 1,107);
+insert into stamp_like values (null, 1,108);
+insert into stamp_like values (null, 1,109);
+insert into stamp_like values (null, 1,110);
+insert into stamp_like values (null, 148,106);
+insert into stamp_like values (null, 149,107);
+insert into stamp_like values (null, 150,108);
+insert into stamp_like values (null, 142,109);
+insert into stamp_like values (null, 143,110);
+insert into stamp_like values (null, 144,111);
+insert into stamp_like values (null, 145,112);

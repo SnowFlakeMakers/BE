@@ -1,3 +1,12 @@
 insert into seal values (null,6,'크리스마스 씰','image.com','2024-05-19',10);
 insert into seal values (null,6,'석가탄신일 씰','image.com','2024-05-18',0);
 insert into seal values (null,7,'생일 씰','image.com','2024-05-17',3);
+insert into seal values (null,6,'발렌타인데이 씰','image.com','2024-05-19',10);
+insert into seal values (null,6,'어린이날 씰','image.com','2024-05-18',0);
+insert into seal values (null,7,'빼빼로데이 씰','image.com','2024-05-17',3);
+insert into seal values (null,6,'결혼기념일 씰','image.com','2024-05-19',10);
+insert into seal values (null,6,'힙합 씰','image.com','2024-05-18',0);
+insert into seal values (null,7,'발라드 씰','image.com','2024-05-17',3);
+insert into seal values (null,6,'케이팝 씰','image.com','2024-05-19',10);
+insert into seal values (null,6,'아이돌 씰','image.com','2024-05-18',0);
+insert into seal values (null,7,'축구 씰','image.com','2024-05-17',3);
