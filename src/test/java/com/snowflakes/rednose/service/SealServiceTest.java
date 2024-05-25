@@ -136,4 +136,20 @@ class SealServiceTest {
                 () -> assertThat(ACTUAL).usingRecursiveComparison().isEqualTo(EXPECTED)
         );
     }
+
+    @DisplayName("씰 이름을 지정할 때 회원이 없으면 예외가 발생한다")
+    @Test
+    void 씰_이름지정_회원없음() {
+        // given
+        final Member JANG = MemberFixture.builder().id(1L).build();
+        final Seal CHRISTMAS_SEAL = SealFixture.builder().id(2L).member(JANG).name(null).numberOfLikes(0).build();
+        final String NAME = "우리의 추억이 담긴 씰";
+        final AssignSealNameRequest REQUEST = AssignSealNameRequest.builder().name(NAME)
+                .sealId(CHRISTMAS_SEAL.getId()).build();
+
+        when(memberRepository.findById(JANG.getId())).thenReturn(Optional.empty());
+        // when then
+        assertThrows(NotFoundException.class, () -> sealService.assignName(JANG.getId(), REQUEST),
+                MemberErrorCode.NOT_FOUND.getMessage());
+    }
 }
