@@ -20,7 +20,7 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     @Query("select s from Stamp s join StampRecord sr on s.id = sr.stamp.id where sr.member.id = :memberId")
     Slice<Stamp> findMyStampsByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
-    @Query("select distinct s from Stamp s join StampRecord r where :keyword is null " +
+    @Query("select distinct s from Stamp s join StampRecord r on s.id = r.stamp.id where :keyword is null " +
             "or s.name like concat('%',:keyword,'%') " +
             "or r.member.nickname like concat('%',:keyword,'%')")
     Page<Stamp> findAllAtBoard(@Param("keyword") String keyword, Pageable pageable);
