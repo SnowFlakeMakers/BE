@@ -15,7 +15,6 @@ import com.snowflakes.rednose.exception.errorcode.SealErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,11 +67,8 @@ public class SealService {
     @Transactional
     public MakeSealResponse make(Long memberId, MakeSealRequest makeSealRequest) {
         Member member = findMemberById(memberId);
-        Seal seal = sealRepository.save(
-                Seal.builder().name(makeSealRequest.getName()).createdAt(LocalDateTime.now()).member(member)
-                        .imageUrl(makeSealRequest.getImage())
-                        .numberOfLikes(0).build());
-        return MakeSealResponse.builder().sealId(seal.getId()).image(seal.getImageUrl()).name(seal.getName()).build();
+        Seal seal = sealRepository.save(makeSealRequest.toSeal(member));
+        return MakeSealResponse.from(seal);
     }
 
     private Member findMemberById(Long memberId) {
