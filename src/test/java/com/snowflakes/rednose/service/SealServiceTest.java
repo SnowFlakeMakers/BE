@@ -16,6 +16,8 @@ import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
 import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.exception.errorcode.SealErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
@@ -171,4 +173,24 @@ class SealServiceTest {
         assertThrows(NotFoundException.class, () -> sealService.assignName(JANG.getId(), REQUEST),
                 SealErrorCode.NOT_FOUND.getMessage());
     }
+
+    @DisplayName("씰 이름을 지정할 때 씰 제작자와 회원이 다르면 예외가 발생한다")
+    @Test
+    void 씰_이름지정_씰주인과다른회원() {
+        // given
+        final Member JANG = MemberFixture.builder().id(1L).build();
+        final Member GIL = MemberFixture.builder().id(2L).build();
+        final Seal CHRISTMAS_SEAL = SealFixture.builder().id(2L).member(JANG).name(null).numberOfLikes(0).build();
+        final String NAME = "우리의 추억이 담긴 씰";
+        final AssignSealNameRequest REQUEST = AssignSealNameRequest.builder().name(NAME)
+                .sealId(CHRISTMAS_SEAL.getId()).build();
+
+        when(memberRepository.findById(GIL.getId())).thenReturn(Optional.of(GIL));
+        when(sealRepository.findById(CHRISTMAS_SEAL.getId())).thenReturn(Optional.of(CHRISTMAS_SEAL));
+
+        // when, then
+        assertThrows(UnAuthorizedException.class, () -> sealService.assignName(GIL.getId(), REQUEST),
+                AuthErrorCode.NOT_SEAL_CREATOR.getMessage());
+    }
+
 }
