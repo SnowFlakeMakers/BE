@@ -19,7 +19,6 @@ public class AssignSealNameRequest {
     @Length(max = 255, min = 1, message = "씰 이름은 1자 이상 255자 이하여야 합니다")
     private String name;
 
-    @NotBlank(message = "씰 id는 빈칸일 수 없습니다")
     @Min(value = 1, message = "씰 id는 0 이하일 수 없습니다")
     private Long sealId;
 }
