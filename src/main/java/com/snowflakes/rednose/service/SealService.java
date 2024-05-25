@@ -68,7 +68,7 @@ public class SealService {
     public MakeSealResponse make(Long memberId, MakeSealRequest makeSealRequest) {
         Member member = findMemberById(memberId);
         Seal seal = sealRepository.save(makeSealRequest.toSeal(member));
-        return MakeSealResponse.from(seal);
+        return MakeSealResponse.of(seal, preSignedUrlService.getPreSignedUrlForShow(seal.getImageUrl()));
     }
 
     private Member findMemberById(Long memberId) {

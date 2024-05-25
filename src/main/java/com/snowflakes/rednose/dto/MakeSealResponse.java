@@ -13,7 +13,7 @@ public class MakeSealResponse {
     private String image;
     private String name;
 
-    public static MakeSealResponse from(Seal seal) {
-        return MakeSealResponse.builder().sealId(seal.getId()).image(seal.getImageUrl()).name(seal.getName()).build();
+    public static MakeSealResponse of(Seal seal, String preSignedUrl) {
+        return MakeSealResponse.builder().sealId(seal.getId()).image(preSignedUrl).name(seal.getName()).build();
     }
 }
