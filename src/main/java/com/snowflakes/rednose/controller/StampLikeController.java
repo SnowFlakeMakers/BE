@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.stamplike.ShowStampLikeResponse;
 import com.snowflakes.rednose.service.StampLikeService;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +22,18 @@ public class StampLikeController {
     private final StampLikeService stampLikeService;
 
     @PostMapping("/stamp-likes/{stampId}")
-    public ResponseEntity<Void> like(Long memberId, @PathVariable Long stampId) {
+    public ResponseEntity<Void> like(@MemberId Long memberId, @PathVariable Long stampId) {
         stampLikeService.like(stampId, memberId);
         return ResponseEntity.created(URI.create("/api/v1/stamps")).build();
     }
 
     @GetMapping("/stamp-likes")
-    public ShowStampLikeResponse show(Long memberId, Pageable pageable) {
+    public ShowStampLikeResponse show(@MemberId Long memberId, Pageable pageable) {
         return stampLikeService.getLikes(memberId, pageable);
     }
 
     @DeleteMapping("/stamp-likes/{stampId}")
-    public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long stampId) {
+    public ResponseEntity<Void> cancel(@MemberId Long memberId, @PathVariable Long stampId) {
         stampLikeService.cancel(stampId, memberId);
         return ResponseEntity.ok().build();
     }
