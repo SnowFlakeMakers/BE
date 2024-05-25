@@ -86,7 +86,4 @@ public class Seal {
         numberOfLikes--;
     }
 
-    public void assignName(String name) {
-        this.name = name;
-    }
 }
