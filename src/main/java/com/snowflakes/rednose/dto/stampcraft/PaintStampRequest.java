@@ -1,5 +1,8 @@
 package com.snowflakes.rednose.dto.stampcraft;
 
+import lombok.Getter;
+
+@Getter
 public class PaintStampRequest {
 
     private int x;
@@ -7,18 +10,6 @@ public class PaintStampRequest {
     private String color;
 
     protected PaintStampRequest() {
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getColor() {
-        return color;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.snowflakes.rednose.controller;
 
-
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
@@ -9,8 +8,6 @@ import com.snowflakes.rednose.service.StampService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +33,7 @@ public class StampController {
     }
 
     @GetMapping("/my-stamps")
-    public ShowMyStampsResponse showMyStamps(Pageable pageable, Long memberId) {
-        return stampService.showMyStamps(pageable, 1L);
+    public ShowMyStampsResponse showMyStamps(Pageable pageable,@MemberId Long memberId) {
+        return stampService.showMyStamps(pageable, memberId);
     }
 }

@@ -1,8 +1,10 @@
-package com.snowflakes.rednose.dto.stamplike;
+package com.snowflakes.rednose.dto.stamp;
 
 import com.snowflakes.rednose.entity.Stamp;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class StampResponse {
 
     private String image;
@@ -16,23 +18,11 @@ public class StampResponse {
         this.numberOfLikes = numberOfLikes;
     }
 
-    public static StampResponse from(Stamp stamp) {
+    public static StampResponse of(Stamp stamp, String imageUrl) {
         return StampResponse.builder()
-                .image(stamp.getImageUrl())
+                .image(imageUrl)
                 .name(stamp.getName())
                 .numberOfLikes(stamp.getNumberOfLikes())
                 .build();
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getNumberOfLikes() {
-        return numberOfLikes;
     }
 }

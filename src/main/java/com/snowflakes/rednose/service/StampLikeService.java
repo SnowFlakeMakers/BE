@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.service;
 
+import com.snowflakes.rednose.dto.stamp.StampResponse;
 import com.snowflakes.rednose.dto.stamplike.ShowStampLikeResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
@@ -26,6 +27,7 @@ public class StampLikeService {
     private final StampLikeRepository stampLikeRepository;
     private final StampRepository stampRepository;
     private final MemberRepository memberRepository;
+    private final PreSignedUrlService preSignedUrlService;
 
     @Transactional
     public void like(Long stampId, Long memberId) {
@@ -55,7 +57,15 @@ public class StampLikeService {
 
     public ShowStampLikeResponse getLikes(Long memberId, Pageable pageable) {
         Slice<Stamp> stamps = stampRepository.findLikesByMemberId(memberId, pageable);
-        return ShowStampLikeResponse.from(stamps);
+        return new ShowStampLikeResponse(
+                stamps.hasNext(),
+                stamps.stream().map(s -> makeStampResponse(s)).toList()
+        );
+    }
+
+    private StampResponse makeStampResponse(Stamp stamp) {
+        String imageUrl = preSignedUrlService.getPreSignedUrlForShow(stamp.getImageUrl());
+        return StampResponse.of(stamp, imageUrl);
     }
 
     @Transactional

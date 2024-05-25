@@ -1,5 +1,6 @@
 package com.snowflakes.rednose.controller;
 
+import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.seallike.ShowMySealLikesResponse;
 import com.snowflakes.rednose.service.SealLikeService;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +24,19 @@ public class SealLikeController {
     private final SealLikeService sealLikeService;
 
     @PostMapping("/seal-likes/{sealId}")
-    public ResponseEntity<Void> like(Long memberId, @PathVariable Long sealId) {
+    public ResponseEntity<Void> like(@MemberId Long memberId, @PathVariable Long sealId) {
         sealLikeService.like(sealId, memberId);
         return ResponseEntity.created(URI.create("/api/v1/seals")).build();
     }
 
     @DeleteMapping("/seal-likes/{sealId}")
-    public ResponseEntity<Void> cancel(Long memberId, @PathVariable Long sealId) {
+    public ResponseEntity<Void> cancel(@MemberId Long memberId, @PathVariable Long sealId) {
         sealLikeService.cancel(sealId, memberId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/seal-likes/likes")
-    public ShowMySealLikesResponse show(Long memberId, Pageable pageable) {
+    public ShowMySealLikesResponse show(@MemberId Long memberId, Pageable pageable) {
         return sealLikeService.show(memberId, pageable);
     }
 }

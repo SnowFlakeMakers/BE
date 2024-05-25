@@ -6,7 +6,10 @@ import com.snowflakes.rednose.dto.seal.AssignSealNameRequest;
 import com.snowflakes.rednose.dto.seal.AssignSealNameResponse;
 import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
+import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
+import com.snowflakes.rednose.dto.seal.ShowSealsResponse;
+import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.service.SealService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1")
@@ -29,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SealController {
 
     private final SealService sealService;
-
+    private final PreSignedUrlService preSignedUrlService;
 
     @GetMapping("/seals/{sealId}")
     public ResponseEntity<ShowSealSpecificResponse> specific(@PathVariable Long sealId, @MemberId Long memberId) {
@@ -38,9 +42,10 @@ public class SealController {
     }
 
     @GetMapping("/my-seals")
-    public ShowMySealsResponse showMySeals(Pageable pageable, Long memberId) {
+    public ShowMySealsResponse showMySeals(Pageable pageable, @MemberId Long memberId) {
         return sealService.showMySeals(pageable, memberId);
     }
+
 
     @PostMapping("/seals")
     public MakeSealResponse make(@MemberId Long memberId, @RequestBody @Valid MakeSealRequest makeSealRequest) {
@@ -50,5 +55,15 @@ public class SealController {
     @PostMapping("/seals/name")
     public AssignSealNameResponse name(@MemberId Long memberId, @RequestBody @Valid AssignSealNameRequest assignSealNameReqeust){
         return sealService.assignName(memberId, assignSealNameReqeust);
+    }
+
+    @GetMapping("/seals")
+    public ShowSealsResponse show(@RequestParam(required = false) String keyword, Pageable pageable) {
+        return sealService.show(keyword, pageable);
+    }
+
+    @GetMapping("/seals/pre-signed-url")
+    public CreatePreSignedUrlResponse getPreSignedUrl() {
+      return preSignedUrlService.getSealPreSignedUrlForPut();
     }
 }
