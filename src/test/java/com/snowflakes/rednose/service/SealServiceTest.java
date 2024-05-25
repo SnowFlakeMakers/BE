@@ -9,17 +9,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.snowflakes.rednose.dto.MakeSealResponse;
-import com.snowflakes.rednose.dto.seal.AssignSealNameRequest;
-import com.snowflakes.rednose.dto.seal.AssignSealNameResponse;
 import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
 import com.snowflakes.rednose.exception.NotFoundException;
-import com.snowflakes.rednose.exception.UnAuthorizedException;
-import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
-import com.snowflakes.rednose.exception.errorcode.SealErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;

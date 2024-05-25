@@ -2,8 +2,6 @@ package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.MakeSealResponse;
-import com.snowflakes.rednose.dto.seal.AssignSealNameRequest;
-import com.snowflakes.rednose.dto.seal.AssignSealNameResponse;
 import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowMySealsResponse;
 import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
