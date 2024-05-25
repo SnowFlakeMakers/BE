@@ -1,11 +1,21 @@
 package com.snowflakes.rednose.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.snowflakes.rednose.dto.MakeSealResponse;
+import com.snowflakes.rednose.dto.seal.MakeSealRequest;
 import com.snowflakes.rednose.dto.seal.ShowSealSpecificResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Seal;
+import com.snowflakes.rednose.exception.NotFoundException;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
+import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.repository.SealLikeRepository;
 import com.snowflakes.rednose.repository.SealRepository;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
@@ -27,6 +37,12 @@ class SealServiceTest {
     private SealRepository sealRepository;
     @Mock
     private SealLikeRepository sealLikeRepository;
+
+    @Mock
+    private MemberRepository memberRepository;
+
+    @Mock
+    private PreSignedUrlService preSignedUrlService;
 
     @InjectMocks
     private SealService sealService;
@@ -54,5 +70,47 @@ class SealServiceTest {
 
         // then
         assertThat(ACTUAL).usingRecursiveComparison().isEqualTo(EXPECTED);
+    }
+
+    @DisplayName("씰을 만들 수 있다")
+    @Test
+    void 씰_만들기() {
+        // given
+        final Member JANG = MemberFixture.builder().id(1L).build();
+        final Seal CHRISTMAS_SEAL = SealFixture.builder().id(2L).member(JANG).name("크리스마스씰").numberOfLikes(0).build();
+        final MakeSealRequest REQUEST = MakeSealRequest.builder().image(CHRISTMAS_SEAL.getImageUrl()).build();
+        final String PRE_SIGNED_URL = "preSigned.com";
+
+        when(memberRepository.findById(JANG.getId())).thenReturn(Optional.of(JANG));
+        when(sealRepository.save(any(Seal.class))).thenReturn(CHRISTMAS_SEAL);
+        when(preSignedUrlService.getPreSignedUrlForShow(CHRISTMAS_SEAL.getImageUrl())).thenReturn(PRE_SIGNED_URL);
+
+        final MakeSealResponse EXPECTED = MakeSealResponse.builder().image(PRE_SIGNED_URL)
+                .sealId(CHRISTMAS_SEAL.getId()).name(CHRISTMAS_SEAL.getName()).build();
+
+        // when
+        final MakeSealResponse ACTUAL = sealService.make(JANG.getId(), REQUEST);
+
+        assertAll(
+                () -> verify(memberRepository, times(1)).findById(JANG.getId()),
+                () -> verify(sealRepository, times(1)).save(any(Seal.class)),
+                () -> verify(preSignedUrlService, times(1)).getPreSignedUrlForShow(CHRISTMAS_SEAL.getImageUrl()),
+                () -> assertThat(ACTUAL).usingRecursiveComparison().isEqualTo(EXPECTED)
+        );
+    }
+
+    @DisplayName("씰을 만들 때 존재하지 않는 회원에 대해 예외를 던진다")
+    @Test
+    void 씰_만들기_회원없음() {
+        // given
+        final Member JANG = MemberFixture.builder().id(1L).build();
+        final Seal CHRISTMAS_SEAL = SealFixture.builder().id(2L).member(JANG).name(null).numberOfLikes(0).build();
+        final MakeSealRequest REQUEST = MakeSealRequest.builder().image(CHRISTMAS_SEAL.getImageUrl()).build();
+
+        when(memberRepository.findById(JANG.getId())).thenReturn(Optional.empty());
+
+        // when then
+        assertThrows(NotFoundException.class, () -> sealService.make(JANG.getId(), REQUEST),
+                MemberErrorCode.NOT_FOUND.getMessage());
     }
 }

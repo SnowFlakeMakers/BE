@@ -32,8 +32,8 @@ public class StampService {
     private final StampLikeRepository stampLikeRepository;
     private final StampRecordRepository stampRecordRepository;
 
-    public ShowStampsResponse show(Pageable pageable) {
-        Page<Stamp> stamps = stampRepository.findAll(pageable);
+    public ShowStampsResponse show(String keyWord, Pageable pageable) {
+        Page<Stamp> stamps = stampRepository.findAllAtBoard(keyWord, pageable);
         return ShowStampsResponse.from(stamps);
     }
 

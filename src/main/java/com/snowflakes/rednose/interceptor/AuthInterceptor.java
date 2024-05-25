@@ -1,10 +1,13 @@
 package com.snowflakes.rednose.interceptor;
 
 import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,8 +15,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
+    public final String AUTHORIZATION = "Authorization";
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -34,7 +39,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         // 로그인해야 하는 메서드에 대해 jwt 검증
         // 헤더는 Authorization: <type> <credentials> 형태이므로 토큰을 얻기 위해 split
-        jwtTokenProvider.verifySignature(request.getHeader("Authorization").split(" ")[1]);
+        String accessToken = getAuthorizationHeaderFromRequest(request);
+        jwtTokenProvider.verifySignature(accessToken.split(" ")[1]);
         return true;
+    }
+
+    private String getAuthorizationHeaderFromRequest(HttpServletRequest request) {
+        String accessToken = request.getHeader(AUTHORIZATION);
+        if (accessToken == null || accessToken.isBlank()) {
+            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
+        }
+        return accessToken;
     }
 }
