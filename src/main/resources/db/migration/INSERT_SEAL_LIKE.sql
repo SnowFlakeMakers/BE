@@ -1,0 +1,13 @@
+insert into seal_like values (null, 1,1);
+insert into seal_like values (null, 1,176);
+insert into seal_like values (null, 1,177);
+insert into seal_like values (null, 1,178);
+insert into seal_like values (null, 1,179);
+insert into seal_like values (null, 1,180);
+insert into seal_like values (null, 148,176);
+insert into seal_like values (null, 149,177);
+insert into seal_like values (null, 150,178);
+insert into seal_like values (null, 142,179);
+insert into seal_like values (null, 143,180);
+insert into seal_like values (null, 144,181);
+insert into seal_like values (null, 145,182);
