@@ -44,4 +44,10 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));
     }
+
+    @AccessibleWithoutLogin
+    @GetMapping("/test")
+    public String test(@RequestParam(defaultValue = "1") Long memberId) {
+        return authService.issueAccessToken(memberId);
+    }
 }
