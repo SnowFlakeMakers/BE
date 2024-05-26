@@ -9,6 +9,7 @@ import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
+import com.snowflakes.rednose.util.RandomNicknameGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ public class AuthService {
     @Value("${kakao.api_key}")
     private String clientId;
     private WebClient webClient = WebClient.builder().build();
+    private RandomNicknameGenerator randomNicknameGenerator;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -119,8 +121,10 @@ public class AuthService {
     public IssueTokenResult issueTokenWithUserInfo(UserInfo userInfo) {
         log.info("userinfo socialid : {}", userInfo.getId());
 
+        String randomNickname = randomNicknameGenerator.generate();
+
         Member member = memberRepository.findBySocialId(userInfo.getId())
-                .orElseGet(() -> memberRepository.save(userInfo.toMember()));
+                .orElseGet(() -> memberRepository.save(userInfo.toMember(randomNickname)));
 
         Long memberId = member.getId();
 
