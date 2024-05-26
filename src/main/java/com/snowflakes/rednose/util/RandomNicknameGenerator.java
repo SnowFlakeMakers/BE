@@ -7,9 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RandomNicknameGenerator {
-
     private Random random = new Random();
-
     final List<String> ADJECTIVES = Arrays.asList(
             "가냘픈", "가는", "가엾은", "가파른", "같은", "거센", "거친", "건조한", "검은", "게으른",
             "게을러빠진", "게을러터진", "고달픈", "고른", "고마운", "고운", "고픈", "곧은", "괜찮은",
@@ -48,9 +46,9 @@ public class RandomNicknameGenerator {
     );
 
     public String generate() {
-        return String.format("{} {} {}",
-                ADJECTIVES.get(random.nextInt(ADJECTIVES.size())),
-                COLORS.get(random.nextInt(COLORS.size())),
-                ANIMALS.get(random.nextInt(ANIMALS.size())));
+        String adjective = ADJECTIVES.get(random.nextInt(ADJECTIVES.size()));
+        String color = COLORS.get(random.nextInt(COLORS.size()));
+        String animal = ANIMALS.get(random.nextInt(ANIMALS.size()));
+        return String.format("%s %s %s", adjective, color, animal);
     }
 }
