@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RandomNicknameGenerator {
     private Random random = new Random();
+    final String SPACE = " ";
 
     private final MemberRepository memberRepository;
 
@@ -57,7 +58,9 @@ public class RandomNicknameGenerator {
             String adjective = ADJECTIVES.get(random.nextInt(ADJECTIVES.size()));
             String color = COLORS.get(random.nextInt(COLORS.size()));
             String animal = ANIMALS.get(random.nextInt(ANIMALS.size()));
-            nickname = adjective + " " + color + " " + animal;
+            StringBuilder stringBuilder = new StringBuilder();
+            nickname = stringBuilder.append(adjective).append(SPACE).append(color).append(SPACE).append(animal)
+                    .toString();
         } while (memberRepository.existsByNickname(nickname));
         return nickname;
     }
