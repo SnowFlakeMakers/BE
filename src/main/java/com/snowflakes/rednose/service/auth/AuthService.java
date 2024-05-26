@@ -33,7 +33,8 @@ public class AuthService {
     @Value("${kakao.api_key}")
     private String clientId;
     private WebClient webClient = WebClient.builder().build();
-    private RandomNicknameGenerator randomNicknameGenerator;
+    
+    private final RandomNicknameGenerator randomNicknameGenerator;
 
     private final JwtTokenProvider jwtTokenProvider;
 
