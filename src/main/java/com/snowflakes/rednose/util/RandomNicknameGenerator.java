@@ -58,7 +58,7 @@ public class RandomNicknameGenerator {
             String color = COLORS.get(random.nextInt(COLORS.size()));
             String animal = ANIMALS.get(random.nextInt(ANIMALS.size()));
             nickname = adjective + " " + color + " " + animal;
-        } while (!memberRepository.existsByNickname(nickname));
+        } while (memberRepository.existsByNickname(nickname));
         return nickname;
     }
 }
