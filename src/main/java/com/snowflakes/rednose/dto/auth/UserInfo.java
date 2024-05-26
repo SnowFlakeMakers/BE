@@ -20,8 +20,8 @@ public class UserInfo {
     private Long id;
     private KaKaoAccount kakaoAccount;
 
-    public Member toMember() {
-        return Member.builder().socialId(id).usable(true)
+    public Member toMember(String randomNickname) {
+        return Member.builder().socialId(id).usable(true).nickname(randomNickname)
                 .image(kakaoAccount.getProfile().getProfileImageUrl()).build();
     }
 }
