@@ -35,7 +35,7 @@ public class StampLikeController {
     @DeleteMapping("/stamp-likes/{stampId}")
     public ResponseEntity<Void> cancel(@MemberId Long memberId, @PathVariable Long stampId) {
         stampLikeService.cancel(stampId, memberId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }
