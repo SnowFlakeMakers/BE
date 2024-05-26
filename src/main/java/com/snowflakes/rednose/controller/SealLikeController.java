@@ -35,7 +35,7 @@ public class SealLikeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/seal-likes/likes")
+    @GetMapping("/seal-likes")
     public ShowMySealLikesResponse show(@MemberId Long memberId, Pageable pageable) {
         return sealLikeService.show(memberId, pageable);
     }
