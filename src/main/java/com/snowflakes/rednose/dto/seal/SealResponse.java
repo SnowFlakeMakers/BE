@@ -10,12 +10,14 @@ public class SealResponse {
     private String image;
     private String name;
     private int numberOfLikes;
+    private Long id;
 
     @Builder
-    public SealResponse(String image, String name, int numberOfLikes) {
+    public SealResponse(String image, String name, int numberOfLikes, Long id) {
         this.image = image;
         this.name = name;
         this.numberOfLikes = numberOfLikes;
+        this.id = id;
     }
 
     public static SealResponse of(Seal seal, String preSignedUrl) {
@@ -23,6 +25,7 @@ public class SealResponse {
                 .image(preSignedUrl)
                 .name(seal.getName())
                 .numberOfLikes(seal.getNumberOfLikes())
+                .id(seal.getId())
                 .build();
     }
 

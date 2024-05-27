@@ -16,10 +16,13 @@ public class ShowStampSpecificResponse {
     private List<String> collaborators;
     private int numberOfLikes;
     private boolean liked;
+    private Long id;
 
     public static ShowStampSpecificResponse of(Stamp stamp, boolean liked, List<String> collaborators) {
         return ShowStampSpecificResponse.builder().name(stamp.getName()).imageUrl(stamp.getImageUrl())
                 .createdAt(stamp.getCreatedAt()).collaborators(collaborators).numberOfLikes(stamp.getNumberOfLikes())
-                .liked(liked).build();
+                .liked(liked)
+                .id(stamp.getId())
+                .build();
     }
 }
