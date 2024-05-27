@@ -10,12 +10,14 @@ public class StampResponse {
     private String image;
     private String name;
     private int numberOfLikes;
+    private Long id;
 
     @Builder
-    public StampResponse(String image, String name, int numberOfLikes) {
+    public StampResponse(String image, String name, int numberOfLikes, Long id) {
         this.image = image;
         this.name = name;
         this.numberOfLikes = numberOfLikes;
+        this.id = id;
     }
 
     public static StampResponse of(Stamp stamp, String imageUrl) {
@@ -23,6 +25,7 @@ public class StampResponse {
                 .image(imageUrl)
                 .name(stamp.getName())
                 .numberOfLikes(stamp.getNumberOfLikes())
+                .id(stamp.getId())
                 .build();
     }
 }
