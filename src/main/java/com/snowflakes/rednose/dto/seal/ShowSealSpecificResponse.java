@@ -15,9 +15,11 @@ public class ShowSealSpecificResponse {
     private boolean liked;
     private LocalDateTime createdAt;
     private String creator;
+    private Long id;
 
     public static ShowSealSpecificResponse of(Seal seal, boolean liked) {
         return ShowSealSpecificResponse.builder().imageUrl(seal.getImageUrl()).name(seal.getName())
+                .id(seal.getId())
                 .likes(seal.getNumberOfLikes())
                 .createdAt(seal.getCreatedAt()).creator(seal.getMember().getNickname()).liked(liked).build();
     }
