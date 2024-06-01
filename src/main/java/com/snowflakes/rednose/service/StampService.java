@@ -4,6 +4,7 @@ package com.snowflakes.rednose.service;
 import com.snowflakes.rednose.dto.stamp.ShowMyStampsResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampSpecificResponse;
 import com.snowflakes.rednose.dto.stamp.ShowStampsResponse;
+import com.snowflakes.rednose.dto.stamp.StampAtListResponse;
 import com.snowflakes.rednose.dto.stamp.StampResponse;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.exception.NotFoundException;
@@ -34,7 +35,10 @@ public class StampService {
 
     public ShowStampsResponse show(String keyWord, Pageable pageable) {
         Page<Stamp> stamps = stampRepository.findAllAtBoard(keyWord, pageable);
-        return ShowStampsResponse.from(stamps);
+        List<StampAtListResponse> urlConverted = stamps.getContent().stream()
+                .map(stamp -> makeStampAtListResponse(stamp))
+                .toList();
+        return ShowStampsResponse.of(stamps, urlConverted);
     }
 
     public ShowStampSpecificResponse showSpecific(Long stampId, Long memberId) {
@@ -61,5 +65,10 @@ public class StampService {
     private StampResponse makeStampResponse(Stamp stamp) {
         String imageUrl = preSignedUrlService.getPreSignedUrlForShow(stamp.getImageUrl());
         return StampResponse.of(stamp, imageUrl);
+    }
+
+    private StampAtListResponse makeStampAtListResponse(Stamp stamp) {
+        String imageUrl = preSignedUrlService.getPreSignedUrlForShow(stamp.getImageUrl());
+        return StampAtListResponse.of(stamp, imageUrl);
     }
 }
