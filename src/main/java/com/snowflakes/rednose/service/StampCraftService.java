@@ -1,6 +1,5 @@
 package com.snowflakes.rednose.service;
 
-import com.snowflakes.rednose.dto.stamp.CreatePreSignedUrlResponse;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftRequest;
 import com.snowflakes.rednose.dto.stampcraft.CreateStampCraftResponse;
@@ -42,6 +41,7 @@ public class StampCraftService {
     private final StampRecordRepository stampRecordRepository;
     private final StampRepository stampRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PreSignedUrlService preSignedUrlService;
 
     private Long ID = 0L;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
@@ -99,19 +99,22 @@ public class StampCraftService {
     }
 
     @Transactional
-    public CreateStampResponse done(CreateStampRequest request, SimpMessageHeaderAccessor accessor, Long stampCraftId) {
-        Long memberId = connections.get(accessor.getSessionId());
+    public CreateStampResponse done(CreateStampRequest request, Long memberId, Long stampCraftId) {
         Member host = findMemberById(memberId);
         validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         validCorrectHost(host, stampCraft);
         Stamp stamp = stampRepository.save(request.toStamp());
+        saveStampRecord(stampCraft, stamp);
+        stampCrafts.remove(stampCraftId);
+        return CreateStampResponse.of(stamp, preSignedUrlService.getPreSignedUrlForShow(stamp.getImageUrl()));
+    }
+
+    private void saveStampRecord(StampCraft stampCraft, Stamp stamp) {
         for (Member member : stampCraft.getMembers()) {
             StampRecord stampRecord = StampRecord.builder().stamp(stamp).member(member).build();
             stampRecordRepository.save(stampRecord);
         }
-        stampCrafts.remove(stampCraftId);
-        return CreateStampResponse.from(stamp);
     }
 
     private void validCorrectHost(Member host, StampCraft stampCraft) {
