@@ -12,9 +12,9 @@ public class StampAtListResponse {
     private int likes;
     private Long id;
 
-    public static StampAtListResponse from(Stamp stamp) {
+    public static StampAtListResponse of(Stamp stamp, String preSignedUrl) {
         return StampAtListResponse.builder().name(stamp.getName())
-                .image(stamp.getImageUrl())
+                .image(preSignedUrl)
                 .likes(stamp.getNumberOfLikes())
                 .id(stamp.getId())
                 .build();
