@@ -58,7 +58,7 @@ public class StampCraft {
     }
 
     public boolean memberIsHost(Member member) {
-        return host == member;
+        return host.getId() == member.getId();
     }
 
     public void chooseNewHost() {
