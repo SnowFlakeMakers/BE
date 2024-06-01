@@ -10,6 +10,7 @@ import com.snowflakes.rednose.dto.stampcraft.EnterStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampResponse;
+import com.snowflakes.rednose.dto.stampcraft.ShowCreateStampProgressResponse;
 import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.service.StampCraftService;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +85,11 @@ public class StampCraftController {
         CreateStampResponse response = stampCraftService.done(request, memberId, stampCraftId);
         messagingTemplate.convertAndSend("/sub/stamp-craft/" + stampCraftId, response);
         return response;
+    }
+
+    @GetMapping("/api/v1/stamp-craft/{stampCraftId}")
+    public ShowCreateStampProgressResponse showProgress(@PathVariable Long stampCraftId) {
+        return stampCraftService.getProgress(stampCraftId);
     }
 
 }
