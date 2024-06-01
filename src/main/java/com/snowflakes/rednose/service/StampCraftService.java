@@ -9,6 +9,7 @@ import com.snowflakes.rednose.dto.stampcraft.LeaveStampCraftResponse;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampRequest;
 import com.snowflakes.rednose.dto.stampcraft.PaintStampResponse;
 import com.snowflakes.rednose.dto.stampcraft.ShowCreateStampProgressResponse;
+import com.snowflakes.rednose.dto.stampcraft.StartStampNamingResponse;
 import com.snowflakes.rednose.entity.Member;
 import com.snowflakes.rednose.entity.Stamp;
 import com.snowflakes.rednose.entity.StampCraft;
@@ -154,5 +155,13 @@ public class StampCraftService {
         LocalDateTime createdAt = stampCraft.getCreatedAt();
         long remain = Duration.between(createdAt, LocalDateTime.now()).getSeconds();
         return ShowCreateStampProgressResponse.of(stampCraft, remain);
+    }
+
+    public StartStampNamingResponse startNaming(Long stampCraftId, Long memberId) {
+        Member member = findMemberById(memberId);
+        validExistStampCraft(stampCraftId);
+        StampCraft stampCraft = stampCrafts.get(stampCraftId);
+        validCorrectHost(member, stampCraft);
+        return new StartStampNamingResponse();
     }
 }
