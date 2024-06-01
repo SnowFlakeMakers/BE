@@ -1,5 +1,5 @@
 package com.snowflakes.rednose.dto.stampcraft;
 
 public enum MessageType {
-    ENTER, PAINT, LEAVE, DONE
+    ENTER, PAINT, LEAVE, DONE, NAMING
 }
