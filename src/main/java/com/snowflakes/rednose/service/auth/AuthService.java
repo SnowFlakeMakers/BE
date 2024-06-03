@@ -107,6 +107,7 @@ public class AuthService {
         String accessToken = issueAccessToken(memberId);
         String refreshToken = issueRefreshToken(memberId);
         Member member = findMemberById(memberId);
+        member.storeRefreshToken(refreshToken);
         ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
         ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
         return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
