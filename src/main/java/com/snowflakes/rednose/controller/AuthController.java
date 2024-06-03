@@ -1,6 +1,7 @@
 package com.snowflakes.rednose.controller;
 
 import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
+import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.dto.auth.LoginResultResponse;
 import com.snowflakes.rednose.dto.auth.UserInfo;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +47,12 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie(),
                         issueTokenResult.getAccessTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));
+    }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(@MemberId Long memberId) {
+        authService.logout(memberId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @AccessibleWithoutLogin

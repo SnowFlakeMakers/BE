@@ -171,5 +171,11 @@ public class AuthService {
         Long memberId = validateRefreshToken(refreshToken);
         return issueToken(memberId);
     }
+
+    @Transactional
+    public void logout(Long memberId) {
+        Member member = findMemberById(memberId);
+        member.expireRefreshToken();
+    }
 }
 
