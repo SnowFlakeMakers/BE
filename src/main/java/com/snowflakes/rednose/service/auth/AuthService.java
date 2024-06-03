@@ -30,10 +30,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 public class AuthService {
 
+    public static final String REFRESH_TOKEN = "refreshToken";
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String PATH = "/";
+    public static final String REDIRECT_URL = "http://localhost:8080/api/v1/login/kakao";
+    public static final String KAUTH_GET_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    public static final String KAUTH_GET_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
     @Value("${kakao.api_key}")
     private String clientId;
     private WebClient webClient = WebClient.builder().build();
-    
+
     private final RandomNicknameGenerator randomNicknameGenerator;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -50,11 +56,11 @@ public class AuthService {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "authorization_code");
         requestBody.add("client_id", clientId);
-        requestBody.add("redirect_url", "http://localhost:8080/api/v1/login/kakao");
+        requestBody.add("redirect_url", REDIRECT_URL);
         requestBody.add("code", authCode);
 
         KakaoToken kaKaoToken = webClient.post()
-                .uri("https://kauth.kakao.com/oauth/token")
+                .uri(KAUTH_GET_TOKEN_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(requestBody))
                 .retrieve()
@@ -66,7 +72,7 @@ public class AuthService {
 
     public UserInfo getUserInfo(KakaoToken kakaoToken) {
         UserInfo userInfo = webClient.get()
-                .uri("https://kapi.kakao.com/v2/user/me")
+                .uri(KAUTH_GET_USER_INFO_URL)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + kakaoToken.getAccessToken())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .retrieve()
@@ -101,13 +107,11 @@ public class AuthService {
         String accessToken = issueAccessToken(memberId);
         String refreshToken = issueRefreshToken(memberId);
         Member member = findMemberById(memberId);
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite(SameSite.NONE.attributeValue())
-                .build();
-        return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+        member.storeRefreshToken(refreshToken);
+        ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
+        ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
+        return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
+                .refreshTokenCookie(refreshTokenCookie.toString())
                 .nickname(member.getNickname())
                 .imageUrl(member.getImage())
                 .build();
@@ -120,8 +124,6 @@ public class AuthService {
 
     @Transactional
     public IssueTokenResult issueTokenWithUserInfo(UserInfo userInfo) {
-        log.info("userinfo socialid : {}", userInfo.getId());
-
         String randomNickname = randomNicknameGenerator.generate();
 
         Member member = memberRepository.findBySocialId(userInfo.getId())
@@ -132,15 +134,31 @@ public class AuthService {
         String accessToken = issueAccessToken(memberId);
         String refreshToken = issueRefreshToken(memberId);
 
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite(SameSite.NONE.attributeValue())
-                .build();
-        return IssueTokenResult.builder().accessToken(accessToken).refreshTokenCookie(refreshTokenCookie.toString())
+        ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
+        ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
+
+        return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
+                .refreshTokenCookie(refreshTokenCookie.toString())
                 .imageUrl(member.getImage())
                 .nickname(member.getNickname())
+                .build();
+    }
+
+    private ResponseCookie buildAccessTokenCookie(String accessToken) {
+        return ResponseCookie.from(ACCESS_TOKEN, accessToken)
+                .httpOnly(true)
+                .secure(true)
+                .path(PATH)
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+    }
+
+    private ResponseCookie buildRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from(REFRESH_TOKEN, refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path(PATH)
+                .sameSite(SameSite.NONE.attributeValue())
                 .build();
     }
 

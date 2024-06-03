@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class IssueTokenResult {
-    private String accessToken;
+    private String accessTokenCookie;
     private String refreshTokenCookie;
     private String imageUrl;
     private String nickname;
