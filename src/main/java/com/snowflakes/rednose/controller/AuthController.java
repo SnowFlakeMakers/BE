@@ -31,7 +31,8 @@ public class AuthController {
         UserInfo userInfo = authService.getUserInfoFromAuthCode(code);
         IssueTokenResult issueTokenResult = authService.issueTokenWithUserInfo(userInfo);
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
+                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie(),
+                        issueTokenResult.getAccessTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));
     }
 
@@ -41,7 +42,8 @@ public class AuthController {
             @CookieValue("refreshToken") String refreshToken) {
         IssueTokenResult issueTokenResult = authService.reIssueToken(refreshToken);
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
+                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie(),
+                        issueTokenResult.getAccessTokenCookie())
                 .body(LoginResultResponse.from(issueTokenResult));
     }
 
