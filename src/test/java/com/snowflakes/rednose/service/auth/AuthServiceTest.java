@@ -5,8 +5,10 @@ import static org.mockito.Mockito.when;
 
 import com.snowflakes.rednose.dto.auth.IssueTokenResult;
 import com.snowflakes.rednose.entity.Member;
+import com.snowflakes.rednose.exception.NotFoundException;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
+import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
 import java.util.Optional;
@@ -87,4 +89,17 @@ class AuthServiceTest {
         assertThat(장지담.getRefreshToken()).isEqualTo(null);
     }
 
+    @DisplayName("로그아웃 과정에서 존재하지 않는 회원에 대해 알맞은 예외를 던진다")
+    @Test
+    public void 로그아웃_회원_존재하지_않음() {
+        // given
+        final Member 장지담 = MemberFixture.builder().socialId(1L).build();
+
+        when(memberRepository.findById(장지담.getId())).thenReturn(Optional.empty());
+
+        // when, then
+        Assertions.assertThrows(NotFoundException.class, () -> authService.logout(장지담.getId()),
+                MemberErrorCode.NOT_FOUND.getMessage());
+
+    }
 }
