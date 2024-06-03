@@ -48,9 +48,11 @@ class AuthServiceTest {
         final Long MEMBER_ID = 1L;
         final String REFRESH_TOKEN = "flvmfptlxhzms123";
         final String ACCESS_TOKEN = "ajcptmxhzms123";
-        final String REFRESH_TOKEN_COOKIE = "refreshToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
+        final String REFRESH_TOKEN_COOKIE =
+                "refreshToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
         final String ACCESS_TOKEN_COOKIE = "accessToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
-        IssueTokenResult expected = IssueTokenResult.builder().refreshTokenCookie(REFRESH_TOKEN_COOKIE).accessTokenCookie(ACCESS_TOKEN_COOKIE)
+        IssueTokenResult expected = IssueTokenResult.builder().refreshTokenCookie(REFRESH_TOKEN_COOKIE)
+                .accessTokenCookie(ACCESS_TOKEN_COOKIE)
                 .build();
 
         Member member = MemberFixture.builder().id(MEMBER_ID).build();
@@ -66,4 +68,23 @@ class AuthServiceTest {
         assertThat(actual.equals(expected));
 
     }
+
+    @DisplayName("로그아웃을 성공적으로 할 수 있다")
+    @Test
+    public void 로그아웃_성공() {
+        // given
+        final Member 장지담 = MemberFixture.builder().socialId(1L).build();
+        final String 토큰 = "ajkdlfajdlfkajl123klsdjlfaj";
+        장지담.storeRefreshToken(토큰);
+        assertThat(장지담.getRefreshToken()).isEqualTo(토큰);
+
+        when(memberRepository.findById(장지담.getId())).thenReturn(Optional.of(장지담));
+
+        // when
+        authService.logout(장지담.getId());
+
+        // then
+        assertThat(장지담.getRefreshToken()).isEqualTo(null);
+    }
+
 }
