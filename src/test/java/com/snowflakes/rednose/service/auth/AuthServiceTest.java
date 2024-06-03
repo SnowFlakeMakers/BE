@@ -10,6 +10,7 @@ import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
+import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.support.fixture.MemberFixture;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -27,6 +28,8 @@ class AuthServiceTest {
     private JwtTokenProvider jwtTokenProvider;
     @Mock
     private MemberRepository memberRepository;
+    @Mock
+    private PreSignedUrlService preSignedUrlService;
     @InjectMocks
     private AuthService authService;
 
@@ -50,11 +53,14 @@ class AuthServiceTest {
         final Long MEMBER_ID = 1L;
         final String REFRESH_TOKEN = "flvmfptlxhzms123";
         final String ACCESS_TOKEN = "ajcptmxhzms123";
+        final String PRESIGNED_IMAGE_URL = "presigned1234.com";
         final String REFRESH_TOKEN_COOKIE =
                 "refreshToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
         final String ACCESS_TOKEN_COOKIE = "accessToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
+        final String IMAGE_URL_COOKIE = "imageUrl=" + PRESIGNED_IMAGE_URL + "; Path=/; Secure; HttpOnly; SameSite=None";
         IssueTokenResult expected = IssueTokenResult.builder().refreshTokenCookie(REFRESH_TOKEN_COOKIE)
                 .accessTokenCookie(ACCESS_TOKEN_COOKIE)
+                .imageUrlCookie(IMAGE_URL_COOKIE)
                 .build();
 
         Member member = MemberFixture.builder().id(MEMBER_ID).build();
@@ -62,6 +68,7 @@ class AuthServiceTest {
         when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
         when(jwtTokenProvider.createAccessToken(MEMBER_ID)).thenReturn(REFRESH_TOKEN);
         when(jwtTokenProvider.createRefreshToken()).thenReturn(ACCESS_TOKEN);
+        when(preSignedUrlService.getPreSignedUrlForShow(member.getImage())).thenReturn(PRESIGNED_IMAGE_URL);
 
         // when
         IssueTokenResult actual = authService.issueToken(MEMBER_ID);
