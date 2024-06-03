@@ -9,6 +9,7 @@ import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
+import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.util.RandomNicknameGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ public class AuthService {
     public static final String REDIRECT_URL = "http://localhost:8080/api/v1/login/kakao";
     public static final String KAUTH_GET_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     public static final String KAUTH_GET_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
+    public static final String IMAGE_URL = "imageUrl";
     @Value("${kakao.api_key}")
     private String clientId;
     private WebClient webClient = WebClient.builder().build();
@@ -45,6 +47,8 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
+
+    private final PreSignedUrlService preSignedUrlService;
 
     /**
      * 인가 코드를 받아 카카오 인증 서버에 post 요청을 보내고 토큰을 반환한다
@@ -108,12 +112,19 @@ public class AuthService {
         String refreshToken = issueRefreshToken(memberId);
         Member member = findMemberById(memberId);
         member.storeRefreshToken(refreshToken);
+
+        return buildIssueTokenResult(accessToken, refreshToken, member);
+    }
+
+    private IssueTokenResult buildIssueTokenResult(String accessToken, String refreshToken, Member member) {
         ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
         ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
+        ResponseCookie imageUrlCookie = buildImageUrlCookie(
+                preSignedUrlService.getPreSignedUrlForShow(member.getImage()));
         return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
                 .refreshTokenCookie(refreshTokenCookie.toString())
                 .nickname(member.getNickname())
-                .imageUrl(member.getImage())
+                .imageUrlCookie(imageUrlCookie.toString())
                 .build();
     }
 
@@ -134,14 +145,7 @@ public class AuthService {
         String accessToken = issueAccessToken(memberId);
         String refreshToken = issueRefreshToken(memberId);
 
-        ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
-        ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
-
-        return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
-                .refreshTokenCookie(refreshTokenCookie.toString())
-                .imageUrl(member.getImage())
-                .nickname(member.getNickname())
-                .build();
+        return buildIssueTokenResult(accessToken, refreshToken, member);
     }
 
     private ResponseCookie buildAccessTokenCookie(String accessToken) {
@@ -155,6 +159,15 @@ public class AuthService {
 
     private ResponseCookie buildRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from(REFRESH_TOKEN, refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path(PATH)
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+    }
+
+    private ResponseCookie buildImageUrlCookie(String imageUrl) {
+        return ResponseCookie.from(IMAGE_URL, imageUrl)
                 .httpOnly(true)
                 .secure(true)
                 .path(PATH)
