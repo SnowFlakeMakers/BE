@@ -9,7 +9,6 @@ import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.exception.errorcode.MemberErrorCode;
 import com.snowflakes.rednose.repository.MemberRepository;
-import com.snowflakes.rednose.service.PreSignedUrlService;
 import com.snowflakes.rednose.util.RandomNicknameGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +46,6 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
-
-    private final PreSignedUrlService preSignedUrlService;
 
     /**
      * 인가 코드를 받아 카카오 인증 서버에 post 요청을 보내고 토큰을 반환한다
@@ -119,8 +116,7 @@ public class AuthService {
     private IssueTokenResult buildIssueTokenResult(String accessToken, String refreshToken, Member member) {
         ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
         ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
-        ResponseCookie imageUrlCookie = buildImageUrlCookie(
-                preSignedUrlService.getPreSignedUrlForShow(member.getImage()));
+        ResponseCookie imageUrlCookie = buildImageUrlCookie(member.getImage());
         return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
                 .refreshTokenCookie(refreshTokenCookie.toString())
                 .nickname(member.getNickname())
