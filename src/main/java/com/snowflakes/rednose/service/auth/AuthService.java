@@ -36,6 +36,7 @@ public class AuthService {
     public static final String REDIRECT_URL = "http://localhost:8080/api/v1/login/kakao";
     public static final String KAUTH_GET_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     public static final String KAUTH_GET_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
+    public static final String IMAGE_URL = "imageUrl";
     @Value("${kakao.api_key}")
     private String clientId;
     private WebClient webClient = WebClient.builder().build();
@@ -108,12 +109,18 @@ public class AuthService {
         String refreshToken = issueRefreshToken(memberId);
         Member member = findMemberById(memberId);
         member.storeRefreshToken(refreshToken);
+
+        return buildIssueTokenResult(accessToken, refreshToken, member);
+    }
+
+    private IssueTokenResult buildIssueTokenResult(String accessToken, String refreshToken, Member member) {
         ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
         ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
+        ResponseCookie imageUrlCookie = buildImageUrlCookie(member.getImage());
         return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
                 .refreshTokenCookie(refreshTokenCookie.toString())
                 .nickname(member.getNickname())
-                .imageUrl(member.getImage())
+                .imageUrlCookie(imageUrlCookie.toString())
                 .build();
     }
 
@@ -134,14 +141,7 @@ public class AuthService {
         String accessToken = issueAccessToken(memberId);
         String refreshToken = issueRefreshToken(memberId);
 
-        ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
-        ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
-
-        return IssueTokenResult.builder().accessTokenCookie(accessTokenCookie.toString())
-                .refreshTokenCookie(refreshTokenCookie.toString())
-                .imageUrl(member.getImage())
-                .nickname(member.getNickname())
-                .build();
+        return buildIssueTokenResult(accessToken, refreshToken, member);
     }
 
     private ResponseCookie buildAccessTokenCookie(String accessToken) {
@@ -162,6 +162,15 @@ public class AuthService {
                 .build();
     }
 
+    private ResponseCookie buildImageUrlCookie(String imageUrl) {
+        return ResponseCookie.from(IMAGE_URL, imageUrl)
+                .httpOnly(true)
+                .secure(true)
+                .path(PATH)
+                .sameSite(SameSite.NONE.attributeValue())
+                .build();
+    }
+
     public UserInfo getUserInfoFromAuthCode(String authCode) {
         KakaoToken token = getToken(authCode);
         return getUserInfo(token);
@@ -170,6 +179,12 @@ public class AuthService {
     public IssueTokenResult reIssueToken(String refreshToken) {
         Long memberId = validateRefreshToken(refreshToken);
         return issueToken(memberId);
+    }
+
+    @Transactional
+    public void logout(Long memberId) {
+        Member member = findMemberById(memberId);
+        member.expireRefreshToken();
     }
 }
 

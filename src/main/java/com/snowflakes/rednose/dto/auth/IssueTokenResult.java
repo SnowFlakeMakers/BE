@@ -12,6 +12,6 @@ import lombok.ToString;
 public class IssueTokenResult {
     private String accessTokenCookie;
     private String refreshTokenCookie;
-    private String imageUrl;
+    private String imageUrlCookie;
     private String nickname;
 }
