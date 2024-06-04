@@ -1,6 +1,7 @@
 package com.snowflakes.rednose.entity;
 
 import lombok.Builder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 public class StampCraft {
@@ -13,13 +14,16 @@ public class StampCraft {
 
     private String[][] stamp;
 
+    private LocalDateTime createdAt;
+
     protected StampCraft() {
     }
 
     @Builder
-    public StampCraft(Member host, CanvasType canvasType, List<Member> members, String[][] stamp) {
+    public StampCraft(Member host, CanvasType canvasType, List<Member> members, String[][] stamp, LocalDateTime createdAt) {
         this.host = host;
         this.canvasType = canvasType;
+        this.createdAt = createdAt;
         this.members = new ArrayList<>();
         this.stamp = new String[canvasType.getSize()][canvasType.getSize()];
     }
@@ -54,7 +58,7 @@ public class StampCraft {
     }
 
     public boolean memberIsHost(Member member) {
-        return host == member;
+        return host.getId().equals(member.getId());
     }
 
     public void chooseNewHost() {
@@ -65,5 +69,9 @@ public class StampCraft {
 
     public boolean hasMembers() {
         return members.size() != 0;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
