@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     public static final String REDIRECT_URL_FORMAT = "%s?nickname=%s";
+    public static final String CUSTOM_HEADER = "image";
     private final AuthService authService;
     private final String FRONT_HOMEPAGE = "http://localhost:3000/home";
 
@@ -42,9 +43,9 @@ public class AuthController {
                 URLEncoder.encode(issueTokenResult.getNickname()));
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, REDIRECT_URL)
-                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie(),
-                        issueTokenResult.getAccessTokenCookie(),
-                        issueTokenResult.getImageUrlCookie())
+                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
+                .header(HttpHeaders.AUTHORIZATION, issueTokenResult.getAccessToken())
+                .header(CUSTOM_HEADER, issueTokenResult.getImage())
                 .build();
     }
 
