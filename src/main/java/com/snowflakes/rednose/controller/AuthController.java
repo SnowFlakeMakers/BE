@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     public static final String REDIRECT_URL_FORMAT = "%s?nickname=%s";
+    public static final String CUSTOM_HEADER = "image";
     private final AuthService authService;
     private final String FRONT_HOMEPAGE = "http://localhost:3000/home";
-    private final String TEST_REDIRECT = "http://localhost:8080/api/v1/home";
 
     @AccessibleWithoutLogin
     @GetMapping("/login/kakao")
@@ -41,13 +41,13 @@ public class AuthController {
     }
 
     private ResponseEntity<?> buildLoginResultResponse(IssueTokenResult issueTokenResult) {
-        String REDIRECT_URL = String.format(REDIRECT_URL_FORMAT, TEST_REDIRECT,
+        String REDIRECT_URL = String.format(REDIRECT_URL_FORMAT, FRONT_HOMEPAGE,
                 URLEncoder.encode(issueTokenResult.getNickname()));
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, REDIRECT_URL)
                 .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
                 .header(HttpHeaders.AUTHORIZATION, issueTokenResult.getAccessToken())
-                .header("image", issueTokenResult.getImage())
+                .header(CUSTOM_HEADER, issueTokenResult.getImage())
                 .build();
     }
 
@@ -69,13 +69,5 @@ public class AuthController {
     @GetMapping("/test")
     public String test(@RequestParam(defaultValue = "1") Long memberId) {
         return authService.issueAccessToken(memberId);
-    }
-
-    @AccessibleWithoutLogin
-    @GetMapping("/home")
-    public String home() {
-        log.info("리다이렉트 성공");
-
-        return "redirect successful";
     }
 }
