@@ -53,8 +53,6 @@ class AuthServiceTest {
         final String IMAGE_URL = "image.com";
         final String REFRESH_TOKEN_COOKIE =
                 "refreshToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
-     //   final String ACCESS_TOKEN_COOKIE = "accessToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
-     //   final String IMAGE_URL_COOKIE = "imageUrl=" + IMAGE_URL + "; Path=/; Secure; HttpOnly; SameSite=None";
         IssueTokenResult expected = IssueTokenResult.builder().refreshTokenCookie(REFRESH_TOKEN_COOKIE)
                 .accessToken(ACCESS_TOKEN)
                 .image(IMAGE_URL)

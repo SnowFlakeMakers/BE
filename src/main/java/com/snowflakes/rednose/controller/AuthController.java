@@ -32,15 +32,13 @@ public class AuthController {
 
     @AccessibleWithoutLogin
     @GetMapping("/login/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
-        log.info("여기맞음");
+    public ResponseEntity<Void> kakaoLogin(@RequestParam String code) {
         UserInfo userInfo = authService.getUserInfoFromAuthCode(code);
         IssueTokenResult issueTokenResult = authService.issueTokenWithUserInfo(userInfo);
-        log.info("응답만들기");
         return buildLoginResultResponse(issueTokenResult);
     }
 
-    private ResponseEntity<?> buildLoginResultResponse(IssueTokenResult issueTokenResult) {
+    private ResponseEntity<Void> buildLoginResultResponse(IssueTokenResult issueTokenResult) {
         String REDIRECT_URL = String.format(REDIRECT_URL_FORMAT, FRONT_HOMEPAGE,
                 URLEncoder.encode(issueTokenResult.getNickname()));
         return ResponseEntity.status(HttpStatus.FOUND)
@@ -53,7 +51,7 @@ public class AuthController {
 
     @AccessibleWithoutLogin
     @PostMapping("/reissue/kakao")
-    public ResponseEntity<?> kakaoReissue(
+    public ResponseEntity<Void> kakaoReissue(
             @CookieValue("refreshToken") String refreshToken) {
         IssueTokenResult issueTokenResult = authService.reIssueToken(refreshToken);
         return buildLoginResultResponse(issueTokenResult);
