@@ -42,7 +42,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         // 로그인해야 하는 메서드에 대해 jwt 검증
         // 헤더는 Authorization: <type> <credentials> 형태이므로 토큰을 얻기 위해 split
         String accessToken = getAccessTokenFromRequest(request);
-        jwtTokenProvider.verifySignature(accessToken.split(" ")[1]);
+        jwtTokenProvider.verifySignature(accessToken);
         return true;
     }
 
