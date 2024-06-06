@@ -1,9 +1,12 @@
 package com.snowflakes.rednose.argumentresolver;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.snowflakes.rednose.annotation.MemberId;
+import com.snowflakes.rednose.exception.UnAuthorizedException;
+import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -16,17 +19,24 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
+    public static final String ACCESS_TOKEN = "accessToken";
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(MemberId.class) && Long.class.isAssignableFrom(parameter.getParameterType());
+        return parameter.hasParameterAnnotation(MemberId.class) && Long.class.isAssignableFrom(
+                parameter.getParameterType());
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String refreshToken = webRequest.getHeader(AUTHORIZATION).split(" ")[1];
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        Cookie refreshTokenCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
+                .findFirst()
+                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN));
+        String refreshToken = refreshTokenCookie.getValue();
         return jwtTokenProvider.getMemberId(refreshToken);
     }
 }
