@@ -4,9 +4,9 @@ import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -47,14 +47,10 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private String getAccessTokenFromRequest(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(ACCESS_TOKEN)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
+                .findFirst()
+                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN))
+                .getValue();
     }
 }
