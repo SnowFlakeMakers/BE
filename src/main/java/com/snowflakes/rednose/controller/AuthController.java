@@ -28,29 +28,32 @@ public class AuthController {
     public static final String REDIRECT_URL_FORMAT = "%s?nickname=%s";
     private final AuthService authService;
     private final String FRONT_HOMEPAGE = "http://localhost:3000/home";
+    private final String TEST_REDIRECT = "http://localhost:8080/api/v1/home";
 
     @AccessibleWithoutLogin
     @GetMapping("/login/kakao")
-    public ResponseEntity<Void> kakaoLogin(@RequestParam String code) {
+    public ResponseEntity<?> kakaoLogin(@RequestParam String code) {
+        log.info("여기맞음");
         UserInfo userInfo = authService.getUserInfoFromAuthCode(code);
         IssueTokenResult issueTokenResult = authService.issueTokenWithUserInfo(userInfo);
+        log.info("응답만들기");
         return buildLoginResultResponse(issueTokenResult);
     }
 
-    private ResponseEntity<Void> buildLoginResultResponse(IssueTokenResult issueTokenResult) {
-        String REDIRECT_URL = String.format(REDIRECT_URL_FORMAT, FRONT_HOMEPAGE,
+    private ResponseEntity<?> buildLoginResultResponse(IssueTokenResult issueTokenResult) {
+        String REDIRECT_URL = String.format(REDIRECT_URL_FORMAT, TEST_REDIRECT,
                 URLEncoder.encode(issueTokenResult.getNickname()));
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, REDIRECT_URL)
-                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie(),
-                        issueTokenResult.getAccessTokenCookie(),
-                        issueTokenResult.getImageUrlCookie())
+                .header(HttpHeaders.SET_COOKIE, issueTokenResult.getRefreshTokenCookie())
+                .header(HttpHeaders.AUTHORIZATION, issueTokenResult.getAccessToken())
+                .header("image", issueTokenResult.getImage())
                 .build();
     }
 
     @AccessibleWithoutLogin
     @PostMapping("/reissue/kakao")
-    public ResponseEntity<Void> kakaoReissue(
+    public ResponseEntity<?> kakaoReissue(
             @CookieValue("refreshToken") String refreshToken) {
         IssueTokenResult issueTokenResult = authService.reIssueToken(refreshToken);
         return buildLoginResultResponse(issueTokenResult);
@@ -66,5 +69,13 @@ public class AuthController {
     @GetMapping("/test")
     public String test(@RequestParam(defaultValue = "1") Long memberId) {
         return authService.issueAccessToken(memberId);
+    }
+
+    @AccessibleWithoutLogin
+    @GetMapping("/home")
+    public String home() {
+        log.info("리다이렉트 성공");
+
+        return "redirect successful";
     }
 }
