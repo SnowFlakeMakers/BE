@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods(CORS_ALLOWED_METHODS.split(","))
                 .allowedOrigins(CLIENT_LOCALHOST)
-                .exposedHeaders(HttpHeaders.SET_COOKIE, HttpHeaders.LOCATION)
+                .exposedHeaders(HttpHeaders.SET_COOKIE, HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION)
                 .allowCredentials(true);
     }
 
