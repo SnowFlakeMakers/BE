@@ -4,6 +4,7 @@ import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
+    public static final String ACCESS_TOKEN = "accessToken";
     public final String AUTHORIZATION = "Authorization";
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -39,16 +41,20 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         // 로그인해야 하는 메서드에 대해 jwt 검증
         // 헤더는 Authorization: <type> <credentials> 형태이므로 토큰을 얻기 위해 split
-        String accessToken = getAuthorizationHeaderFromRequest(request);
+        String accessToken = getAccessTokenFromRequest(request);
         jwtTokenProvider.verifySignature(accessToken.split(" ")[1]);
         return true;
     }
 
-    private String getAuthorizationHeaderFromRequest(HttpServletRequest request) {
-        String accessToken = request.getHeader(AUTHORIZATION);
-        if (accessToken == null || accessToken.isBlank()) {
-            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
+    private String getAccessTokenFromRequest(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(ACCESS_TOKEN)) {
+                    return cookie.getValue();
+                }
+            }
         }
-        return accessToken;
+        throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
     }
 }
