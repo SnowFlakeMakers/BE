@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -49,6 +48,7 @@ public class StampCraftService {
     private final PreSignedUrlService preSignedUrlService;
 
     private Long ID = 0L;
+    private static final long LIMIT_TIME = 60 * 60l;
     private Map<Long, StampCraft> stampCrafts = new ConcurrentHashMap<>();
     private Map<String, Long> connections = new ConcurrentHashMap<>();
 
@@ -153,7 +153,7 @@ public class StampCraftService {
         validExistStampCraft(stampCraftId);
         StampCraft stampCraft = stampCrafts.get(stampCraftId);
         LocalDateTime createdAt = stampCraft.getCreatedAt();
-        long remain = Duration.between(createdAt, LocalDateTime.now()).getSeconds();
+        long remain = LIMIT_TIME - Duration.between(createdAt, LocalDateTime.now()).getSeconds();
         return ShowCreateStampProgressResponse.of(stampCraft, remain);
     }
 
