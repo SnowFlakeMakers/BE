@@ -11,7 +11,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class IssueTokenResult {
     private String refreshTokenCookie;
-    private String accessToken;
+    private String accessTokenCookie;
     private String image;
     private String nickname;
 }
