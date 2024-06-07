@@ -32,11 +32,11 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        Cookie refreshTokenCookie = Arrays.stream(request.getCookies())
+        Cookie accessTokenCookie = Arrays.stream(request.getCookies())
                 .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
                 .findFirst()
                 .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN));
-        String refreshToken = refreshTokenCookie.getValue();
-        return jwtTokenProvider.getMemberId(refreshToken);
+        String accessToken = accessTokenCookie.getValue();
+        return jwtTokenProvider.getMemberId(accessToken);
     }
 }
