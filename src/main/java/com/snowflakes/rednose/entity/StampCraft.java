@@ -3,6 +3,7 @@ package com.snowflakes.rednose.entity;
 import lombok.Builder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 public class StampCraft {
 
@@ -26,6 +27,7 @@ public class StampCraft {
         this.createdAt = createdAt;
         this.members = new ArrayList<>();
         this.stamp = new String[canvasType.getSize()][canvasType.getSize()];
+        Arrays.fill(stamp, "#fff");
     }
 
     public Member getHost() {
