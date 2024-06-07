@@ -50,12 +50,13 @@ class AuthServiceTest {
         final Long MEMBER_ID = 1L;
         final String REFRESH_TOKEN = "flvmfptlxhzms123";
         final String ACCESS_TOKEN = "ajcptmxhzms123";
-        final String IMAGE_URL = "image.com";
         final String REFRESH_TOKEN_COOKIE =
                 "refreshToken=" + REFRESH_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
-        IssueTokenResult expected = IssueTokenResult.builder().refreshTokenCookie(REFRESH_TOKEN_COOKIE)
-                .accessToken(ACCESS_TOKEN)
-                .image(IMAGE_URL)
+        final String ACCESS_TOKEN_COOKIE =
+                "accessToken=" + ACCESS_TOKEN + "; Path=/; Secure; HttpOnly; SameSite=None";
+        IssueTokenResult expected = IssueTokenResult.builder()
+                .refreshTokenCookie(REFRESH_TOKEN_COOKIE)
+                .accessTokenCookie(ACCESS_TOKEN_COOKIE)
                 .build();
 
         Member member = MemberFixture.builder().id(MEMBER_ID).build();

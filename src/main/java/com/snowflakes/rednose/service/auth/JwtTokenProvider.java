@@ -70,6 +70,10 @@ public class JwtTokenProvider {
     // 토큰 검증 및 검증에 성공할 경우 claim 값 반환
     public Jws<Claims> verifySignature(String token) {
 
+        if (token == null || token.isBlank()) {
+            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
+        }
+
         try {
             return Jwts.parser().setSigningKey(encodedKey).requireIssuer(ISSUER)
                     .parseClaimsJws(token);
