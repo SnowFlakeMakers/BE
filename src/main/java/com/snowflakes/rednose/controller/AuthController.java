@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    public static final String REDIRECT_URL_FORMAT = "%s?nickname=%s?image=%s";
+    public static final String REDIRECT_URL_FORMAT = "%s?nickname=%s&image=%s";
 
     private final AuthService authService;
     private final String FRONT_HOMEPAGE = "http://localhost:3000/home";
