@@ -28,7 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllException(Exception e) {
-        log.info(e.getMessage());
+        e.printStackTrace();
         return handleExceptionInternal(new InternalServerException(InternalServerErrorCode.ERROR));
     }
 
