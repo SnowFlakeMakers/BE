@@ -18,13 +18,13 @@ import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        String accessToken = headerAccessor.getFirstNativeHeader("Authorization");
-        if (accessToken.isEmpty()) {
+        String accessToken = String.valueOf(headerAccessor.getNativeHeader("Authorization"));
+        if (accessToken == null || accessToken.isEmpty()) {
             throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
         }
         jwtTokenProvider.verifySignature(accessToken);
