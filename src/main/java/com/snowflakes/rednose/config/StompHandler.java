@@ -23,7 +23,8 @@ public class StompHandler implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        String accessToken = String.valueOf(headerAccessor.getNativeHeader("Authorization"));
+        String accessToken = headerAccessor.getFirstNativeHeader("Authorization");
+        log.info("access token => {}", accessToken);
         if (accessToken == null || accessToken.isEmpty()) {
             throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
         }
