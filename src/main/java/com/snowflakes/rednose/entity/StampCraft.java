@@ -21,13 +21,13 @@ public class StampCraft {
     }
 
     @Builder
-    public StampCraft(Member host, CanvasType canvasType, List<Member> members, String[][] stamp, LocalDateTime createdAt) {
+    public StampCraft(Member host, CanvasType canvasType, LocalDateTime createdAt) {
         this.host = host;
         this.canvasType = canvasType;
         this.createdAt = createdAt;
         this.members = new ArrayList<>();
         this.stamp = new String[canvasType.getSize()][canvasType.getSize()];
-        Arrays.fill(stamp, "#fff");
+        for(String line[] : stamp) Arrays.fill(line, "#fff");
     }
 
     public Member getHost() {
