@@ -43,9 +43,11 @@ public class AuthController {
                 URLEncoder.encode(issueTokenResult.getNickname()), URLEncoder.encode(issueTokenResult.getImage()));
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, REDIRECT_URL)
-                .header(HttpHeaders.SET_COOKIE,
-                        issueTokenResult.getRefreshTokenCookie(),
-                        issueTokenResult.getAccessTokenCookie())
+//                .header(HttpHeaders.SET_COOKIE,
+//                        issueTokenResult.getRefreshTokenCookie(),
+//                        issueTokenResult.getAccessTokenCookie())
+                .header("accessToken", issueTokenResult.getAccessToken())
+                .header("refreshToken", issueTokenResult.getRefreshToken())
                 .build();
     }
 
