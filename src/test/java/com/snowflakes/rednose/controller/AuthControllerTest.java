@@ -45,11 +45,20 @@ class AuthControllerTest {
         when(memberRepository.findByRefreshToken(refreshToken)).thenReturn(Optional.of(지담));
 
         // when
+//        webTestClient.post().uri("/api/v1/reissue/kakao")
+//                .header("refreshToken",refreshToken)
+//                .cookie("refreshToken", refreshToken)
+//                .exchange()
+//                .expectStatus().isFound()
+//                .expectCookie().value("accessToken", accessToken -> {
+//                    assertThat(jwtTokenProvider.getMemberId(accessToken)).isEqualTo(지담.getId());
+//                });
+
         webTestClient.post().uri("/api/v1/reissue/kakao")
-                .cookie("refreshToken", refreshToken)
+                .header("refreshToken",refreshToken)
                 .exchange()
                 .expectStatus().isFound()
-                .expectCookie().value("accessToken", accessToken -> {
+                .expectHeader().value("accessToken", accessToken -> {
                     assertThat(jwtTokenProvider.getMemberId(accessToken)).isEqualTo(지담.getId());
                 });
     }
