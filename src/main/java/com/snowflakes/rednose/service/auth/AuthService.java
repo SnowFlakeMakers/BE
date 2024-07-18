@@ -114,11 +114,11 @@ public class AuthService {
     }
 
     private IssueTokenResult buildIssueTokenResult(String accessToken, String refreshToken, Member member) {
-        ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
-        ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
+        // ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
+        // ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
         return IssueTokenResult.builder()
-                .refreshTokenCookie(refreshTokenCookie.toString())
-                .accessTokenCookie(accessTokenCookie.toString())
+                .refreshToken(refreshToken)
+                .accessToken(accessToken)
                 .nickname(member.getNickname())
                 .image(member.getImage())
                 .build();

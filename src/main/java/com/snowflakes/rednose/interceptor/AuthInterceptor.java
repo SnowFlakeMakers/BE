@@ -4,10 +4,8 @@ import com.snowflakes.rednose.annotation.AccessibleWithoutLogin;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +19,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthInterceptor implements HandlerInterceptor {
 
     public static final String ACCESS_TOKEN = "accessToken";
-    public final String AUTHORIZATION = "Authorization";
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
@@ -48,14 +45,20 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private String getAccessTokenFromRequest(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
+        String accessToken = request.getHeader(ACCESS_TOKEN);
+        if (accessToken == null || accessToken.isBlank()) {
             throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
         }
-        return Arrays.stream(request.getCookies())
-                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
-                .findFirst()
-                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN))
-                .getValue();
+        return accessToken;
+
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies == null) {
+//            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
+//        }
+//        return Arrays.stream(request.getCookies())
+//                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
+//                .findFirst()
+//                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN))
+//                .getValue();
     }
 }

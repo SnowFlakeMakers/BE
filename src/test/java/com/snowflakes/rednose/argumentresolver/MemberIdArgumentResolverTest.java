@@ -53,7 +53,8 @@ class MemberIdArgumentResolverTest {
 
         // when
         webTestClient.delete().uri("/api/v1/members")
-                .cookie("accessToken", ACCESS_TOKEN)
+         //       .cookie("accessToken", ACCESS_TOKEN)
+                .header("accessToken", ACCESS_TOKEN)
                 .exchange()
                 .expectStatus().isNoContent();
 

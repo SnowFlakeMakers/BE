@@ -4,9 +4,7 @@ import com.snowflakes.rednose.annotation.MemberId;
 import com.snowflakes.rednose.exception.UnAuthorizedException;
 import com.snowflakes.rednose.exception.errorcode.AuthErrorCode;
 import com.snowflakes.rednose.service.auth.JwtTokenProvider;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -32,11 +30,15 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        Cookie accessTokenCookie = Arrays.stream(request.getCookies())
-                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
-                .findFirst()
-                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN));
-        String accessToken = accessTokenCookie.getValue();
+        String accessToken = request.getHeader(ACCESS_TOKEN);
+        if (accessToken == null || accessToken.isBlank()) {
+            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
+        }
+//        Cookie accessTokenCookie = Arrays.stream(request.getCookies())
+//                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
+//                .findFirst()
+//                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN));
+//        String accessToken = accessTokenCookie.getValue();
         return jwtTokenProvider.getMemberId(accessToken);
     }
 }
