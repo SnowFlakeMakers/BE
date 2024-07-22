@@ -114,10 +114,9 @@ public class AuthService {
     }
 
     private IssueTokenResult buildIssueTokenResult(String accessToken, String refreshToken, Member member) {
-        // ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
-        // ResponseCookie accessTokenCookie = buildAccessTokenCookie(accessToken);
+        ResponseCookie refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
         return IssueTokenResult.builder()
-                .refreshToken(refreshToken)
+                .refreshTokenCookie(refreshTokenCookie.toString())
                 .accessToken(accessToken)
                 .nickname(member.getNickname())
                 .image(member.getImage())
@@ -144,26 +143,8 @@ public class AuthService {
         return buildIssueTokenResult(accessToken, refreshToken, member);
     }
 
-    private ResponseCookie buildAccessTokenCookie(String accessToken) {
-        return ResponseCookie.from(ACCESS_TOKEN, accessToken)
-                .httpOnly(true)
-                .secure(true)
-                .path(PATH)
-                .sameSite(SameSite.NONE.attributeValue())
-                .build();
-    }
-
     private ResponseCookie buildRefreshTokenCookie(String refreshToken) {
         return ResponseCookie.from(REFRESH_TOKEN, refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .path(PATH)
-                .sameSite(SameSite.NONE.attributeValue())
-                .build();
-    }
-
-    private ResponseCookie buildImageUrlCookie(String imageUrl) {
-        return ResponseCookie.from(IMAGE_URL, imageUrl)
                 .httpOnly(true)
                 .secure(true)
                 .path(PATH)

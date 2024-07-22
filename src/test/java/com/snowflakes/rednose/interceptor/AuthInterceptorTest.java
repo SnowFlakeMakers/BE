@@ -33,8 +33,6 @@ class AuthInterceptorTest {
         webTestClient.post()
                 .uri("/api/v1/seals")
                 .contentType(MediaType.APPLICATION_JSON)
-//                .cookie("accessToken", accessToken)
-//                .cookie("refreshToken", refreshToken)
                 .header("accessToken",accessToken)
                 .header("refreshToken",refreshToken)
                 .exchange()
