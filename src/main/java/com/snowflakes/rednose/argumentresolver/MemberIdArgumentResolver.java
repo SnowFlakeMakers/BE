@@ -34,11 +34,6 @@ public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
         if (accessToken == null || accessToken.isBlank()) {
             throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
         }
-//        Cookie accessTokenCookie = Arrays.stream(request.getCookies())
-//                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
-//                .findFirst()
-//                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN));
-//        String accessToken = accessTokenCookie.getValue();
         return jwtTokenProvider.getMemberId(accessToken);
     }
 }
