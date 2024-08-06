@@ -62,7 +62,7 @@ class AuthServiceTest {
 
         when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
         when(jwtTokenProvider.createAccessToken(MEMBER_ID)).thenReturn(REFRESH_TOKEN);
-        when(jwtTokenProvider.createRefreshToken()).thenReturn(ACCESS_TOKEN);
+        when(jwtTokenProvider.createRefreshToken(member.getId())).thenReturn(ACCESS_TOKEN);
 
         // when
         IssueTokenResult actual = authService.issueToken(MEMBER_ID);
