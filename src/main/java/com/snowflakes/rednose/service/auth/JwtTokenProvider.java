@@ -53,7 +53,10 @@ public class JwtTokenProvider {
     }
 
     // JWT refresh 토큰 생성 (access token 재발행용)
-    public String createRefreshToken() {
+    public String createRefreshToken(Long memberId) {
+        // claim : id
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(ID, memberId);
 
         // 발행시간
         Date now = new Date();

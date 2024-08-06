@@ -50,15 +50,5 @@ public class AuthInterceptor implements HandlerInterceptor {
             throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
         }
         return accessToken;
-
-//        Cookie[] cookies = request.getCookies();
-//        if (cookies == null) {
-//            throw new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN);
-//        }
-//        return Arrays.stream(request.getCookies())
-//                .filter(cookie -> ACCESS_TOKEN.equals(cookie.getName()))
-//                .findFirst()
-//                .orElseThrow(() -> new UnAuthorizedException(AuthErrorCode.NULL_OR_BLANK_TOKEN))
-//                .getValue();
     }
 }
