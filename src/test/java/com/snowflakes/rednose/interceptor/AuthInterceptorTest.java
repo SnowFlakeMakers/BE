@@ -29,7 +29,7 @@ class AuthInterceptorTest {
     @ParameterizedTest
     @NullAndEmptySource
     void 토큰값널_예외(String accessToken) {
-        String refreshToken = jwtTokenProvider.createRefreshToken();
+        String refreshToken = jwtTokenProvider.createRefreshToken(1L);
         webTestClient.post()
                 .uri("/api/v1/seals")
                 .contentType(MediaType.APPLICATION_JSON)

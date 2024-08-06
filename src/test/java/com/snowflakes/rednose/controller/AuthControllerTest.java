@@ -38,8 +38,8 @@ class AuthControllerTest {
     @Test
     void 토큰_재발급성공() {
         // given
-        String refreshToken = jwtTokenProvider.createRefreshToken();
         Member 지담 = MemberFixture.builder().id(1L).build();
+        String refreshToken = jwtTokenProvider.createRefreshToken(지담.getId());
 
         when(memberRepository.findById(지담.getId())).thenReturn(Optional.of(지담));
         when(memberRepository.findByRefreshToken(refreshToken)).thenReturn(Optional.of(지담));

@@ -54,7 +54,7 @@ class JwtTokenProviderTest {
     @Test
     void refreshToken_발행_검증() {
         // when
-        String refreshToken = jwtTokenProvider.createRefreshToken();
+        String refreshToken = jwtTokenProvider.createRefreshToken(1L);
 
         // then (검증 과정에서 예외를 던지지 않는 것을 테스트)
         Assertions.assertDoesNotThrow(() -> jwtTokenProvider.verifySignature(refreshToken));
